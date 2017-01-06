@@ -1,0 +1,60 @@
+{
+  "name": "madklub",
+  "version": "1.0.0",
+  "description": "Web application for managing madklub",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.production.config.js --progress --profile --colors",
+    "start": "babel-node server.js",
+    "lint": "eslint --ext js --ext jsx src || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "madklub"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "history": "^4.5.0",
+    "immutable": "^3.8.1",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-redux": "^5.0.1",
+    "react-router": "^3.0.0",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-0": "^6.16.0",
+    "eslint": "^3.12.2",
+    "eslint-plugin-react": "^6.8.0",
+    "react-hot-loader": "^1.3.1",
+    "webpack": "^1.14.0",
+    "webpack-dev-middleware": "^1.9.0",
+    "webpack-hot-middleware": "^2.15.0"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "keywords": [
+    "dinnerclub",
+    "madklub",
+    "nodejs",
+    "express",
+    "react",
+    "redux",
+    "redux-thunk",
+    "apollo",
+    "universal",
+    "jwt"
+  ],
+  "author": "Peter Alexander Garnæs",
+  "license": "MIT"
+}
