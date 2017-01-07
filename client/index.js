@@ -4,7 +4,7 @@ import React       from 'react';
 import { render }  from 'react-dom';
 import { browserHistory, Router }  from 'react-router';
 //import createBrowserHistory from 'history/lib/createBrowserHistory';
-import routes from './../shared/routes';
+import routes from './../app/routes';
 
 //const history = createBrowserHistory();
 

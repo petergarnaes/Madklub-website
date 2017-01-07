@@ -1,14 +1,14 @@
 var path = require('path');
 var express = require('express');
 var webpack = require('webpack');
-var config = require('./webpack.config.dev');
+var config = require('../webpack.config.dev');
 
 //import express from 'express';
 import React from 'react';
 //var React = require('react');
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
-import routes from './shared/routes';
+import routes from '../app/routes';
 
 var port = 3000;
 const app = express();
