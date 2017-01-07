@@ -51,12 +51,13 @@ Not really clear yet...
 
 When running `npm run build` as of now, the app will be built in the `dist` 
 folder. The idea is that the files there is the complete app. As of now, the 
-client side Javascript app is built to `bundle.js` and `bundle.js.map`.
+client side Javascript app is built to `bundle.js` and `bundle.js.map`. The map
+is for debugging, because `devtool: 'source-map'` is defined, maybe remove for
+build/production?
 
-Server code is compiled with babel to be a little more efficient, but its 
-does not work, since the files it imports are not copied into the `dist` 
-folder. Maybe this can be minified and bundled with webpack? Just a copy of 
-the `webpack.config.prod.js` but with `server.js` as entry point?
+Server is also transpiled and bundled with webpack. For production build, 
+uglifying and no hot reload can be used exactly like with client, but with 
+`target: node` of course, as we see in `webpack.config.server.dev.js`.
 
 Point is, that `dist` folder should contain the finished app that is minified 
 and transpiled to es5. This means both client and server code in a bundled, 
