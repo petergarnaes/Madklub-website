@@ -49,7 +49,32 @@ re-bundling and restarting of the server. Perhaps with `nodemon` or built in
 
 ## Project structure
 
-Not really clear yet...
+Mostly clear... This is so far:
+
+* `server`: Contains all server specific code. Contains GraphQL specific code,
+passport schemes and database configs. To level shema is in `schema.js`
+* `server/api`: Contains GraphQL specific code, as well as database 
+configuration.
+* `server/api/db`: Database configuration, uses `sequelize` to set up and call 
+an SQL database. `index.js` exports the sequelize shema of the entire DB, to 
+easily construct the GraphQL shema and resolve with `graphql-sequelize`.
+* `server/api/types`: Contains our defined types, which is the meat of our 
+schema.
+* `server/api/queries`: Top level types in our schema, to simplify `schema.js`
+greatly. Also contains queries that are not representations of the database, 
+like current user session info, potentially user settings or server info.
+* `server/api/mutations`: Contains all mutations possible in our schema.
+* `client`: Contains client specific code. As of now it simply contains the 
+browser specific setup for rendering the app. Browser specific is setting up 
+history with the router, getting initial store state from HTML header sent from
+server into Redux, setting up Apollo and such.
+* `app/routes.js`: Contain the route tree
+* `app/components`: Contains a folder for each component in the app. As of now 
+each folder will mostly just contain the `index.js` file, as it can all be 
+contained within the app. Here everything from Redux/Apollo containers to 
+`mapDispatch` happens, as well as UI.
+* `app/public`: Public assets like images, .svg's etc. Copied when building 
+app.
 
 ## Building App
 
