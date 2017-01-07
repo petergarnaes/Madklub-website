@@ -43,6 +43,10 @@ To get going with the development server, first install dependencies with
 server on port 3000. This setup includes hot reloading of react components, 
 so styling and development should be very fast.
 
+As of now, changes to the server or the files it touches are not triggering a 
+re-bundling and restarting of the server. Perhaps with `nodemon` or built in 
+`compiler.watch()` in `server.js`?
+
 ## Project structure
 
 Not really clear yet...

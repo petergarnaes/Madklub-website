@@ -20,7 +20,10 @@ module.exports = {
     externals: nodeModules,
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.BannerPlugin('require("source-map-support").install();',
+            { raw: true, entryOnly: false }),
+        new webpack.NormalModuleReplacementPlugin(/\.css$/, 'node-noop')
     ],
     module: {
         loaders: [
@@ -30,5 +33,6 @@ module.exports = {
                 exclude: /node_modules/
             }
         ]
-    }
+    },
+    devtool: 'sourcemap'
 }
