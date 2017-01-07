@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
+//import 'bootstrap/dist/css/bootstrap.css';
+//import 'bootstrap/dist/css/bootstrap-theme.css';
 import React from 'react';
 import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
 
@@ -19,14 +19,14 @@ export default class AppView extends React.Component {
                 </Navbar>
                 <Jumbotron>
                     <Grid>
-                        <h1>Todos and stuff</h1>
+                        <h1>Todos and stuff!</h1>
                         <p>
                         <Button
                             bsStyle="success"
                             bsSize="large"
                             href="http://react-bootstrap.github.io/components.html"
                             target="_blank">
-                            View React Boostrap Docs
+                            View React Boostrap Docs!
                         </Button>
                         </p>
                     </Grid>
