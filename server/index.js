@@ -2,10 +2,9 @@ var path = require('path');
 var express = require('express');
 var webpack = require('webpack');
 var config = require('../webpack.config.dev');
+var fs = require('fs');
 
-//import express from 'express';
 import React from 'react';
-//var React = require('react');
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
 import routes from '../app/routes';
@@ -13,6 +12,7 @@ import routes from '../app/routes';
 var port = 3000;
 const app = express();
 
+// Setup hot loading and dev stuff
 var compiler = webpack(config);
 
 app.use(require('webpack-dev-middleware')(compiler, {
@@ -22,7 +22,11 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
-function handleRender(req,res){
+/**
+ * Handles rendering by creating initial state and responding with the rendered
+ * app based on that state.
+ **/
+function handleRender(renderProps,res){
     // Create a new Redux store instance
     // const store = createStore(counterApp)
     //
@@ -36,16 +40,24 @@ function handleRender(req,res){
     // Grab the initial state from our Redux store
     // const preloadedState = store.getState()
     //
+    const html = renderToString(<RouterContext {...renderProps} />);
+    const preloadedState = {};
     // Send the rendered page back to the client
-    // res.send(renderFullPage(html, preloadedState))
+    res.status(200).send(renderFullPage(html, preloadedState))
 }
 
+/**
+ * Renders react app instance to a html document
+ **/
 function renderFullPage(html, preloadedState){
+    // Loads all of app css statically, which is statically compiled.
+    const css = fs.readFileSync('./dist/public/styles.css');
     return `
         <!doctype html>
         <html>
             <head>
                 <title>Redux Universal Example</title>
+                <style type="text/css">${css}</style>
             </head>
             <body>
                 <div id="react-view">${html}</div>
@@ -60,8 +72,11 @@ function renderFullPage(html, preloadedState){
     `
 }
 
+/**
+ * Site requests are handled here, takes care of routing and server-side rendering
+ **/
 app.use((req, res) => {
-    console.log('Bobby?');
+    console.log('Page request! Client asked for '+req.url);
     match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
         if(error){
             res.status(500).send(error.message)
@@ -71,30 +86,18 @@ app.use((req, res) => {
             // You can also check renderProps.components or renderProps.routes for
             // your "not found" component or route respectively, and send a 404 as
             // below, if you're using a catch-all route.
-            res.status(200).send(
-                renderFullPage(renderToString(<RouterContext {...renderProps} />))
-            )
+            handleRender(renderProps,res)
+            //res.status(200).send(
+            //    renderFullPage(renderToString(<RouterContext {...renderProps} />))
+            //)
         } else {
+            //TODO: make a nicer 404 page
             res.status(404).send('Not found')
         }
-    });/*
-      const HTML = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Isomorphic Redux Demo</title>
-        </head>
-        <body>
-          <div id="react-view"></div>
-          <script type="application/javascript" src="/bundle.js"></script>
-        </body>
-      </html>
-      `;
-  
-  res.end(HTML);*/
+    });
 });
 
+// Launching server
 app.listen(port, function onAppListen(err){
     if(err) {
         console.error(err);
@@ -102,4 +105,3 @@ app.listen(port, function onAppListen(err){
         console.info('==> [] Webpack development server on port: %s',port);
     }
 });
-//export default app;

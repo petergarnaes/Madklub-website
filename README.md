@@ -35,6 +35,15 @@ nice with Redux.
 ### Things to consider
 
 * Database. What to use?
+* All of app stylesheet is statically included in header, so the site does not 
+flash unstyled. Ideally we have [critical rendering path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/)
+which is possible with either [container stuff](https://github.com/kriasoft/isomorphic-style-loader)
+or a more self implemented way doing stuff with css modules and load them like 
+in react-redux-universal-hot-example. This should be an experimental 
+afterthought, as static will be fine.
+We need to define a [custom stylesheet](http://getbootstrap.com/customize/) 
+that does not include style for components we do not use. For production we 
+should also minify the css which `css-loader` is capable of.
 
 ## Setup Test Environemnt
 

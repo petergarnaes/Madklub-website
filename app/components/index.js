@@ -1,5 +1,5 @@
-//import 'bootstrap/dist/css/bootstrap.css';
-//import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
 import React from 'react';
 import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
 
