@@ -56,7 +56,7 @@ function renderFullPage(html, preloadedState){
         <!doctype html>
         <html>
             <head>
-                <title>Redux Universal Example</title>
+                <title>Madklub</title>
                 <style type="text/css">${css}</style>
             </head>
             <body>

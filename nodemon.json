@@ -1,0 +1,12 @@
+{
+    "verbose": true,
+    "execMap": {
+        "js": "webpack --config webpack.config.server.dev.js && node"
+    },
+    "watch": [
+        "server"
+    ],
+    "env": {
+        "NODE_ENV": "development"
+    }
+}
