@@ -20,7 +20,8 @@ like authorization and routing outside the App a breeze.
 more.
 * Redux - Flux implementation, making the app even more modular and functional
 * Boostrap - Predefined CSS and components with great options for customizing 
-get a beautiful website.
+get a beautiful website. Antd (ant design) is an alternative, seems very 
+similar, only a few components differ.
 * GraphQL - An API supporting queries, so changes in frontend data dependencies
 does not require changes in backend API. Also ensures we never overfetch, or 
 make multiple API calls for one page.
