@@ -104,7 +104,52 @@ transpiled and minified state. The client `bundle.js` should be available for
 the HTML document to load, so in the future it should probably be in something 
 like `dist/public`, along with other assets.
 
+## Security
+
+Security is a key concern, and there are many pitfalls. This app goes for a
+stateless authentication, as this is the simple and most flexible model for 
+the user.
+
+* HTTPS - A users interaction with the web page should be encrypted. Use lets 
+encrypt (or something?) for free HTTPS? This also ensures no Man in the Middle 
+attacks that can sniff up JWT token.
+* passport - Allows using various strategies to verify users credentials.
+* bcrypt - Strong password encryption with salt for local password storage.
+* JWT - Authentication token tool, for safely encrypting a json object and 
+using it as the authentication token. When this token is sent to the server 
+we can decrypt it and retreive user ID, so successful decryption is equivalent 
+to authentication of the user with the decrypted user ID. Timestamp and 
+expiration is handled by library.
+We only transfer this token over https ie. `secure: true`, and it is `httpOnly`
+because we might as well.
+* Dealing with CSRF - We use the Double Submit Cookie pattern, which together 
+with same-origin policy (default) ensures that it requires JavaScript to make 
+a valid request, which by same-origin is only possible in the page we served, 
+and not some malicious third-party site, or any sort of link the user is 
+tricked into clicking.
+* Dealing with XSS - All string inputs must be sanitized! Even though session 
+JWT token is `httpOnly` XSS could still use logged in session, and traverse 
+any CSRF method. While they can not get the JWT token, they can still send 
+request from the browser as the logged in user.
+
+More notes on public API in Random Notes.
+
+All mutations should be verified if the user is allowed to do the mutation in 
+question. Does the user have the right permissions? Is time restrictions and 
+deadlines held? All mutations with several steps should be transactions. 
+Writes should be infrequent, so transactions will do.
+
+ALL INPUT MUST BE SANITIZED!
+
 ## Random Notes
+
+# Public API security
+
+If we wanted our GraphQL API to be public, we could give out an API key, which 
+is just another JWT token but with a different secret/header. Our API should 
+then be able to verifiy either cookie+csrf or HTTP header with 
+`Authorization: Bearer jwt-api-key` which is the standard OAuth pattern. A 
+separate login page might be in order here.
 
 ### Async loading
 
