@@ -66,7 +66,7 @@ passport schemes and database configs. To level shema is in `schema.js`
 * `server/api`: Contains GraphQL specific code, as well as database 
 configuration.
 * `server/api/db`: Database configuration, uses `sequelize` to set up and call 
-an SQL database. `index.js` exports the sequelize shema of the entire DB, to 
+an SQL database. `index.js` exports the sequelize shema of the entire DB, to
 easily construct the GraphQL shema and resolve with `graphql-sequelize`.
 * `server/api/types`: Contains our defined types, which is the meat of our 
 schema.
@@ -80,7 +80,7 @@ history with the router, getting initial store state from HTML header sent from
 server into Redux, setting up Apollo and such.
 * `app/routes.js`: Contain the route tree
 * `app/components`: Contains a folder for each component in the app. As of now 
-each folder will mostly just contain the `index.js` file, as it can all be 
+each folder will mostly just contain the `index.js` file, as it can all be
 contained within the app. Here everything from Redux/Apollo containers to 
 `mapDispatch` happens, as well as UI.
 * `app/public`: Public assets like images, .svg's etc. Copied when building 

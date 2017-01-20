@@ -5,11 +5,18 @@ var config = require('../webpack.config.dev');
 var fs = require('fs');
 
 import React from 'react';
+import cookieParser from 'cookie-parser';
+import expressJwt from 'express-jwt';
+import expressGraphQL from 'express-graphql';
+import jwt from 'jsonwebtoken';
+import passport from './passport';
+import schema from './api/schema';
+import { port, auth, analytics } from './config';
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
 import routes from '../app/routes';
 
-var port = 3000;
+const crypto = require('crypto');
 const app = express();
 
 // Setup hot loading and dev stuff
@@ -21,6 +28,75 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 
 app.use(require('webpack-hot-middleware')(compiler));
+
+app.use(cookieParser());
+
+//
+// Authentication
+// -----------------------------------------------------------------------------
+app.use(expressJwt({
+    secret: auth.jwt.secret,
+    credentialsRequired: false,
+    /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
+    getToken: req => req.cookies.id_token,
+    /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
+}));
+
+app.use(passport.initialize());
+
+/* TODO Make csrf token vertification with double submit cookies
+ * by generating a random csrf token for each request with privileges.
+ * Implement 'Cookie-to-Header Token' also called 'Bearer authentication' which Relay can do like this:
+ * http://stackoverflow.com/questions/32618424/where-do-you-put-the-csrf-token-in-relay-graphql.
+ * But with cookie to header instead (instead of meta tag)
+ * If the hacker tricks a user into submitting some request, he would have to guess the csrf token,
+ * which would be impossible because new one is generated with each request.*/
+// TODO only generate and check csrf tokens on each mutation, because mutations are what should be protected
+// Generates a random sequence, which we use as CSRF token
+app.use((req,res,next)=>{
+    //console.log("Sup: "+req.cookies.csrf_token);
+    var id = crypto.randomBytes(20).toString('hex');
+    res.cookie('csrf_token', id, {httpOnly: false});
+    next();
+});
+
+function successful_login(req, res) {
+    const expiresIn = 60 * 60 * 24 * 180; // 180 days
+    const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
+    // httpOnly true since the client side does not need access to it
+    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
+    res.redirect('/');
+}
+
+// Is a get request, because we do not post any data, user is redirected to facebook
+// and returned to /login/facebook/return
+app.get('/login/facebook',
+    passport.authenticate('facebook', { scope: ['email', 'user_location'], session: false })
+);
+// Url we want our users returned to when they have been to facebook and accepted us.
+app.get('/login/facebook/return',
+    passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
+    successful_login
+);
+
+// TODO on error, make a message show, instead of redirect?
+app.post('/login',
+    passport.authenticate('local',{failureRedirect: '/login', session: false}),
+    successful_login
+);
+
+//
+// Register API middleware
+// -----------------------------------------------------------------------------
+app.use('/graphql',
+    expressGraphQL(req => ({
+            schema,
+            graphiql: true,
+            rootValue: { request: req },
+            pretty: process.env.NODE_ENV !== 'production',
+        })
+    )
+);
 
 /**
  * Handles rendering by creating initial state and responding with the rendered
