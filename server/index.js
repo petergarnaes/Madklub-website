@@ -1,3 +1,4 @@
+import "babel-polyfill";
 var path = require('path');
 var express = require('express');
 var webpack = require('webpack');
@@ -5,6 +6,7 @@ var config = require('../webpack.config.dev');
 var fs = require('fs');
 
 import React from 'react';
+// Server functionality related imports
 import cookieParser from 'cookie-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
@@ -12,6 +14,9 @@ import jwt from 'jsonwebtoken';
 import passport from './passport';
 import schema from './api/schema';
 import { port, auth, analytics } from './config';
+import db from './api/db/index';
+import testSet from './api/db/test_set';
+// Imports for server rendering
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match } from 'react-router';
 import routes from '../app/routes';
@@ -173,11 +178,21 @@ app.use((req, res) => {
     });
 });
 
-// Launching server
-app.listen(port, function onAppListen(err){
-    if(err) {
-        console.error(err);
-    } else {
-        console.info('==> [] Webpack development server on port: %s',port);
-    }
+//
+// Launch the server
+// -----------------------------------------------------------------------------
+db.sequelize.sync({force: false}).then(async function () {
+    console.log('Models are synced up!');
+    //testSet(db);
+    // Launching server
+    app.listen(port, function onAppListen(err){
+        if(err) {
+            console.error(err);
+        } else {
+            console.info('==> [] Webpack development server on port: %s',port);
+        }
+    });
+}).catch((err)=>{
+    console.log(err);
+    console.log(err.sql);
 });

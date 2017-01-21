@@ -20,10 +20,10 @@ let models = [require("./user"),
     require("./user_profile")];
 
 models.forEach(function(model) {
-        let m = model(sequelize,Sequelize.DataTypes);
-        console.log(m.name);
-        db[m.name] = m;
-    });
+    let m = model(sequelize,Sequelize.DataTypes);
+    console.log(m.name);
+    db[m.name] = m;
+});
 
 Object.keys(db).forEach(function(modelName) {
     if ("associate" in db[modelName]) {

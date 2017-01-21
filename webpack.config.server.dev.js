@@ -14,7 +14,7 @@ fs.readdirSync('node_modules')
 //new webpack.NormalModuleReplacementPlugin(/\.css$/, 'node-noop')
 
 module.exports = {
-    entry: './server',
+    entry: ['babel-polyfill','./server'],
     target: 'node',
     output: {
         path: path.join(__dirname,'dist'),
