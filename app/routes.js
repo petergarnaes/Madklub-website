@@ -1,9 +1,13 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { Route,IndexRoute } from 'react-router';
 
 import App from './components';
+import Main from './components/main';
+import Login from './components/login';
 
 export default (
-    <Route name="app" component={App} path="/">
+    <Route component={App} path="/" >
+        <IndexRoute component={Main}/>
+        <Route component={Login} path="/login" />
     </Route>
 );
