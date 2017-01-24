@@ -11,7 +11,11 @@ import cookieParser from 'cookie-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import schema from './api/schema';
+import ApolloClient from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import {createLocalInterface}  from 'apollo-local-query';
 import { port, auth, analytics } from './config';
+const graphql = require('graphql');
 import db from './api/db/index';
 import registerLoginFacebookMiddleware from './login/facebook_login';
 import testSet from './api/db/test_set';
@@ -65,7 +69,7 @@ app.use((req,res,next)=>{
 registerLoginFacebookMiddleware(app);
 
 //
-// Register API login
+// Register API middleware
 // -----------------------------------------------------------------------------
 app.use('/graphql',expressGraphQL((req,res) => ({
         schema,
@@ -92,8 +96,21 @@ function handleRender(renderProps,res){
     //
     // Grab the initial state from our Redux store
     // const preloadedState = store.getState()
+
+    const options = {networkInterface: createLocalInterface(graphql, schema),ssrMode: true};
+    const client = new ApolloClient(options);
+
+    // Render the component to a string
+    const html = renderToString(
+         <ApolloProvider client={client}>
+             <RouterContext {...renderProps} />
+         </ApolloProvider>
+    );
     //
-    const html = renderToString(<RouterContext {...renderProps} />);
+    // Grab the initial state from our Redux store
+    // const preloadedState = store.getState()
+    //
+    //const html = renderToString(<RouterContext {...renderProps} />);
     const preloadedState = {};
     // Send the rendered page back to the client
     res.status(200).send(renderFullPage(html, preloadedState))

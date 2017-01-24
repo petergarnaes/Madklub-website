@@ -13,6 +13,8 @@
     "url": "madklub"
   },
   "dependencies": {
+    "apollo-client": "^0.8.0",
+    "apollo-local-query": "^0.2.0",
     "babel-polyfill": "^6.22.0",
     "bcrypt": "^1.0.2",
     "bootstrap": "^3.3.7",
@@ -21,8 +23,10 @@
     "express-graphql": "^0.6.1",
     "express-jwt": "^5.1.0",
     "graphql": "^0.8.2",
+    "graphql-anywhere": "^2.0.0",
     "graphql-relay": "^0.4.4",
     "graphql-sequelize": "^4.0.5",
+    "graphql-tag": "^1.2.3",
     "history": "^4.5.0",
     "immutable": "^3.8.1",
     "jsonwebtoken": "^7.2.1",
@@ -31,6 +35,7 @@
     "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
     "react": "^15.4.1",
+    "react-apollo": "^0.8.3",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.1",
