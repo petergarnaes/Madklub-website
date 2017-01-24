@@ -12,7 +12,7 @@ import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import schema from './api/schema';
 import ApolloClient from 'apollo-client';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import {createLocalInterface}  from 'apollo-local-query';
 import { port, auth, analytics } from './config';
 const graphql = require('graphql');
@@ -83,7 +83,7 @@ app.use('/graphql',expressGraphQL((req,res) => ({
  * Handles rendering by creating initial state and responding with the rendered
  * app based on that state.
  **/
-function handleRender(renderProps,res){
+async function handleRender(renderProps,res){
     // Create a new Redux store instance
     // const store = createStore(counterApp)
     //
@@ -97,21 +97,22 @@ function handleRender(renderProps,res){
     // Grab the initial state from our Redux store
     // const preloadedState = store.getState()
 
+    // Sets up network interface to load data locally not using network. Should be both faster and work with Heruko
+    // since they apparently have some restrictions on local network requests
     const options = {networkInterface: createLocalInterface(graphql, schema),ssrMode: true};
+    // Sets up app to be rendered
     const client = new ApolloClient(options);
-
-    // Render the component to a string
-    const html = renderToString(
-         <ApolloProvider client={client}>
-             <RouterContext {...renderProps} />
-         </ApolloProvider>
+    var app = (
+        <ApolloProvider client={client}>
+            <RouterContext {...renderProps} />
+        </ApolloProvider>
     );
-    //
-    // Grab the initial state from our Redux store
-    // const preloadedState = store.getState()
-    //
-    //const html = renderToString(<RouterContext {...renderProps} />);
-    const preloadedState = {};
+    // Renders app with data loaded
+    const html = await renderToStringWithData(app);
+
+    // Sets initial state for apollo, so client bundle knows what is loaded and whatnot
+    const preloadedState = {[client.reduxRootKey]: client.getInitialState()};
+
     // Send the rendered page back to the client
     res.status(200).send(renderFullPage(html, preloadedState))
 }
@@ -134,7 +135,7 @@ function renderFullPage(html, preloadedState){
                 <script>
                     // WARNING: See the following for Security isues with this approach:
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
-                    // window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
+                    window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
                 </script>
                 <script type="application/javascript" src="/bundle.js"></script>
             </body>

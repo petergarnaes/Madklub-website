@@ -3,6 +3,7 @@
 import React       from 'react';
 import { render }  from 'react-dom';
 import { browserHistory, Router }  from 'react-router';
+import * as Cookies from "js-cookie";
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 //import createBrowserHistory from 'history/lib/createBrowserHistory';
@@ -11,6 +12,7 @@ import routes from './../app/routes';
 //const history = createBrowserHistory();
 
 const networkInterface = createNetworkInterface({
+    uri: '/graphql',
     opts: {
         credentials: 'same-origin',
     }
@@ -24,7 +26,7 @@ networkInterface.use([{
         }
 
         // get the authentication token from local storage if it exists
-        const token = req.cookies.csrf_token;
+        const token = Cookies.get("csrf_token");
         console.log('token is '+token);
         req.options.headers['X-CSRF-TOKEN'] = token ? token : null;
         next();
@@ -32,6 +34,7 @@ networkInterface.use([{
 }]);
 
 const client = new ApolloClient({
+    initialState: window.__PRELOADED_STATE__,
     networkInterface
 });
 

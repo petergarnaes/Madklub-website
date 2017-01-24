@@ -1,4 +1,6 @@
 import React from 'react';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import {
     FormGroup,
     ControlLabel,
@@ -17,26 +19,77 @@ const FieldGroup = ({ id, label, validate, help, ...props }) => (
         {validate && <FormControl.Feedback />}
         {help && <HelpBlock>{help}</HelpBlock>}
     </FormGroup>
-)
+);
 
-export default class Login extends React.Component {
+class LoginComponent extends React.Component {
+    static propTypes = {
+        //router: React.PropTypes.object.isRequired,
+        mutate: React.PropTypes.func.isRequired,
+    }
+
     constructor(props){
         super(props);
         this.onEmailChange = this.onEmailChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.state = {
-            validate: null
+            email: '',
+            emailValidation: null,
+            passwordValidation: null,
+            password: '',
+            loginErrorHelp: null,
+            loggingIn: false
         };
     }
 
     onEmailChange(e){
-        console.log(e.target.value);
         let typed = e.target.value;
+        let valid = typed.includes('@');
         let val = (typed.length > 0 ? 
-            (typed.includes('@') ? 'success' : 'error') : 
+            (valid ? 'success' : 'warning') :
             null
         );
         this.setState({
-            validate: val
+            emailValidation: val,
+            email: typed
+        });
+    }
+
+    onPasswordChange(e){
+        let typed = e.target.value;
+        let val = (typed.length > 0 ?
+                (typed.length > 2 ? 'success' : 'warning') :
+                null
+        );
+        this.setState({
+            passwordValidation: val,
+            password: typed
+        });
+    }
+
+    onSubmit(e){
+        console.log(e);
+        if(!(this.state.password.length > 2 && this.state.email.includes('@'))){
+            this.setState({
+                emailValidation: 'warning',
+                passwordValidation: 'warning',
+                loginErrorHelp: 'Please make sure to use email and valid password of 6 characters or more'
+            });
+            return;
+        }
+        this.props.mutate({variables: {
+            username: this.state.email,
+            password: this.state.password
+        }}).then((b)=>
+            // TODO change return type to something with validation feedback AND redirect to '/'
+            console.log(b)
+        ).catch((err)=>{
+            // TODO after above backend refactor, should report network error or something
+            this.setState({
+                emailValidation: 'error',
+                passwordValidation: 'error',
+                loginErrorHelp: 'Invalid login!'
+            });
         });
     }
 
@@ -52,18 +105,22 @@ export default class Login extends React.Component {
                                     type="email"
                                     label="Email"
                                     onChange={this.onEmailChange}
-                                    validate={this.state.validate}
+                                    validate={this.state.emailValidation}
                                     placeholder="Enter email"/>
                                 <FieldGroup
                                     id="loginPassword"
                                     type="password"
                                     label="Password"
+                                    onChange={this.onPasswordChange}
+                                    validate={this.state.passwordValidation}
+                                    help={this.state.loginErrorHelp}
                                     placeholder="Enter password"/>
                                 <Button
                                     bsStyle="primary"
                                     bsSize="large"
                                     className="center-block"
-                                    type="submit">
+                                    disabled={this.state.loggingIn}
+                                    onClick={this.onSubmit}>
                                     Login
                                 </Button>
                             </Col>
@@ -74,3 +131,11 @@ export default class Login extends React.Component {
         )
     }
 }
+
+const loginMutation = gql`
+    mutation login($username: String!,$password: String!){
+        login(username: $username,password: $password)
+    }
+`;
+
+export default graphql(loginMutation)(LoginComponent)
