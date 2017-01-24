@@ -65,6 +65,7 @@ const schema = new Schema({
             changeDinnerClub: require('./mutations/changeDinnerclub').default,
             changeKitchen: require('./mutations/changeKitchen').default,
             participate: require('./mutations/participate').default,
+            login: require('./mutations/login').default
         }
     })
 });

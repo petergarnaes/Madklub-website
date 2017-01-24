@@ -19,7 +19,7 @@ export default async function(db){
     email_confirmed: true,
     username: 'peterg',
     // Password is 'hello'
-    password_hash: '$2a$10$nU9FO0ElZNwwtbBpARghoOKIav2eX2Z0AFHC.Gn5NGE.JFfyLXYcu'
+    password_hash: '$2a$10$35fWpFBd3on2JTyRxmdhaefp79j6vqmstpOFN2DIyYOsIrm9tKwNG'
   });
   peter_account.setUser(peter);
   peter.setAccount(peter_account);

@@ -116,6 +116,7 @@ passport.use(new FacebookStrategy({
     storeLogin().catch(done);
 }));
 
+// Deprecated, not in use, we log in locally through GraphQL
 passport.use(new LocalStrategy(
     // TODO prevent bruteforce, use lockout on user account
     function(username,password,done){
