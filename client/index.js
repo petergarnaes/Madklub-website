@@ -1,5 +1,6 @@
 //import 'bootstrap/dist/css/bootstrap.css';
 //import 'bootstrap/dist/css/bootstrap-theme.css';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import React       from 'react';
 import { render }  from 'react-dom';
 import { browserHistory, Router }  from 'react-router';
@@ -34,12 +35,27 @@ networkInterface.use([{
 }]);
 
 const client = new ApolloClient({
-    initialState: window.__PRELOADED_STATE__,
+    // Seems like we explicitly instantiate the store that Apollo also uses for caching and stuff.
+    //initialState: window.__PRELOADED_STATE__,
     networkInterface
 });
 
+const store = createStore(
+    combineReducers({
+        //todos: todoReducer,
+        //users: userReducer,
+        apollo: client.reducer(),
+    }),
+    window.__PRELOADED_STATE__, // initial state
+    compose(
+        applyMiddleware(client.middleware()),
+        // If you are using the devToolsExtension, you can add it here also
+        //window.devToolsExtension ? window.devToolsExtension() : f => f,
+    )
+);
+
 render(
-    <ApolloProvider client={client}>
+    <ApolloProvider store={store} client={client}>
         <Router children={routes} history={browserHistory} />
     </ApolloProvider>,
     document.getElementById('react-view')

@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import schema from './api/schema';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import {createLocalInterface}  from 'apollo-local-query';
@@ -102,16 +103,32 @@ async function handleRender(renderProps,res){
     const options = {networkInterface: createLocalInterface(graphql, schema),ssrMode: true};
     // Sets up app to be rendered
     const client = new ApolloClient(options);
+
+    const store = createStore(
+        combineReducers({
+            //todos: todoReducer,
+            //users: userReducer,
+            apollo: client.reducer(),
+        }),
+        {},
+        // Dunno if this is necessary, my guess is only we define middleware, but we might do server side middleware
+        // some day :)
+        compose(
+            applyMiddleware(client.middleware())
+        )
+    );
+
     var app = (
-        <ApolloProvider client={client}>
+        <ApolloProvider store={store} client={client}>
             <RouterContext {...renderProps} />
         </ApolloProvider>
     );
+
     // Renders app with data loaded
     const html = await renderToStringWithData(app);
 
     // Sets initial state for apollo, so client bundle knows what is loaded and whatnot
-    const preloadedState = {[client.reduxRootKey]: client.getInitialState()};
+    const preloadedState = store.getState();
 
     // Send the rendered page back to the client
     res.status(200).send(renderFullPage(html, preloadedState))
