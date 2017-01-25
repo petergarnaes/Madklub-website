@@ -51,14 +51,11 @@ app.use(expressJwt({
     /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
 }));
 
-/* TODO Make csrf token vertification with double submit cookies
- * by generating a random csrf token for each request with privileges.
- * Implement 'Cookie-to-Header Token' also called 'Bearer authentication' which Relay can do like this:
- * http://stackoverflow.com/questions/32618424/where-do-you-put-the-csrf-token-in-relay-graphql.
- * But with cookie to header instead (instead of meta tag)
+/* by generating a random csrf token for each request with privileges.
+ * Implement 'Cookie-to-Header Token' also called 'Double Submit'. We can see how Apollo does this in
+ * client/index.js.
  * If the hacker tricks a user into submitting some request, he would have to guess the csrf token,
  * which would be impossible because new one is generated with each request.*/
-// TODO only generate and check csrf tokens on each mutation, because mutations are what should be protected
 // Generates a random sequence, which we use as CSRF token
 app.use((req,res,next)=>{
     //console.log("Sup: "+req.cookies.csrf_token);
@@ -85,46 +82,34 @@ app.use('/graphql',expressGraphQL((req,res) => ({
  * app based on that state.
  **/
 async function handleRender(renderProps,res){
-    // Create a new Redux store instance
-    // const store = createStore(counterApp)
-    //
-    // Render the component to a string
-    // const html = renderToString(
-    //     <Provider store={store}>
-    //         <App />
-    //     </Provider>
-    // )
-    //
-    // Grab the initial state from our Redux store
-    // const preloadedState = store.getState()
-
     // Sets up network interface to load data locally not using network. Should be both faster and work with Heruko
     // since they apparently have some restrictions on local network requests
     const options = {networkInterface: createLocalInterface(graphql, schema),ssrMode: true};
-    // Sets up app to be rendered
+    // Sets up Apollo client to load data when rendering
     const client = new ApolloClient(options);
 
+    // Explicitly set up apollo store, which we also use as our own Redux store
     const store = createStore(
         combineReducers({
             //todos: todoReducer,
             //users: userReducer,
             apollo: client.reducer(),
         }),
-        {},
+        {}, // Initial state
         // Dunno if this is necessary, my guess is only we define middleware, but we might do server side middleware
         // some day :)
         compose(
             applyMiddleware(client.middleware())
         )
     );
-
+    // Sets up app to be rendered
     var app = (
         <ApolloProvider store={store} client={client}>
             <RouterContext {...renderProps} />
         </ApolloProvider>
     );
 
-    // Renders app with data loaded
+    // Renders app with data loaded, and Redux store initial state propagated
     const html = await renderToStringWithData(app);
 
     // Sets initial state for apollo, so client bundle knows what is loaded and whatnot
@@ -145,6 +130,7 @@ function renderFullPage(html, preloadedState){
         <html>
             <head>
                 <title>Madklub</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <style type="text/css">${css}</style>
             </head>
             <body>
