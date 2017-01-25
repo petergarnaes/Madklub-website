@@ -5,6 +5,7 @@ import {
     GraphQLID as ID,
     GraphQLString as StringType,
     GraphQLObjectType as ObjectType,
+    GraphQLBoolean as BooleanType,
     GraphQLNonNull as NonNull,
 } from 'graphql';
 import db from '../db';
@@ -51,7 +52,24 @@ function log_in(username,password){
 
 // Automatically resolves kitchen based on user, checks user is admin as well
 const login = {
-    type: StringType,
+    type: new ObjectType({
+        name: 'Login',
+        fields: {
+            success: {
+                type: new NonNull(BooleanType),
+                description: 'Did the user authorize successfully'
+            },
+            token: {
+                type:StringType,
+                description: 'The login token, is a JWT token. Must be sent in cookie as "id_token" on subsequent requests'
+            },
+            feedback: {
+                type: new NonNull(StringType),
+                description: 'The feedback to display to the user if "success" is false'
+            }
+        },
+        description: 'Login information'
+    }),
     args: {
         username: {
             type: new NonNull(StringType),
@@ -69,9 +87,10 @@ const login = {
             console.log("the login is: "+JSON.stringify(login));
             if(login){
                 request.user = {id: login.id, email: login.email};
-                return successful_login(request,response);
+                let token = successful_login(request,response);
+                return {success: true, token: token,feedback: "Successfully authorized"}
             } else {
-                return Promise.reject("Unautherized");
+                return {success: false, token: '',feedback: "Invalid username or password"}
             }
         }).catch((err)=>Promise.reject(err));
     },

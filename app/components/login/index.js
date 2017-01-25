@@ -1,6 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { withRouter } from 'react-router';
 import {
     FormGroup,
     ControlLabel,
@@ -23,7 +24,7 @@ const FieldGroup = ({ id, label, validate, help, ...props }) => (
 
 class LoginComponent extends React.Component {
     static propTypes = {
-        //router: React.PropTypes.object.isRequired,
+        router: React.PropTypes.object.isRequired,
         mutate: React.PropTypes.func.isRequired,
     }
 
@@ -80,15 +81,24 @@ class LoginComponent extends React.Component {
         this.props.mutate({variables: {
             username: this.state.email,
             password: this.state.password
-        }}).then((b)=>
-            // TODO change return type to something with validation feedback AND redirect to '/'
-            console.log(b)
-        ).catch((err)=>{
-            // TODO after above backend refactor, should report network error or something
+        }}).then((b)=> {
+            // TODO Somehow store logged in user in store, so front page knows whats up
+            console.log(b);
+            if(b.data.login.success){
+                // We are authorized! Cookie is set thanks to the response, so we are good!
+                this.props.router.replace('/');
+            } else {
+                // Wrong credentials...
+                this.setState({
+                    emailValidation: 'error',
+                    passwordValidation: 'error',
+                    loginErrorHelp: b.data.login.feedback
+                });
+            }
+        }).catch((err)=>{
             this.setState({
-                emailValidation: 'error',
                 passwordValidation: 'error',
-                loginErrorHelp: 'Invalid login!'
+                loginErrorHelp: 'Server or network error, are you connected to the internet?'
             });
         });
     }
@@ -134,8 +144,11 @@ class LoginComponent extends React.Component {
 
 const loginMutation = gql`
     mutation login($username: String!,$password: String!){
-        login(username: $username,password: $password)
+        login(username: $username,password: $password) {
+            success
+            feedback
+        }
     }
 `;
 
-export default graphql(loginMutation)(LoginComponent)
+export default graphql(loginMutation)(withRouter(LoginComponent))
