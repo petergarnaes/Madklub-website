@@ -1,6 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
+import ApolloClient from 'apollo-client';
 import { withRouter } from 'react-router';
 import {
     FormGroup,
@@ -26,6 +27,7 @@ class LoginComponent extends React.Component {
     static propTypes = {
         router: React.PropTypes.object.isRequired,
         mutate: React.PropTypes.func.isRequired,
+        client: React.PropTypes.instanceOf(ApolloClient).isRequired,
     }
 
     constructor(props){
@@ -86,7 +88,12 @@ class LoginComponent extends React.Component {
             console.log(b);
             if(b.data.login.success){
                 // We are authorized! Cookie is set thanks to the response, so we are good!
+                this.props.client.resetStore();
                 this.props.router.replace('/');
+                //this.props.router.replace({
+                //    pathname: '/',
+                //    query: {refresh: true}
+                //});
             } else {
                 // Wrong credentials...
                 this.setState({
@@ -96,6 +103,7 @@ class LoginComponent extends React.Component {
                 });
             }
         }).catch((err)=>{
+            console.log(err);
             this.setState({
                 passwordValidation: 'error',
                 loginErrorHelp: 'Server or network error, are you connected to the internet?'
@@ -151,4 +159,4 @@ const loginMutation = gql`
     }
 `;
 
-export default graphql(loginMutation)(withRouter(LoginComponent))
+export default graphql(loginMutation)(withRouter(withApollo(LoginComponent)))

@@ -16,7 +16,7 @@ const me = {
   resolve: function({request},args,context,info) {
     // TODO Check for csrf with double cookie submit method
     //if(request && request.user.id && req.cookies.csrf_token === req.get('X-CSRF-TOKEN')){
-    if(request && request.user.id){
+    if(request && request.user && request.user.id){
       console.log("Valid login");
       return resolver(User)({request: request},{id: request.user.id},context,info);
     } else {

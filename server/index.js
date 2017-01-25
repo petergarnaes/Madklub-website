@@ -81,10 +81,10 @@ app.use('/graphql',expressGraphQL((req,res) => ({
  * Handles rendering by creating initial state and responding with the rendered
  * app based on that state.
  **/
-async function handleRender(renderProps,res){
+async function handleRender(renderProps,req,res){
     // Sets up network interface to load data locally not using network. Should be both faster and work with Heruko
     // since they apparently have some restrictions on local network requests
-    const options = {networkInterface: createLocalInterface(graphql, schema),ssrMode: true};
+    const options = {networkInterface: createLocalInterface(graphql, schema,{rootValue: { request: req, response: res }}),ssrMode: true};
     // Sets up Apollo client to load data when rendering
     const client = new ApolloClient(options);
 
@@ -160,7 +160,7 @@ app.use((req, res) => {
             // You can also check renderProps.components or renderProps.routes for
             // your "not found" component or route respectively, and send a 404 as
             // below, if you're using a catch-all route.
-            handleRender(renderProps,res)
+            handleRender(renderProps,req,res)
             //res.status(200).send(
             //    renderFullPage(renderToString(<RouterContext {...renderProps} />))
             //)
