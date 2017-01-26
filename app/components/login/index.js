@@ -1,7 +1,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { graphql, withApollo } from 'react-apollo';
-import ApolloClient from 'apollo-client';
+import { login } from '../../actions/login';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
     FormGroup,
@@ -27,7 +28,7 @@ class LoginComponent extends React.Component {
     static propTypes = {
         router: React.PropTypes.object.isRequired,
         mutate: React.PropTypes.func.isRequired,
-        client: React.PropTypes.instanceOf(ApolloClient).isRequired,
+        login: React.PropTypes.func.isRequired,
     }
 
     constructor(props){
@@ -84,11 +85,10 @@ class LoginComponent extends React.Component {
             username: this.state.email,
             password: this.state.password
         }}).then((b)=> {
-            // TODO Somehow store logged in user in store, so front page knows whats up
             console.log(b);
             if(b.data.login.success){
-                // We are authorized! Cookie is set thanks to the response, so we are good!
-                this.props.client.resetStore();
+                // TODO dispatch LOGIN action
+                this.props.login();
                 this.props.router.replace('/');
                 //this.props.router.replace({
                 //    pathname: '/',
@@ -159,4 +159,12 @@ const loginMutation = gql`
     }
 `;
 
-export default graphql(loginMutation)(withRouter(withApollo(LoginComponent)))
+const mapStateToProps = (_) => ({});
+
+const mapDispatchToProps = (dispatch) => ({
+    login: () => {
+        dispatch(login())
+    }
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(graphql(loginMutation)(withRouter(LoginComponent)))

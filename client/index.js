@@ -9,6 +9,7 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 //import createBrowserHistory from 'history/lib/createBrowserHistory';
 import routes from './../app/routes';
+import * as reducers from '../app/reducers';
 
 //const history = createBrowserHistory();
 
@@ -42,8 +43,7 @@ const client = new ApolloClient({
 
 const store = createStore(
     combineReducers({
-        //todos: todoReducer,
-        //users: userReducer,
+        ...reducers,
         apollo: client.reducer(),
     }),
     window.__PRELOADED_STATE__, // initial state

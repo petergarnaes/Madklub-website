@@ -18,6 +18,7 @@ import {createLocalInterface}  from 'apollo-local-query';
 import { port, auth, analytics } from './config';
 const graphql = require('graphql');
 import db from './api/db/index';
+import * as reducers from '../app/reducers';
 import registerLoginFacebookMiddleware from './login/facebook_login';
 import testSet from './api/db/test_set';
 // Imports for server rendering
@@ -88,14 +89,17 @@ async function handleRender(renderProps,req,res){
     // Sets up Apollo client to load data when rendering
     const client = new ApolloClient(options);
 
+    // Sets correct initial Redux state, indicating if we are logged in or not
+    let loginState = (req != null && req.user != null);
+
     // Explicitly set up apollo store, which we also use as our own Redux store
     const store = createStore(
         combineReducers({
-            //todos: todoReducer,
-            //users: userReducer,
+            ...reducers,
+            //isLoggedIn: (state = loginState,action) => state,
             apollo: client.reducer(),
         }),
-        {}, // Initial state
+        {isLoggedIn: loginState}, // Initial state
         // Dunno if this is necessary, my guess is only we define middleware, but we might do server side middleware
         // some day :)
         compose(
