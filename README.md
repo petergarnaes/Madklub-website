@@ -11,13 +11,13 @@ to es5 (which can run in browsers)
 * Node.js - Server running javascript, good for light weight thread work (ie. 
 normal website work) and ideal for Universal Apps with server side rendering 
 to deliver an optimal experience. Very mature environment with many tools for 
-everything from internasonalization, authorization to API.
+everything from internationalization, authorization to API.
 * Express - Makes Node.js way more practical, by using middleware. Makes stuff 
 like authorization and routing outside the App a breeze.
 * React - UI component library, and thanks to babel we can write them with 
 `.jsx` decorators, making it readable and more declarative.
-* React Router - Easy in-app routing with built in history handling and much 
-more.
+* React Router - Easy in-app routing with built in history handling, querying
+and much more.
 * Redux - Flux implementation, making the app even more modular and functional
 * Boostrap - Predefined CSS and components with great options for customizing 
 get a beautiful website. Antd (ant design) is an alternative, seems very 
@@ -32,6 +32,10 @@ nice with Redux.
 * JWT - Smart way to deal with tokens and login sessions for the app.
 * Passport - Authorization middleware, with possible Facebook integration!
 * bcrypt or scrypt - Encryption and salting tool for storing passwords.
+* sequelize - Construct queries in javascript, use promise chaining to easily
+construct transactions depending on multiple dependent mutations.
+* graphql-sequelize - Can with a given sequelize DB model help you construct
+your graphql schema and resolve graphql queries into sql queries.
 
 ### Things to consider
 
@@ -57,6 +61,11 @@ Changes to the server and anything in the `server` folder will trigger a
 re-bundling of the server. This is slow compared to hot-reloading, but still
 great for prototyping the server.
 
+Notice that changes to `app` folder triggers rebundling of client side bundling.
+This is not the same as server side, so when refreshing you will not get a page
+you just made, but when bundle arrives you will. The console will probably also
+warn you of this fact, but don't worry! Just re-bundle the server.
+
 ## Project structure
 
 Mostly clear... This is so far:
@@ -78,11 +87,18 @@ like current user session info, potentially user settings or server info.
 browser specific setup for rendering the app. Browser specific is setting up 
 history with the router, getting initial store state from HTML header sent from
 server into Redux, setting up Apollo and such.
+* `app`: Folder containing the app, ie. the shared code between client and
+server.
 * `app/routes.js`: Contain the route tree
 * `app/components`: Contains a folder for each component in the app. As of now 
 each folder will mostly just contain the `index.js` file, as it can all be
 contained within the app. Here everything from Redux/Apollo containers to 
 `mapDispatch` happens, as well as UI.
+* `app/actions`: Files with methods for producing actions of different kinds.
+* `app/reducers`: Reducers that can with any given action and state produce
+a new state. New state should be copy, ie. reducer is pure. They are all
+exported in `app/reducers/index.js`, and combined on both server and client to
+form the entire state.
 * `app/public`: Public assets like images, .svg's etc. Copied when building 
 app.
 
@@ -154,6 +170,8 @@ separate login page might be in order here.
 ### Async loading
 
 To add asynchronously loaded libraries and components see [medium blog post](https://medium.com/@lavrton/progressive-loading-for-modern-web-applications-via-code-splitting-fb43999735c6#.yvw7jdab4)
+or [code splitting](https://webpack.js.org/guides/code-splitting-require/).
 
+For asynchronously loaded routes see react router [dynamic routing](https://github.com/ReactTraining/react-router/blob/master/docs/guides/DynamicRouting.md)
 
 
