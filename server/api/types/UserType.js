@@ -13,13 +13,15 @@ import {
   GraphQLList as ListType,
 } from 'graphql';
 import {resolver} from 'graphql-sequelize';
-import {User} from '../db';
+import { User, DinnerClub } from '../db';
 import KitchenType from './KitchenType';
 import UserParticipationType from './UserParticipationType';
 import UserAccountType from './UserAccountType';
 import UserClaimType from './UserClaimType';
 import UserLoginsType from './UserLoginsType';
-import {SimpleUserType,SimpleUserFields} from './SimpleUserType';
+import InputDateRangeType from './InputDateRangeType';
+import { SimpleUserFields } from './SimpleUserType';
+import moment from 'moment';
 
 const UserType = new ObjectType({
   name: 'User',
@@ -37,7 +39,38 @@ const UserType = new ObjectType({
     },
     participating: {
       type: new ListType(UserParticipationType),
-      resolve: resolver(User.Participating),
+        args: {
+            range: {
+                type: InputDateRangeType,
+                description: 'Select DinnerClubs in this range'
+            }
+        },
+      resolve: resolver(User.Participating,{
+        before: (options,args) => {
+            if(args.range){
+                var start = moment(args.range.start);
+                var end = moment(args.range.end);
+                console.log('Requested dinnerclubs between: '+start+' and '+end);
+                // Dates must be valid
+                if (start.isValid() && end.isValid() && start.isBefore(end)) {
+                    // TODO impose increasing 'at' date order
+                    options.include = [{
+                        model: DinnerClub,
+                        where: {
+                            at: {
+                                $gt: start.toISOString(),
+                                $lt: end.toISOString()
+                            }
+                        }
+                    }];
+                } else {
+                    // date is not valid
+                    return Promise.reject('Dates invalid! Make sure start is before end...');
+                }
+            }
+            return options;
+        }
+      }),
       description: 'All the dinners this user is participating in'
     },
     account: {
