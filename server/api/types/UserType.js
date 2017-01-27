@@ -35,43 +35,45 @@ const UserType = new ObjectType({
     kitchen: {
       type: KitchenType,
       resolve: resolver(User.Kitchen),
-      description: 'The kitchen of which the user is a part of'
+      description: 'The Kitchen of which the user is a part of'
     },
     participating: {
       type: new ListType(UserParticipationType),
         args: {
             range: {
                 type: InputDateRangeType,
-                description: 'Select DinnerClubs in this range'
+                description: 'Select Participation\'s in this range'
             }
         },
       resolve: resolver(User.Participating,{
         before: (options,args) => {
+            // We ALWAYS order by 'at' date of dinnerclubs. Very important, as frontend needs to pick the upcoming one
+            var includes = {model: DinnerClub};
+            options.order = [
+                [{ model: DinnerClub }, 'at', 'ASC']
+            ];
             if(args.range){
                 var start = moment(args.range.start);
                 var end = moment(args.range.end);
-                console.log('Requested dinnerclubs between: '+start+' and '+end);
                 // Dates must be valid
                 if (start.isValid() && end.isValid() && start.isBefore(end)) {
-                    // TODO impose increasing 'at' date order
-                    options.include = [{
-                        model: DinnerClub,
-                        where: {
-                            at: {
-                                $gt: start.toISOString(),
-                                $lt: end.toISOString()
-                            }
+                    includes.where = {
+                        at: {
+                            $gt: start.toISOString(),
+                            $lt: end.toISOString()
                         }
-                    }];
+                    };
                 } else {
                     // date is not valid
-                    return Promise.reject('Dates invalid! Make sure start is before end...');
+                    return Promise.reject('Dates invalid! Make sure dates follow ISO 8601 date format and make sure ' +
+                        'start is before end...');
                 }
             }
+            options.include = [includes];
             return options;
         }
       }),
-      description: 'All the dinners this user is participating in'
+      description: 'All the dinners this user is participating in, in ascending order of date and time it is held at.'
     },
     account: {
       type: UserAccountType,
