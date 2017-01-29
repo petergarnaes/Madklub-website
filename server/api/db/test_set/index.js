@@ -1,6 +1,7 @@
  /**
  * Created by peter on 4/27/16.
  */
+import moment from "moment";
 
 export default async function(db){
   // 10 vest
@@ -79,10 +80,13 @@ export default async function(db){
     active: true,
     kitchen_admin: false
   });
+
   vest10.setAdmin(peter);
+
   vest10.addMember([peter,maria,trine,erik,julie,andreas,astrid,frida,thorbjorn]);
+
   var madklub1 = await db.DinnerClub.create({
-    at: new Date(),
+    at: moment("2017-01-20 19:00:00").toISOString(),
     cancelled: false,
     total_cost: 75.0,
     meal: 'Kaviar'
@@ -95,9 +99,39 @@ export default async function(db){
     part.setUser(user);
     part.setDinnerClub(madklub1);
   });
-  //madklub1.addParticipant([erik,trine,maria,julie,andreas,astrid,peter]);
-
   vest10.addDinnerclub(madklub1);
+
+  var madklub2 = await db.DinnerClub.create({
+    at: moment("2017-01-22 19:00:00").toISOString(),
+    cancelled: false,
+    total_cost: 110.0,
+    meal: 'Foie Gras'
+  });
+  madklub2.setCook(astrid);
+  [erik,trine,maria,julie,andreas,astrid,peter].forEach(async function (user) {
+    var part = await db.Participation.create({
+      guest_count: 0
+    });
+    part.setUser(user);
+    part.setDinnerClub(madklub2);
+  });
+  vest10.addDinnerclub(madklub2);
+
+  var madklub3 = await db.DinnerClub.create({
+    at: moment("2017-01-23 19:00:00").toISOString(),
+    cancelled: false,
+    total_cost: 10.0,
+    meal: 'Boller i karry'
+  });
+  madklub3.setCook(frida);
+  [erik,trine,maria,julie,andreas,astrid,peter].forEach(async function (user) {
+    var part = await db.Participation.create({
+      guest_count: 0
+    });
+    part.setUser(user);
+    part.setDinnerClub(madklub3);
+  });
+  vest10.addDinnerclub(madklub3);
 
   var ost4 = await db.Kitchen.create({
     name: '4 Øst'

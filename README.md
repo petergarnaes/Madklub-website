@@ -50,13 +50,26 @@ We need to define a [custom stylesheet](http://getbootstrap.com/customize/)
 that does not include style for components we do not use. For production we 
 should also minify the css which `css-loader` is capable of.
 
-## Setup Test Environemnt
+## Setup Test Environment
 
+### Requirements
+Node 6.0 required, as well as a sqlite driver for test database.
+
+### Starting the test server
 To get going with the development server, first install dependencies with 
 `npm install`. Then simply run `npm start`. This will start the development
 server on port 3000. This setup includes hot reloading of react components, 
 so styling and development should be very fast.
 
+### Test data
+To get some test data into the system, when the sequelize db is syncing change
+`force` to `true` and uncomment `testDb(db)` first time you start the server.
+Then you can change it back, as it will be there forever.
+
+If you don't change it back, it will overwrite it on every restart, which makes
+testing mutations hard.
+
+### Testing environment
 Changes to the server and anything in the `server` folder will trigger a 
 re-bundling of the server. This is slow compared to hot-reloading, but still
 great for prototyping the server.
@@ -130,6 +143,7 @@ the user.
 encrypt (or something?) for free HTTPS? This also ensures no Man in the Middle 
 attacks that can sniff up JWT token.
 * passport - Allows using various strategies to verify users credentials.
+This way a company more competent in protecting users information is used.
 * bcrypt - Strong password encryption with salt for local password storage.
 * JWT - Authentication token tool, for safely encrypting a json object and 
 using it as the authentication token. When this token is sent to the server 

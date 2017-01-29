@@ -3,24 +3,54 @@
  */
 import {
   GraphQLObjectType as ObjectType,
-  GraphQLID as ID,
-  GraphQLString as StringType,
-  GarphQLInt as IntType,
-  GraphQLNonNull as NonNull,
   GraphQLList as ListType,
 } from 'graphql';
 import {resolver} from 'graphql-sequelize';
 import {Kitchen} from '../db';
 import {attributeFields} from 'graphql-sequelize';
 import DinnerClubType from './DinnerClubType';
+import InputDateRangeType from './InputDateRangeType';
 import {SimpleUserType} from './SimpleUserType';
+import moment from 'moment';
 
 const KitchenType = new ObjectType({
   name: 'Kitchen',
   fields: Object.assign(attributeFields(Kitchen,{exclude: ['adminId']}),{ // Extra fields
     dinnerclubs: {
       type: new ListType(DinnerClubType),
-      resolve: resolver(Kitchen.DinnerClubs),
+      args: {
+        range: {
+          type: InputDateRangeType,
+          description: 'Select DinnerClubs in this range'
+        }
+      },
+      resolve: resolver(Kitchen.DinnerClubs,{
+        before: (options,args) => {
+          // We ALWAYS order by 'at' date. Very important, as frontend needs to pick the upcoming one
+          options.order = [
+            ['at', 'ASC']
+          ];
+          if(args.range){
+            var start = moment(args.range.start);
+            var end = moment(args.range.end);
+            // Dates must be valid
+            if (start.isValid() && end.isValid() && start.isBefore(end)) {
+              options.where = {
+                at: {
+                  $gt: start.toISOString(),
+                  $lt: end.toISOString()
+                }
+              };
+            } else {
+              // date is not valid
+              Promise.reject('Dates invalid! Make sure dates follow ISO 8601 date format and make sure ' +
+                  'start is before end...');
+              return options;
+            }
+          }
+          return options;
+        }
+      }),
       description: 'List of dinnerclubs, both future and past, associated with this kitchen'
     },
     members: {
