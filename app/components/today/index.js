@@ -6,6 +6,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import moment from 'moment';
+import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
 //import { connect } from 'react-redux';
 
 const TodayWithData = ({data}) => {
@@ -18,8 +19,10 @@ const TodayWithData = ({data}) => {
         )
     }
     // TODO error!
-    let todaysDinnerclub = me.kitchen.dinnerclubs[0];
-    let {isParticipating,hasCancelled} = todaysDinnerclub.participants.reduce(
+
+    // DinnerClubs always ordered by 'at' date, so picking first will be the next one.
+    let dinnerClubToday = me.kitchen.dinnerclubs[0];
+    let {isParticipating,hasCancelled} = dinnerClubToday.participants.reduce(
         ({is,has},part) =>
             ({
                 isParticipating: is || (part.user.id == me.id),
@@ -27,10 +30,16 @@ const TodayWithData = ({data}) => {
             }),
         {isParticipating: false,hasCancelled: false}
     );
-    console.log("Do i participate? "+(isParticipating));
-    console.log("Have i cancelled? "+(hasCancelled));
+    // TODO add a no dinnerclub component, if there is no dinnerclub
     return (
-        <p>We have that {me.display_name} is logged in and they live in room {me.room_number}</p>
+        <div>
+            <p>We have that {me.display_name} is logged in and they live in room {me.room_number}</p>
+            <br/>
+            <FrontPageDinnerClubComponent
+                dinnerClub={dinnerClubToday}
+                isParticipating={isParticipating}
+                hasCancelled={hasCancelled}/>
+        </div>
     );
 };
 
@@ -52,6 +61,7 @@ const currentUserQuery = gql`
             room_number
             kitchen {
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
+                    ...FrontPageDinnerClubComponentDinnerClub
                     participants {
                         cancelled
                         user {
@@ -62,6 +72,7 @@ const currentUserQuery = gql`
             }
         }
     }
+    ${FrontPageDinnerClubComponent.fragments.dinnerclub}
 `;
 
 // Queries all of today (midnight to midnight), so we can pick the first upcoming one.
