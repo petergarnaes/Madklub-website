@@ -67,6 +67,12 @@ app.use((req,res,next)=>{
 
 registerLoginFacebookMiddleware(app);
 
+app.use('/logout',(req,res,next)=>{
+    console.log('ahh?');
+    res.cookie('id_token', '', {maxAge: new Date(0),expires: Date.now(), httpOnly: true});
+    next();
+});
+
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
