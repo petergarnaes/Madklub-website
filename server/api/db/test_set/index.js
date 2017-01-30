@@ -86,7 +86,7 @@ export default async function(db){
   vest10.addMember([peter,maria,trine,erik,julie,andreas,astrid,frida,thorbjorn]);
 
   var madklub1 = await db.DinnerClub.create({
-    at: moment("2017-01-20 19:00:00").toISOString(),
+    at: moment().set({'hour':19,'minute':0,'second':0}).toISOString(),
     cancelled: false,
     total_cost: 75.0,
     meal: 'Kaviar'
@@ -102,7 +102,7 @@ export default async function(db){
   vest10.addDinnerclub(madklub1);
 
   var madklub2 = await db.DinnerClub.create({
-    at: moment("2017-01-22 19:00:00").toISOString(),
+    at: moment().set({'hour':19,'minute':0,'second':0}).day(1).toISOString(),
     cancelled: false,
     total_cost: 110.0,
     meal: 'Foie Gras'
@@ -118,7 +118,7 @@ export default async function(db){
   vest10.addDinnerclub(madklub2);
 
   var madklub3 = await db.DinnerClub.create({
-    at: moment("2017-01-23 19:00:00").toISOString(),
+    at: moment().set({'hour':19,'minute':0,'second':0}).day(2).toISOString(),
     cancelled: false,
     total_cost: 10.0,
     meal: 'Boller i karry'
