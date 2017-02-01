@@ -11,6 +11,14 @@ export default function (app) {
     app.get('/login/facebook',
         passport.authenticate('facebook', { scope: ['email', 'user_location'], session: false })
     );
+    // Local login
+    // TODO failed login should mean red fields!
+    app.post('/login',
+        passport.authenticate('local', { failureRedirect: '/login', session: false }),
+        successful_login,
+        (req,res,next) => {res.redirect('/');next();}
+    );
+
     // Url we want our users returned to when they have been to facebook and accepted us.
     app.get('/login/facebook/return',
         passport.authenticate('facebook', { failureRedirect: '/login', session: false }),

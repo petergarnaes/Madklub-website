@@ -7,7 +7,6 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import moment from 'moment';
 import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
-//import { connect } from 'react-redux';
 
 const TodayWithData = ({data}) => {
     let {loading,error,me} = data;
@@ -22,6 +21,11 @@ const TodayWithData = ({data}) => {
 
     // DinnerClubs always ordered by 'at' date, so picking first will be the next one.
     let dinnerClubToday = me.kitchen.dinnerclubs[0];
+    if(!dinnerClubToday){
+        return (
+            <p>No Dinner club today peeps!</p>
+        );
+    }
     let {isParticipating,hasCancelled} = dinnerClubToday.participants.reduce(
         ({is,has},part) =>
             ({
@@ -78,7 +82,7 @@ const currentUserQuery = gql`
 // Queries all of today (midnight to midnight), so we can pick the first upcoming one.
 // millisecond set, so client AND server side construct the same query, therefore NOT refetching
 // TODO not relevant for Madklub, but maybe set timezone in Redux, so we can set it here and ensure the same query happens on both client/server
-// TODO maybe query from this moment forward instead?
+// TODO maybe query from this moment forward instead? Let server Redux set the time?
 let todayStart = moment().set({'hour':0,'minute':0,'second':0,'millisecond':0}).toISOString();
 let todayEnd = moment().set({'hour':23,'minute':59,'second':59,'millisecond':0}).toISOString();
 console.log("From "+todayStart+" To "+todayEnd);

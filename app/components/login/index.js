@@ -1,8 +1,4 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { graphql, withApollo } from 'react-apollo';
-import { login } from '../../actions/login';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
     FormGroup,
@@ -25,11 +21,11 @@ const FieldGroup = ({ id, label, validate, help, ...props }) => (
 );
 
 class LoginComponent extends React.Component {
-    static propTypes = {
+    /*static propTypes = {
         router: React.PropTypes.object.isRequired,
         mutate: React.PropTypes.func.isRequired,
         login: React.PropTypes.func.isRequired,
-    }
+    }*/
 
     constructor(props){
         super(props);
@@ -79,41 +75,14 @@ class LoginComponent extends React.Component {
                 passwordValidation: 'warning',
                 loginErrorHelp: 'Please make sure to use email and valid password of 6 characters or more'
             });
-            return;
+            console.log("Something is wrong with your login");
+            e.preventDefault();
         }
-        this.props.mutate({variables: {
-            username: this.state.email,
-            password: this.state.password
-        }}).then((b)=> {
-            console.log(b);
-            if(b.data.login.success){
-                // TODO dispatch LOGIN action
-                this.props.login();
-                this.props.router.replace('/');
-                //this.props.router.replace({
-                //    pathname: '/',
-                //    query: {refresh: true}
-                //});
-            } else {
-                // Wrong credentials...
-                this.setState({
-                    emailValidation: 'error',
-                    passwordValidation: 'error',
-                    loginErrorHelp: b.data.login.feedback
-                });
-            }
-        }).catch((err)=>{
-            console.log(err);
-            this.setState({
-                passwordValidation: 'error',
-                loginErrorHelp: 'Server or network error, are you connected to the internet?'
-            });
-        });
     }
 
     render(){
         return (
-                <form>
+                <form onSubmit={this.onSubmit} method="POST">
                     <Grid>
                         <Row>
                             <Col xs={0} sm={2} md={3} lg={4}/>
@@ -121,6 +90,7 @@ class LoginComponent extends React.Component {
                                 <FieldGroup
                                     id="loginEmail"
                                     type="email"
+                                    name="username"
                                     label="Email"
                                     onChange={this.onEmailChange}
                                     validate={this.state.emailValidation}
@@ -128,6 +98,7 @@ class LoginComponent extends React.Component {
                                 <FieldGroup
                                     id="loginPassword"
                                     type="password"
+                                    name="password"
                                     label="Password"
                                     onChange={this.onPasswordChange}
                                     validate={this.state.passwordValidation}
@@ -138,7 +109,7 @@ class LoginComponent extends React.Component {
                                     bsSize="large"
                                     className="center-block"
                                     disabled={this.state.loggingIn}
-                                    onClick={this.onSubmit}>
+                                    type="submit">
                                     Login
                                 </Button>
                             </Col>
@@ -150,6 +121,8 @@ class LoginComponent extends React.Component {
     }
 }
 
+/* Old login, shows how to use mutations. The Reux connect stuff was to fire the login action to make redux store
+   be correct, so Account and Main page and stuff shows
 const loginMutation = gql`
     mutation login($username: String!,$password: String!){
         login(username: $username,password: $password) {
@@ -166,5 +139,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(login())
     }
 });
+ export default connect(mapStateToProps,mapDispatchToProps)(graphql(loginMutation)(withRouter(LoginComponent)))
+*/
 
-export default connect(mapStateToProps,mapDispatchToProps)(graphql(loginMutation)(withRouter(LoginComponent)))
+export default withRouter(LoginComponent)

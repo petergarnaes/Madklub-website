@@ -2,7 +2,7 @@
 
 ## Summary
 
-### Utlizied tech
+### Utilized tech
 
 * Webpack - all-in-one tool for bundling, transpiling using babel and hot 
 reloading code
@@ -16,10 +16,10 @@ everything from internationalization, authorization to API.
 like authorization and routing outside the App a breeze.
 * React - UI component library, and thanks to babel we can write them with 
 `.jsx` decorators, making it readable and more declarative.
-* React Router - Easy in-app routing with built in history handling, querying
-and much more.
+* React Router - Easy in-app routing with built in history handling. Very
+declarative, builds upon the strengths of react.
 * Redux - Flux implementation, making the app even more modular and functional
-* Boostrap - Predefined CSS and components with great options for customizing 
+* Bootstrap - Predefined CSS and components with great options for customizing
 get a beautiful website. Antd (ant design) is an alternative, seems very 
 similar, only a few components differ.
 * GraphQL - An API supporting queries, so changes in frontend data dependencies
@@ -143,7 +143,8 @@ the user.
 encrypt (or something?) for free HTTPS? This also ensures no Man in the Middle 
 attacks that can sniff up JWT token.
 * passport - Allows using various strategies to verify users credentials.
-This way a company more competent in protecting users information is used.
+This way a company with more means and experience in protecting users
+information can be used.
 * bcrypt - Strong password encryption with salt for local password storage.
 * JWT - Authentication token tool, for safely encrypting a json object and 
 using it as the authentication token. When this token is sent to the server 
@@ -173,6 +174,13 @@ ALL INPUT MUST BE SANITIZED!
 
 ## Random Notes
 
+### Requirements
+
+Target browser must be newer browser that supports HTML5, because of its
+browser history API. It is possible to instruct our router to do full refresh
+on every navigation, which we would do for non-HTML5. This can get complicated
+fast though, so for now just don't support.
+
 # Public API security
 
 If we wanted our GraphQL API to be public, we could give out an API key, which 
@@ -183,6 +191,10 @@ separate login page might be in order here.
 
 ### Async loading
 
+With new version of react-router, it is simply a matter of asynchronously
+loading components, which there are many guides on.
+
+#### react-router < v4
 To add asynchronously loaded libraries and components see [medium blog post](https://medium.com/@lavrton/progressive-loading-for-modern-web-applications-via-code-splitting-fb43999735c6#.yvw7jdab4)
 or [code splitting](https://webpack.js.org/guides/code-splitting-require/).
 

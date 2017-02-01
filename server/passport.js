@@ -11,7 +11,7 @@
 import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-import db from './api/db';
+import {UserLogin,User,UserClaim,UserAccount} from './api/db';
 import { auth as config } from './config';
 var bcrypt = require('bcrypt');
 
@@ -29,7 +29,7 @@ passport.use(new FacebookStrategy({
     const claimType = 'urn:facebook:access_token';
     const storeLogin = async () => {
         if (req.user) {
-            const userLogin = await db.UserLogin.findOne({
+            const userLogin = await UserLogin.findOne({
                 attributes: ['name', 'key'],
                 where: { name: loginName, key: profile.id },
             });
@@ -38,7 +38,7 @@ passport.use(new FacebookStrategy({
                 // Sign in with that account or delete it, then link it with your current account.
                 done();
             } else {
-                const user = await db.User.create({
+                const user = await User.create({
                     id: req.user.id,
                     display_name: profile.displayName,
                     picture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
@@ -53,9 +53,9 @@ passport.use(new FacebookStrategy({
                     },
                 }, {
                     include: [
-                        { model: db.UserLogin, as: 'logins' },
-                        { model: db.UserClaim, as: 'claims' },
-                        { model: db.UserAccount, as: 'account' },
+                        { model: UserLogin, as: 'logins' },
+                        { model: UserClaim, as: 'claims' },
+                        { model: UserAccount, as: 'account' },
                     ],
                 });
                 done(null, {
@@ -64,13 +64,13 @@ passport.use(new FacebookStrategy({
                 });
             }
         } else {
-            const users = await db.User.findAll({
+            const users = await User.findAll({
                 attributes: ['id', 'email'],
                 where: { '$logins.name$': loginName, '$logins.key$': profile.id },
                 include: [
                     {
                         attributes: ['name', 'key'],
-                        model: db.UserLogin,
+                        model: UserLogin,
                         as: 'logins',
                         required: true,
                     },
@@ -79,13 +79,13 @@ passport.use(new FacebookStrategy({
             if (users.length) {
                 done(null, users[0]);
             } else {
-                let user = await db.User.findOne({ where: { email: profile._json.email } });
+                let user = await User.findOne({ where: { email: profile._json.email } });
                 if (user) {
                     // There is already an account using this email address. Sign in to
                     // that account and link it with Facebook manually from Account Settings.
                     done(null);
                 } else {
-                    user = await db.User.create({
+                    user = await User.create({
                         display_name: profile.displayName,
                         picture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
                         logins: [
@@ -100,9 +100,9 @@ passport.use(new FacebookStrategy({
                         },
                     }, {
                         include: [
-                            { model: db.UserLogin, as: 'logins' },
-                            { model: db.UserClaim, as: 'claims' },
-                            { model: db.UserAccount, as: 'account' },
+                            { model: UserLogin, as: 'logins' },
+                            { model: UserClaim, as: 'claims' },
+                            { model: UserAccount, as: 'account' },
                         ],
                     });
                     done(null, {
@@ -116,12 +116,13 @@ passport.use(new FacebookStrategy({
     storeLogin().catch(done);
 }));
 
-// Deprecated, not in use, we log in locally through GraphQL
+// TODO share code with API
 passport.use(new LocalStrategy(
     // TODO prevent bruteforce, use lockout on user account
     function(username,password,done){
+        console.log("Local strategy in full use!");
         // First we try and find the user
-        db.UserAccount.findOne({
+        UserAccount.findOne({
             where: {
                 $or: [{email: username},{username: username}]
             }

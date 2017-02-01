@@ -8,6 +8,7 @@ var fs = require('fs');
 import React from 'react';
 // Server functionality related imports
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import schema from './api/schema';
@@ -19,12 +20,14 @@ import { port, auth, analytics } from './config';
 const graphql = require('graphql');
 import db from './api/db/index';
 import * as reducers from '../app/reducers';
-import registerLoginFacebookMiddleware from './login/facebook_login';
+import registerLoginMiddleware from './login/login_middleware';
 import testSet from './api/db/test_set';
 // Imports for server rendering
 import { renderToString } from 'react-dom/server';
-import { RouterContext, match } from 'react-router';
-import routes from '../app/routes';
+//import { StaticRouter } from 'react-router';
+import { StaticRouter } from 'react-router-dom';
+//import routes from '../app/routes';
+import App from '../app/components';
 
 const crypto = require('crypto');
 const app = express();
@@ -39,6 +42,8 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
 
 //
@@ -65,12 +70,12 @@ app.use((req,res,next)=>{
     next();
 });
 
-registerLoginFacebookMiddleware(app);
+registerLoginMiddleware(app);
 
-app.use('/logout',(req,res,next)=>{
-    console.log('ahh?');
+app.use('/logout',(req,res)=>{
+    console.log('Logging you out...');
     res.cookie('id_token', '', {maxAge: new Date(0),expires: Date.now(), httpOnly: true});
-    next();
+    res.redirect('/');
 });
 
 //
@@ -88,7 +93,7 @@ app.use('/graphql',expressGraphQL((req,res) => ({
  * Handles rendering by creating initial state and responding with the rendered
  * app based on that state.
  **/
-async function handleRender(renderProps,req,res){
+async function handleRender(req,res){
     // Sets up network interface to load data locally not using network. Should be both faster and work with Heruko
     // since they apparently have some restrictions on local network requests
     const options = {networkInterface: createLocalInterface(graphql, schema,{rootValue: { request: req, response: res }}),ssrMode: true};
@@ -103,7 +108,7 @@ async function handleRender(renderProps,req,res){
         combineReducers({
             ...reducers,
             //isLoggedIn: (state = loginState,action) => state,
-            apollo: client.reducer(),
+            apollo: client.reducer()
         }),
         {isLoggedIn: loginState}, // Initial state
         // Dunno if this is necessary, my guess is only we define middleware, but we might do server side middleware
@@ -112,10 +117,15 @@ async function handleRender(renderProps,req,res){
             applyMiddleware(client.middleware())
         )
     );
+    // This context object contains the results of the render
+    const context = {};
+
     // Sets up app to be rendered
     var app = (
         <ApolloProvider store={store} client={client}>
-            <RouterContext {...renderProps} />
+            <StaticRouter location={req.url} context={context}>
+                <App />
+            </StaticRouter>
         </ApolloProvider>
     );
 
@@ -125,8 +135,16 @@ async function handleRender(renderProps,req,res){
     // Sets initial state for apollo, so client bundle knows what is loaded and whatnot
     const preloadedState = store.getState();
 
-    // Send the rendered page back to the client
-    res.status(200).send(renderFullPage(html, preloadedState))
+    // TODO 404's ?!?!?!
+    // context.url will contain the URL to redirect to if a <Redirect> was used
+    //if (context.url) {
+        // TODO This is not correct, should give location in header, see: http://www.restapitutorial.com/httpstatuscodes.html
+        // We might wnat to do status code 302 for redirects, or maybe just forget about it?
+    //    res.redirect(context.url);
+    //} else {
+        // Send the rendered page back to the client
+    res.status(200).send(renderFullPage(html, preloadedState));
+    //}
 }
 
 /**
@@ -159,6 +177,7 @@ function renderFullPage(html, preloadedState){
 /**
  * Site requests are handled here, takes care of routing and server-side rendering
  **/
+/* Old way with react-router < v4, kept because new one is in beta
 app.use((req, res) => {
     console.log('Page request! Client asked for '+req.url);
     match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -179,6 +198,10 @@ app.use((req, res) => {
             res.status(404).send('Not found')
         }
     });
+});
+*/
+app.use((req,res)=>{
+    handleRender(req,res);
 });
 
 //
