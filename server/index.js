@@ -167,7 +167,7 @@ function renderFullPage(html, preloadedState){
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
                     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
                 </script>
-                <script type="application/javascript" src="/bundle.js"></script>
+                <script type="application/javascript" src="/public/bundle.js"></script>
             </body>
         </html>
     `

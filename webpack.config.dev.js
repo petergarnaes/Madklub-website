@@ -2,13 +2,14 @@ var path = require('path');
 var webpack = require('webpack');
 
 var config = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'sourcemap',
     entry: [
         'webpack-hot-middleware/client',
         './client/index.js'
     ],
+    // Bundle should be in public folder
     output: {
-        path: path.join(__dirname,'dist/'),
+        path: path.join(__dirname,'dist/public/'),
         filename: 'bundle.js',
         publicPath: '/public/'
     },
@@ -27,6 +28,7 @@ var config = {
                 test: /\.css$/,
                 loader: "style-loader!css-loader"
             },
+            // Client specific loading of these file types
             {
                 test: /\.png$/,
                 loader: "url-loader?limit=100000" 
@@ -35,6 +37,7 @@ var config = {
                 test: /\.jpg$/, 
                 loader: "file-loader" 
             },
+            // Client specific font loading, retrieved with HTTP requests with the url-loader.
             {
                 test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, 
                 loader: 'url?limit=10000&mimetype=application/font-woff'

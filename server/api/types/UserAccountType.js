@@ -3,22 +3,28 @@
  */
 import {
   GraphQLObjectType as ObjectType,
-  GraphQLID as ID,
-  GraphQLString as StringType,
-  GarphQLInt as IntType,
-  GraphQLNonNull as NonNull,
-  GraphQLList as ListType,
 } from 'graphql';
 import {UserAccount} from '../db';
 import {attributeFields} from 'graphql-sequelize';
+import DateType from './DateType';
+import {createdAtDoc,updatedAtDoc} from '../docs/created_updated';
 
 const UserAccountType = new ObjectType({
-  name: 'UserAccount',
-  fields: attributeFields(UserAccount,{
-    exclude:
-      ['id','userId','password_hash','lockout_end','lockout_enabled','access_failed_count']
-  }),
-  description: 'The currently logged in users account information'
+    name: 'UserAccount',
+    fields: Object.assign(attributeFields(UserAccount,{
+        exclude:
+            ['id','userId','password_hash','lockout_end','lockout_enabled','access_failed_count','createdAt','updatedAt']
+    }),{ // Extra fields
+        createdAt: {
+            type: DateType,
+            description: createdAtDoc
+        },
+        updatedAt: {
+            type: DateType,
+            description: updatedAtDoc
+        }
+    }),
+    description: 'The currently logged in users account information'
 });
 
 export default UserAccountType;

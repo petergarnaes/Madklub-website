@@ -11,11 +11,22 @@ import {
 } from 'graphql';
 import {UserLogin} from '../db';
 import {attributeFields} from 'graphql-sequelize';
+import DateType from './DateType';
+import {createdAtDoc,updatedAtDoc} from '../docs/created_updated';
 
 const UserLoginsType = new ObjectType({
   name: 'UserLogins',
-  fields: attributeFields(UserLogin,{
-    exclude: ['id','UserId']
+  fields: Object.assign(attributeFields(UserLogin,{
+    exclude: ['id','UserId','createdAt','updatedAt']
+  }),{ // Extra fields
+      createdAt: {
+          type: DateType,
+          description: createdAtDoc
+      },
+      updatedAt: {
+          type: DateType,
+          description: updatedAtDoc
+      }
   }),
   description: 'The currently logged in users third party login information'
 });

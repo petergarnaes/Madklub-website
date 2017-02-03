@@ -16,6 +16,7 @@ fs.readdirSync('node_modules')
 module.exports = {
     entry: ['babel-polyfill','./server'],
     target: 'node',
+    // Backend should be in the protected dist (distribution) folder
     output: {
         path: path.join(__dirname,'dist/'),
         publicPath: '/public/',
@@ -38,10 +39,12 @@ module.exports = {
                 loaders: ['react-hot','babel'],
                 exclude: /node_modules/
             },
+            // Root parameter sets the root folder of url references
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract("style-loader","css-loader?root=public/")
             },
+            // We ensure all files loaded server side are put in the public folder
             {
                 test: /\.(woff|woff2|png|jpg|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'file-loader',

@@ -22,6 +22,8 @@ import UserLoginsType from './UserLoginsType';
 import InputDateRangeType from './InputDateRangeType';
 import { SimpleUserFields } from './SimpleUserType';
 import moment from 'moment';
+import DateType from './DateType';
+import {createdAtDoc,updatedAtDoc} from '../docs/created_updated';
 
 const UserType = new ObjectType({
   name: 'User',
@@ -31,6 +33,14 @@ const UserType = new ObjectType({
     id: {
       type: ID,
       description: 'Users ID to uniquely identify a user. Only used when needing to mutate specific user'
+    },
+    createdAt: {
+        type: DateType,
+        description: createdAtDoc
+    },
+    updatedAt: {
+        type: DateType,
+        description: updatedAtDoc
     },
     kitchen: {
       type: KitchenType,

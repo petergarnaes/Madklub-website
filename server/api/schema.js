@@ -17,13 +17,6 @@ import me from './queries/me';
 import kitchens from './queries/kitchens';
 var bcrypt = require('bcrypt');
 
-// Mapping sequelize models to graphql types
-// TODO dealing with SimpleUserType???
-import {User,Kitchen,DinnerClub} from './db';
-import UserType from './types/UserType';
-import KitchenType from './types/KitchenType';
-import DinnerClubType from './types/DinnerClubType';
-
 const schema = new Schema({
     query: new ObjectType({
         name: 'Query',
