@@ -21,20 +21,21 @@ const TodayWithData = ({data}) => {
 
     // DinnerClubs always ordered by 'at' date, so picking first will be the next one.
     let dinnerClubToday = me.kitchen.dinnerclubs[0];
+    // TODO Make this look nicer
     if(!dinnerClubToday){
         return (
             <p>No Dinner club today peeps!</p>
         );
     }
     let {isParticipating,hasCancelled} = dinnerClubToday.participants.reduce(
-        ({is,has},part) =>
-            ({
-                isParticipating: is || (part.user.id == me.id),
-                hasCancelled: (part.user.id == me.id) && part.cancelled
-            }),
+        (pc,part) => {
+            return ({
+                isParticipating: pc.isParticipating || (part.user.id === me.id),
+                hasCancelled: pc.hasCancelled || ((part.user.id === me.id) && part.cancelled)
+            })
+        },
         {isParticipating: false,hasCancelled: false}
     );
-    // TODO add a no dinnerclub component, if there is no dinnerclub
     return (
         <div>
             <p>We have that {me.display_name} is logged in and they live in room {me.room_number}</p>

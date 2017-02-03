@@ -1,0 +1,11 @@
+.round-icon-button {
+    border-radius: 100%;
+    width:6em;
+    height:6em;
+    border: 2px solid #bbbbbb;
+    margin: 1em;
+}
+
+.glyphicon.the-icon {
+    font-size: 2em;
+}

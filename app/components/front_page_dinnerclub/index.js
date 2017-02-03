@@ -12,6 +12,7 @@ import {
     Col} from 'react-bootstrap';
 import moment from 'moment';
 import CookComponent from '../cook_component';
+import RoundIconButton from '../round_icon_button';
 
 const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,hasCancelled}) => (
     <Grid>
@@ -23,6 +24,20 @@ const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,hasCancelled})
         </Row>
         <Row>
             <p>Cancelled: {""+dinnerClub.cancelled}, shopping is: {""+dinnerClub.shopping_complete}</p>
+        </Row>
+        <Row>
+            <RoundIconButton
+                glyph="ok"
+                onClick={()=>console.log("Totally clicked that shit!")}
+                isActive={isParticipating && !hasCancelled}
+                activeColor="#BDE4B9"
+                activeColorIcon="white"/>
+            <RoundIconButton
+                glyph="remove"
+                onClick={()=>console.log("Totally clicked that other shit!")}
+                isActive={hasCancelled || !isParticipating}
+                activeColor="#e4b9b9"
+                activeColorIcon="white"/>
         </Row>
     </Grid>
 );
