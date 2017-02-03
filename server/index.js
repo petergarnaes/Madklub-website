@@ -153,8 +153,7 @@ async function handleRender(req,res){
 function renderFullPage(html, preloadedState){
     // Loads all of app css statically, which is statically compiled.
     const css = fs.readFileSync('./dist/public/styles.css');
-    return `
-        <!doctype html>
+    return `<!DOCTYPE html>
         <html>
             <head>
                 <title>Madklub</title>
@@ -173,6 +172,10 @@ function renderFullPage(html, preloadedState){
         </html>
     `
 }
+
+//<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+//<style type="text/css">${css}</style>
+//<link rel="stylesheet" type="text/css" href="/styles.css">
 
 /**
  * Site requests are handled here, takes care of routing and server-side rendering

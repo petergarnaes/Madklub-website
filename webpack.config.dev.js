@@ -8,9 +8,9 @@ var config = {
         './client/index.js'
     ],
     output: {
-        path: path.join(__dirname,'dist'),
+        path: path.join(__dirname,'dist/'),
         filename: 'bundle.js',
-        publicPath: '/'
+        publicPath: '/public/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
@@ -27,8 +27,8 @@ var config = {
                 test: /\.css$/,
                 loader: "style-loader!css-loader"
             },
-            { 
-                test: /\.png$/, 
+            {
+                test: /\.png$/,
                 loader: "url-loader?limit=100000" 
             },
             { 
