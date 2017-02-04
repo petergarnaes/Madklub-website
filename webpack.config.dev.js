@@ -15,23 +15,37 @@ var config = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoEmitOnErrorsPlugin()
     ],
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                loaders: ['react-hot','babel'],
+                use: [{
+                        loader: 'react-hot-loader'
+                    }, {
+                        loader: 'babel-loader'
+
+                    }
+                ],
                 exclude: /node_modules/
             },
             {
                 test: /\.css$/,
-                loader: "style-loader!css-loader"
+                use: [{
+                        loader: "style-loader"
+                    },{
+                        loader: "css-loader"
+                    }
+                ]
             },
             // Client specific loading of these file types
             {
                 test: /\.png$/,
-                loader: "url-loader?limit=100000" 
+                loader: "url-loader" ,
+                options: {
+                    limit: "100000"
+                }
             },
             { 
                 test: /\.jpg$/, 
@@ -40,19 +54,31 @@ var config = {
             // Client specific font loading, retrieved with HTTP requests with the url-loader.
             {
                 test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, 
-                loader: 'url?limit=10000&mimetype=application/font-woff'
+                loader: 'url-loader',
+                options: {
+                    limit: "100000",
+                    mimetype: "application/font-woff"
+                }
             },
             {
                 test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, 
-                loader: 'url?limit=10000&mimetype=application/octet-stream'
+                loader: 'url-loader',
+                options: {
+                    limit: "100000",
+                    mimetype: "application/octet-stream"
+                }
             },
             {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, 
-                loader: 'file'
+                loader: 'file-loader'
             },
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, 
-                loader: 'url?limit=10000&mimetype=image/svg+xml'
+                loader: 'url-loader',
+                options: {
+                    limit: "100000",
+                    mimetype: "image/svg+xml"
+                }
             }
         ]
     }
