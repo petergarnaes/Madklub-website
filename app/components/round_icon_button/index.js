@@ -3,7 +3,8 @@
  */
 import './styling.css';
 import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+//import { Glyphicon } from 'react-bootstrap';
 
 const RoundIconButton = ({glyph,onClick,isActive,activeColor,activeColorIcon}) => {
     var buttonProps, iconProps = {};

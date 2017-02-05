@@ -6,10 +6,13 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
-import {
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+//import Col from 'react-bootstrap/lib/Col';
+/*import {
     Grid,
     Row,
-    Col} from 'react-bootstrap';
+    Col} from 'react-bootstrap';*/
 import moment from 'moment';
 import CookComponent from '../cook_component';
 import RoundIconButton from '../round_icon_button';

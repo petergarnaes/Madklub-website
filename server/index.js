@@ -45,6 +45,7 @@ app.use(require('webpack-hot-middleware')(compiler));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
+app.use('/fonts', express.static('./dist/public/fonts'));
 
 //
 // Authentication
@@ -152,13 +153,15 @@ async function handleRender(req,res){
  **/
 function renderFullPage(html, preloadedState){
     // Loads all of app css statically, which is statically compiled.
-    const css = fs.readFileSync('./dist/public/styles.css');
+    // TODO
+    const css = fs.readFileSync('./dist/public/theme.min.css');
     return `<!DOCTYPE html>
         <html>
             <head>
                 <title>Madklub</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <style type="text/css">${css}</style>
+                <link rel="stylesheet" type="text/css" href="/dist/public/styles.css">
             </head>
             <body>
                 <div id="react-view">${html}</div>

@@ -2,7 +2,10 @@
  * Created by peter on 1/25/17.
  */
 import React from 'react';
-import { Jumbotron, Grid,Button } from 'react-bootstrap';
+import Jumbotron from 'react-bootstrap/lib/Jumbotron';
+import Grid from 'react-bootstrap/lib/Grid';
+//import Button from 'react-bootstrap/lib/Button';
+//import { Jumbotron, Grid,Button } from 'react-bootstrap';
 
 const WelcomePage = () => (
     <Jumbotron>

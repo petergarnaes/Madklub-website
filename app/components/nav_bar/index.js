@@ -1,8 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom/Link';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { Navbar,Nav,NavItem,NavDropdown,MenuItem } from 'react-bootstrap';
+import withRouter from 'react-router-dom/withRouter';
+import Navbar from 'react-bootstrap/lib/Navbar';
+import Nav from 'react-bootstrap/lib/Nav';
+import NavItem from 'react-bootstrap/lib/NavItem';
+import NavDropdown from 'react-bootstrap/lib/NavDropdown';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+//import { Navbar,Nav,NavItem,NavDropdown,MenuItem } from 'react-bootstrap';
 
 const goTo = (push) => (key) => {
     var url = "/"+key;

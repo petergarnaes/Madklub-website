@@ -1,7 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
+//import 'bootstrap/dist/css/bootstrap.css';
+//import 'bootstrap/dist/css/bootstrap-theme.css';
 import React from 'react';
-import { Route } from 'react-router-dom';
+import Route from 'react-router-dom/Route';
 import Main from './main';
 import Login from './login';
 import NavBar from './nav_bar';

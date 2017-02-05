@@ -14,7 +14,9 @@ fs.readdirSync('node_modules')
 //new webpack.NormalModuleReplacementPlugin(/\.css$/, 'node-noop')
 
 module.exports = {
-    entry: ['babel-polyfill','./server'],
+    entry: [
+        'babel-polyfill',
+        './server'],
     target: 'node',
     // Backend should be in the protected dist (distribution) folder
     output: {
@@ -26,7 +28,7 @@ module.exports = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
+        new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: true }),
         new ExtractTextPlugin({
             filename: "/public/styles.css",
             disable: false,
@@ -37,11 +39,8 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                use: [{
-                        loader: 'react-hot-loader'
-                    }, {
-                        loader: 'babel-loader'
-                    }
+                use: [
+                    'babel-loader'
                 ],
                 exclude: /node_modules/
             },
@@ -59,8 +58,8 @@ module.exports = {
                 test: /\.(woff|woff2|png|jpg|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'file-loader',
                 options: {
-                    publicPath: 'public/',
-                    outputPath: 'public/',
+                    publicPath: '/public/',
+                    outputPath: '/public/',
                     name: '[hash].[ext]'
                 }
            }

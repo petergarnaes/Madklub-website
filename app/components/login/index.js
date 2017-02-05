@@ -1,6 +1,14 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import {
+import withRouter from 'react-router-dom/withRouter';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import HelpBlock from 'react-bootstrap/lib/HelpBlock';
+import Button from 'react-bootstrap/lib/Button';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+/*import {
     FormGroup,
     ControlLabel,
     FormControl,
@@ -8,7 +16,7 @@ import {
     Button,
     Grid,
     Row,
-    Col} from 'react-bootstrap';
+    Col} from 'react-bootstrap';*/
 
 const FieldGroup = ({ id, label, validate, help, ...props }) => (
     <FormGroup controlId={id}
