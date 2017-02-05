@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js --progress --profile --colors",
+    "build-server": "NODE_ENV=production webpack --config webpack.config.server.prod.js --progress --profile --colors",
     "start": "nodemon dist/backend.js",
     "lint": "eslint --ext js --ext jsx src || exit 0"
   },
@@ -19,7 +20,6 @@
     "babel-polyfill": "^6.22.0",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.16.0",
-    "bootstrap": "^3.3.7",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-graphql": "^0.6.1",
@@ -61,8 +61,9 @@
     "css-loader": "^0.26.1",
     "eslint": "^3.12.2",
     "eslint-plugin-react": "^6.8.0",
-    "extract-text-webpack-plugin": "^2.0.0-rc.2",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "file-loader": "github:webpack/file-loader",
+    "ignore-loader": "^0.1.2",
     "nodemon": "^1.11.0",
     "postcss-loader": "^1.2.2",
     "react-hot-loader": "^3.0.0-beta.6",

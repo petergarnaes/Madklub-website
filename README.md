@@ -77,7 +77,8 @@ great for prototyping the server.
 Notice that changes to `app` folder triggers rebundling of client side bundling.
 This is not the same as server side, so when refreshing you will not get a page
 you just made, but when bundle arrives you will. The console will probably also
-warn you of this fact, but don't worry! Just re-bundle the server.
+warn you your server side rendering is misbehaving, but don't worry! Just
+re-bundle the server.
 
 ## Project structure
 
@@ -171,6 +172,40 @@ deadlines held? All mutations with several steps should be transactions.
 Writes should be infrequent, so transactions will do.
 
 ALL INPUT MUST BE SANITIZED!
+
+## Structure and architecture
+
+This is an isomorphic app, with _all_ styling pre-bundled, and delivered on any
+page load. The philosophy is that we stick mainly to bootstrap, with only a few
+extensions which does not increase bundle size that much.
+
+Bootstrap is fairly well optimized for the modern browser, so pulling the whole
+thing is not to bad (ca. 118 kb). This also seem to be the standard, as there
+are not a lot of work done on isomorphic style loading (only one repo as far as
+I can see).
+
+## TODOs
+
+* Relative paths in `server/index.js` should not have `dist/` in front, the
+`dist` folder should be self contained. This is important for making the
+production bundle work.
+* [Pre-process GraphQL ASTs](http://dev.apollodata.com/react/webpack.html) for
+Apollo with webpack when bundling. This should decrease bundle size, as
+`graphql-tag` is no longer required client side, and speed up client side
+because client does not need to do AST processing.
+* [Compress client side bundle](https://github.com/webpack-contrib/compression-webpack-plugin).
+Should make our bundle well below 200kb, which is somewhat better.
+* Switch to [preact](https://github.com/developit/preact) to decrease bundle
+size.
+* Optional polyfills/fetch/Promise/assign/keys bundle for old browsers, so we
+don't need to include it in main bundle. [Link](https://gist.github.com/davidgilbertson/6a66e05d6f193281a4c6b54d19acf3fd#file-optional-polyfill-js).
+* Look into service workers. Just [this](https://hackernoon.com/10-things-i-learned-making-the-fastest-site-in-the-world-18a0e1cdf4a7#.54l8nvqy8)
+article in general.
+* Can we change fonts to native ones? So we don't need external ones?
+* Preload/prefetch bundle
+* Use WebpackHtmlPlugin to generate the html page we serve. Should link instead
+of statically serving.
+
 
 ## Random Notes
 

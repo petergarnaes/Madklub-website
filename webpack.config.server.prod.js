@@ -1,3 +1,7 @@
+/**
+ * Created by peter on 2/5/17.
+ */
+
 var webpack = require('webpack');
 var path = require('path');
 var fs = require('fs');
@@ -8,8 +12,8 @@ fs.readdirSync('node_modules')
     .filter(function(x){
         return ['.bin'].indexOf(x) === -1;
     }).forEach(function(mod){
-        nodeModules[mod] = 'commonjs ' + mod;
-    });
+    nodeModules[mod] = 'commonjs ' + mod;
+});
 
 //new webpack.NormalModuleReplacementPlugin(/\.css$/, 'node-noop')
 
@@ -26,9 +30,29 @@ module.exports = {
     },
     externals: nodeModules,
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
-        //new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: true }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production')
+            }
+        }),
+        new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            beautify: false,
+            mangle: {
+                screw_ie8: true,
+                keep_fnames: true
+            },
+            compress: {
+                screw_ie8: true,
+                drop_console: true, // strips console statements
+                unused: true,
+                dead_code: true, // big one--strip code that will never execute
+            },
+            comments: false
+        }),
         new ExtractTextPlugin({
             filename: "/public/styles.css",
             disable: false,
@@ -44,25 +68,7 @@ module.exports = {
                 ],
                 exclude: /node_modules/
             },
-            // Root parameter sets the root folder of url references
-            {
-                test: /\.css$/,
-                //loader: ExtractTextPlugin.extract("style-loader","css-loader?root=public/"),
-                loader: ExtractTextPlugin.extract({
-                    fallbackLoader: "style-loader",
-                    loader: "css-loader",
-                    publicPath: "/public/"})
-            },
-            // We ensure all files loaded server side are put in the public folder
-            {
-                test: /\.(woff|woff2|png|jpg|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file-loader',
-                options: {
-                    publicPath: '/public/',
-                    outputPath: '/public/',
-                    name: '[name].[ext]'
-                }
-           }
+            { test: /\.css$/, loader: 'ignore-loader' }
         ]
     },
     devtool: 'sourcemap'

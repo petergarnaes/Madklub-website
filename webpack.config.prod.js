@@ -85,55 +85,68 @@ var config = {
                 //loader: ExtractTextPlugin.extract("style-loader","css-loader?root=public/"),
                 loader: ExtractTextPlugin.extract({
                     fallbackLoader: "style-loader",
-                    loader: "css-loader",
+                    use: {
+                        loader: "css-loader",
+                        // options: { minimize: true } // Somehow made it bigger?!
+                    },
                     //loader: "css-loader",
                     publicPath: "/public/"})
             },
-            // Client specific loading of these file types
             {
-                test: /\.png$/,
-                loader: "url-loader" ,
+                test: /\.(woff|woff2|png|jpg|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'file-loader',
                 options: {
-                    limit: "100000"
-                }
-            },
-            {
-                test: /\.jpg$/,
-                loader: "file-loader"
-            },
-            // Client specific font loading, retrieved with HTTP requests with the url-loader.
-            {
-                test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-                //loader: 'file-loader'
-                loader: 'url-loader',
-                 options: {
-                     limit: "100000",
-                     mimetype: "application/font-woff"
-                 }
-            },
-            {
-                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-                //loader: 'file-loader'
-                loader: 'url-loader',
-                 options: {
-                     limit: "100000",
-                     mimetype: "application/octet-stream"
-                 }
-            },
-            {
-                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file-loader'
-            },
-            {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url-loader',
-                options: {
-                    limit: "100000",
-                    mimetype: "image/svg+xml"
+                    publicPath: '/public/',
+                    name: '[name].[ext]'
                 }
             }
         ]
     }
 };
+
+/*
+* // Client specific loading of these file types
+ {
+ test: /\.png$/,
+ loader: "url-loader" ,
+ options: {
+ limit: "100000"
+ }
+ },
+ {
+ test: /\.jpg$/,
+ loader: "file-loader"
+ },
+ // Client specific font loading, retrieved with HTTP requests with the url-loader.
+ {
+ test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+ //loader: 'file-loader'
+ loader: 'url-loader',
+ options: {
+ limit: "100000",
+ mimetype: "application/font-woff"
+ }
+ },
+ {
+ test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+ //loader: 'file-loader'
+ loader: 'url-loader',
+ options: {
+ limit: "100000",
+ mimetype: "application/octet-stream"
+ }
+ },
+ {
+ test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+ loader: 'file-loader'
+ },
+ {
+ test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+ loader: 'url-loader',
+ options: {
+ limit: "100000",
+ mimetype: "image/svg+xml"
+ }
+ }*/
 
 module.exports = config;

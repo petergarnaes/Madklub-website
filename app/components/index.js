@@ -5,6 +5,7 @@ import Route from 'react-router-dom/Route';
 import Main from './main';
 import Login from './login';
 import NavBar from './nav_bar';
+import '../themes/css/theme.min.css';
 
 class App extends React.Component {
     render() {

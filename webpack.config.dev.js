@@ -33,59 +33,62 @@ var config = {
                 ],
                 exclude: /node_modules/
             },
-            {
-                test: /\.css$/,
-                use: [
-                    "style-loader",
-                    "css-loader?modules",
-                    "postcss-loader"
-                ]
-            },
-            // Client specific loading of these file types
-            {
-                test: /\.png$/,
-                loader: "url-loader" ,
-                options: {
-                    limit: "100000"
-                }
-            },
-            { 
-                test: /\.jpg$/, 
-                loader: "file-loader" 
-            },
-            // Client specific font loading, retrieved with HTTP requests with the url-loader.
-            {
-                test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-                //loader: 'file-loader'
-                loader: 'url-loader',
-                options: {
-                    limit: "100000",
-                    mimetype: "application/font-woff"
-                }
-            },
-            {
-                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-                //loader: 'file-loader'
-                loader: 'url-loader',
-                options: {
-                    limit: "100000",
-                    mimetype: "application/octet-stream"
-                }
-            },
-            {
-                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, 
-                loader: 'file-loader'
-            },
-            {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, 
-                loader: 'url-loader',
-                options: {
-                    limit: "100000",
-                    mimetype: "image/svg+xml"
-                }
-            }
+            { test: /\.css$/, loader: 'ignore-loader' }
         ]
     }
 };
+/*
+* ,
+ {
+ test: /\.css$/,
+ use: [
+ "style-loader",
+ "css-loader?modules",
+ "postcss-loader"
+ ]
+ },
+ // Client specific loading of these file types
+ {
+ test: /\.png$/,
+ loader: "url-loader" ,
+ options: {
+ limit: "100000"
+ }
+ },
+ {
+ test: /\.jpg$/,
+ loader: "file-loader"
+ },
+ // Client specific font loading, retrieved with HTTP requests with the url-loader.
+ {
+ test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+ //loader: 'file-loader'
+ loader: 'url-loader',
+ options: {
+ limit: "100000",
+ mimetype: "application/font-woff"
+ }
+ },
+ {
+ test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+ //loader: 'file-loader'
+ loader: 'url-loader',
+ options: {
+ limit: "100000",
+ mimetype: "application/octet-stream"
+ }
+ },
+ {
+ test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+ loader: 'file-loader'
+ },
+ {
+ test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+ loader: 'url-loader',
+ options: {
+ limit: "100000",
+ mimetype: "image/svg+xml"
+ }
+ }*/
 
 module.exports = config;
