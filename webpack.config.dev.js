@@ -5,7 +5,7 @@ var config = {
     devtool: 'inline-source-map',
     entry: [
         // activate HMR for React
-        'react-hot-loader/patch',
+        //'react-hot-loader/patch',
         'webpack-hot-middleware/client',
         './client/index_dev.js'
     ],

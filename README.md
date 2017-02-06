@@ -205,6 +205,10 @@ article in general.
 * Preload/prefetch bundle
 * Use WebpackHtmlPlugin to generate the html page we serve. Should link instead
 of statically serving.
+* Split CSS into modules that can load asynchronously. Take the non-minified
+CSS theme we have, and split it. Load it with links separately, with the most
+important modules linked first. Most important module would be body and navbar
+stuff, rest loads in along the way. All this should be very cacheable.
 
 
 ## Random Notes

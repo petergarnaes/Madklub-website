@@ -2,16 +2,27 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var CompressionPlugin = require("compression-webpack-plugin");
+
+function isVendor(module) {
+    // this assumes your vendor imports exist in the node_modules directory
+    return module.context && module.context.indexOf('node_modules') !== -1;
+}
 
 var config = {
-    devtool: 'cheap-module-source-map',
-    entry: [
-        './client/index.js'
-    ],
+    //devtool: 'cheap-module-source-map',
+    entry: {
+        main: './client/index.js',
+        //polyfills: [
+        //    `babel-polyfill`,
+        //    `whatwg-fetch`
+        //],
+        //apollo: 'apollo-client'
+    },
     output: {
         path: path.join(__dirname,'dist/public'),
         publicPath: '/public/',
-        filename: 'bundle.js'
+        filename: '[name].[chunkhash].js'
     },
     plugins: [
         new BundleAnalyzerPlugin({
@@ -47,7 +58,7 @@ var config = {
         // include Danish and Faroese
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /da|fo/),
         // Maybe this does something DID NOTHING - we probably need several entries and such
-        new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
+        //new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
 
         new webpack.DefinePlugin({
             'process.env': {
@@ -58,8 +69,20 @@ var config = {
             minimize: true,
             debug: false
         }),
+        // Creates library package, by finding dependencies of app entry point, and include it if it is in node_modules
+        // (see isVendor)
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            //chunks: ['app'],
+            minChunks: isVendor
+        }),
+        // Creates a manifest file, which is somehow necessary to keep vendor chunkhash the same if nothing changed.
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor', 'manifest'] // Specify the common bundle's name.
+        }),
         new webpack.optimize.UglifyJsPlugin({
             beautify: false,
+            minimize: true,
             mangle: {
                 screw_ie8: true,
                 keep_fnames: true
@@ -71,6 +94,13 @@ var config = {
                 dead_code: true, // big one--strip code that will never execute
             },
             comments: false
+        }),
+        new CompressionPlugin({
+            asset: "[path]",
+            algorithm: "gzip",
+            test: /\.js$|\.html$|\.css$/,
+            threshold: 10240,
+            minRatio: 0.8
         })
     ],
     module: {
