@@ -3,6 +3,8 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var CompressionPlugin = require("compression-webpack-plugin");
+var ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 function isVendor(module) {
     // this assumes your vendor imports exist in the node_modules directory
@@ -22,7 +24,8 @@ var config = {
     output: {
         path: path.join(__dirname,'dist/public'),
         publicPath: '/public/',
-        filename: '[name].[chunkhash].js'
+        filename: '[name].[chunkhash].js',
+        chunkFilename: "[name].[chunkhash].js"
     },
     plugins: [
         new BundleAnalyzerPlugin({
@@ -77,9 +80,10 @@ var config = {
             minChunks: isVendor
         }),
         // Creates a manifest file, which is somehow necessary to keep vendor chunkhash the same if nothing changed.
-        new webpack.optimize.CommonsChunkPlugin({
-            names: ['vendor', 'manifest'] // Specify the common bundle's name.
-        }),
+        /*new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor', 'manifest'], // Specify the common bundle's name.
+            minChunks: isVendor
+        }),*/
         new webpack.optimize.UglifyJsPlugin({
             beautify: false,
             minimize: true,
@@ -95,10 +99,18 @@ var config = {
             },
             comments: false
         }),
+        new ChunkManifestPlugin({
+            filename: "chunk-manifest.json",
+            manifestVariable: "webpackManifest"
+        }),
+        new ManifestPlugin({
+            fileName: 'chunk-map-manifest.json'
+        }),
         new CompressionPlugin({
             asset: "[path]",
             algorithm: "gzip",
-            test: /\.js$|\.html$|\.css$/,
+            // TODO add css ie. '|\.css$' when css has been properly dealt with
+            test: /\.js$|\.html$/,
             threshold: 10240,
             minRatio: 0.8
         })

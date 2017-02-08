@@ -3,29 +3,12 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import async_map from '../app/async/components';
-import {set_resolved_component} from '../app/async/resolved_components';
-import App, {state} from './render_config';
+import App, {requests} from './render_config';
 import { AppContainer } from 'react-hot-loader';
 
 // for each registered route
-console.log(state);
+//console.log(state);
 console.log(state.registeredRoutes);
-
-function asyncFunction (route, cb) {
-    new Promise((resolve) => async_map[route](resolve)).then((c)=>{
-        console.log('We now have loaded '+route);
-        console.log(c);
-        set_resolved_component(route,c.default);
-        cb();
-    });
-}
-
-let requests = Object.keys(state.registeredRoutes).map((item) => {
-    return new Promise((resolve) => {
-        asyncFunction(item, resolve);
-    });
-});
 
 const renderApp = (Component) => ReactDOM.render(<AppContainer><Component/></AppContainer>,
     document.getElementById('react-view'));

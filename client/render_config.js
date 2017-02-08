@@ -9,6 +9,10 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import App from '../app/components';
 import * as reducers from '../app/reducers';
+import async_map from '../app/async/components';
+import {set_resolved_component} from '../app/async/resolved_components';
+
+let initialState = window.__PRELOADED_STATE__;
 
 const networkInterface = createNetworkInterface({
     uri: '/graphql',
@@ -36,20 +40,33 @@ const client = new ApolloClient({
     networkInterface
 });
 
-export const state = window.__PRELOADED_STATE__;
-
 const store = createStore(
     combineReducers({
         ...reducers,
         apollo: client.reducer()
     }),
-    window.__PRELOADED_STATE__, // initial state
+    initialState, // initial state
     compose(
         applyMiddleware(client.middleware()),
         // If you are using the devToolsExtension, you can add it here also
         //window.devToolsExtension ? window.devToolsExtension() : f => f,
     )
 );
+
+function asyncFunction (route, cb) {
+    new Promise((resolve) => async_map[route](resolve)).then((c)=>{
+        console.log('We now have loaded '+route);
+        console.log(c);
+        set_resolved_component(route,c.default);
+        cb();
+    });
+}
+
+export let requests = Object.keys(initialState.registeredRoutes).map((item) => {
+    return new Promise((resolve) => {
+        asyncFunction(item, resolve);
+    });
+});
 
 export default () => (
     <ApolloProvider store={store} client={client}>

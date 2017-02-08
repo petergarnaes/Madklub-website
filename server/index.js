@@ -48,6 +48,39 @@ if(process.env.NODE_ENV === 'development') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
+
+
+//
+// Setup production resources
+// -----------------------------------------------------------------------------
+
+// Chunk manifest used by the webpack loader. Inlined in our http responses so their bundle loader can fetch the
+// correct bundle while we still maintain the ability to cache bust. Moved to this separate inlined piece of code,
+// so our entry file does not need to contain it, and thereby change hash on every update, big or small!
+var chunkManifest = '{}';
+// json object that can map bundle names to their full names including hash. Useful for figuring out our production
+// bundles full name, and putting required modules (main bundle + any async route rendered on server) as <preload/>,
+// for absolutely fastest load and avoid waterfall download.
+var chunkMapManifest = {};
+
+// If production, we initialize the manifests
+if(process.env.NODE_ENV === 'production'){
+    // Setup stuff for asynchronous code split name+hash resolving
+    chunkManifest = fs.readFileSync('./dist/public/chunk-manifest.json');
+    chunkMapManifest = JSON.parse(fs.readFileSync('./dist/public/chunk-map-manifest.json'));
+    // Matches routes ending in either js or css. Because we gzip our code and css, we must instruct the browser so it
+    // decrypts it
+    // TODO handle css compressed with gzip when we figure css out
+    console.log("We register right?");
+    app.get(/.+\.js$/, function (req, res, next) {
+        console.log('We did tell it right? '+req.url);
+        //req.url = req.url + '.gz';
+        //req.url = req.url;
+        res.set('Content-Encoding', 'gzip');
+        next();
+    });
+}
+
 app.use('/public', express.static('./dist/public'));
 
 //
@@ -158,11 +191,38 @@ function renderFullPage(html, preloadedState){
     // Loads all of app css statically, which is statically compiled.
     // TODO
     const css = fs.readFileSync('./dist/public/styles.css');
+    var preloads = '';
+    var prefetches = '';
+    // This is developer name of bundle
+    var mainFullName = 'main.js';
+    var vendorFullName = 'vendor.js';
+    // This will setup preload/prefetch statements for both main bundle, as well as
+    if(process.env.NODE_ENV === 'production'){
+        mainFullName = chunkMapManifest['main.js'];
+        preloads += '<link rel="preload" href="/public/'+mainFullName+'" as="script">\n';
+        prefetches += '<link rel="prefetch" href="/public/'+mainFullName+'">\n';
+        vendorFullName = chunkMapManifest['vendor.js'];
+        preloads += '<link rel="preload" href="/public/'+vendorFullName+'" as="script">\n';
+        prefetches += '<link rel="prefetch" href="/public/'+vendorFullName+'">\n';
+        Object.keys(preloadedState.registeredRoutes).forEach((route)=>{
+            // Keys MUST match up with chunk name (declared by require.ensure).
+            let chunkFullName = chunkMapManifest[route+'.js'];
+            console.log('Sending out '+chunkFullName);
+            preloads += '<link rel="preload" href="/public/'+chunkFullName+'" as="script">\n';
+            prefetches += '<link rel="prefetch" href="/public/'+chunkFullName+'">\n';
+        });
+    }
+
     return `<!DOCTYPE html>
         <html>
             <head>
                 <title>Madklub</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <script>
+                window.webpackManifest = ${chunkManifest}
+                </script>
+                ${preloads}
+                ${prefetches}
                 <style type="text/css">${css}</style>
             </head>
             <body>
@@ -172,7 +232,8 @@ function renderFullPage(html, preloadedState){
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
                     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
                 </script>
-                <script type="application/javascript" src="/public/bundle.js"></script>
+                <script type="application/javascript" src="/public/${vendorFullName}"></script>
+                <script type="application/javascript" src="/public/${mainFullName}"></script>
             </body>
         </html>
     `

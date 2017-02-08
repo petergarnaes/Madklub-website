@@ -1,10 +1,11 @@
 var path = require('path');
 var webpack = require('webpack');
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 var config = {
     devtool: 'inline-source-map',
     entry: {
-        bundle: [
+        main: [
             // activate HMR for React
             //'babel-polyfill',
             'react-hot-loader/patch',

@@ -15,7 +15,13 @@ fs.readdirSync('node_modules')
     nodeModules[mod] = 'commonjs ' + mod;
 });
 
-//new webpack.NormalModuleReplacementPlugin(/\.css$/, 'node-noop')
+function replacePath(newResource){
+    let request = newResource.request;
+    console.log('Replacing '+request);
+    newResource.request = request.replace(/async_component$/,'sync_component');
+    console.log("With "+newResource.request);
+    return newResource;
+}
 
 module.exports = {
     entry: [
@@ -30,6 +36,7 @@ module.exports = {
     },
     externals: nodeModules,
     plugins: [
+        // Set environment variable
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify('production')
@@ -39,25 +46,24 @@ module.exports = {
             minimize: true,
             debug: false
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            beautify: false,
-            mangle: {
-                screw_ie8: true,
-                keep_fnames: true
-            },
-            compress: {
-                screw_ie8: true,
-                drop_console: true, // strips console statements
-                unused: true,
-                dead_code: true, // big one--strip code that will never execute
-            },
-            comments: false
+        // Plugin to NOT split if we by error encounter an import() or require.ensure
+        new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1
         }),
-        new ExtractTextPlugin({
-            filename: "/public/styles.css",
-            disable: false,
-            allChunks: true
-        })
+        // Makes sure we use synchronous components on server side
+        new webpack.NormalModuleReplacementPlugin(
+            /\/async_component/,
+            replacePath
+            //'/sync_component'
+        ),
+        // Optimization, uglify added by -p option of webpack
+        //new webpack.optimize.UglifyJsPlugin(),
+        // Client bundler takes care of css
+        //new ExtractTextPlugin({
+        //    filename: "/public/styles.css",
+        //    disable: false,
+        //    allChunks: true
+        //})
     ],
     module: {
         rules: [
