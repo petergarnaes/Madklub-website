@@ -115,6 +115,9 @@ exported in `app/reducers/index.js`, and combined on both server and client to
 form the entire state.
 * `app/public`: Public assets like images, .svg's etc. Copied when building 
 app.
+* `app/themes`: Holds the styling (css) of the app.
+* `app/async`: Holds utilities for asynchronous loading. Does not need to be
+changed unless behavior of asynchronous components change.
 
 ## Building App
 
@@ -184,6 +187,66 @@ thing is not to bad (ca. 118 kb). This also seem to be the standard, as there
 are not a lot of work done on isomorphic style loading (only one repo as far as
 I can see).
 
+### Async components
+
+To keep the bundle size of the app to a minimum, we use code splitting to make
+all non-immediate components split from the `main` bundle. These can then be
+downloaded on demand. It all hinges on the `import()` statement.
+
+At compile time, webpack takes any `import()` statement, dereference its path
+and bundles that code __with__ dependencies into a separate bundle. When that
+same `import()` statement is reached at run-time, it returns a promise that
+returns the module we split of.
+
+A problem arises though... These components should _only_ be asynchronous on
+the client. To solve this problem, we do make a module that uses `require`
+instead of `import()` because it is synchronous, and with
+`NaromalModuleReplacementPlugin` make the server use the synchronous module
+when bundled up.
+
+This however creates yet _another_ problem. Even though the client gets the
+page server-side rendered, when running the bundle code, it thinks it has to
+load the component asynchronously. Because asynchronous components don't show
+while loading, this happens:
+
+* Client gets server-side rendered page in all its glory!
+* Bundle starts loading the required component with all the code necessary to
+run it, but while it waits, shows nothing, ie. __removes__ the glorious
+sever-side rendered content.
+* Component is asynchronously loaded, mounts the component and everything is
+good again.
+
+So as we can see, our efforts are ruined. We want the server to tell the client
+which async components are already rendered, and make the client wait for those
+components to load before rendering the app.
+
+This is communicated through Redux. When server renders an async component, it
+fires a `register` event, which makes the store remember the key for the
+component it rendered. Before the client renders, it waits for all the async
+components indexed by the keys the server sends. These components are stored in
+a map, again indexed by their keys. This is so when the async route is rendered
+and it discovers that the server has already rendered it, it uses the component
+from the "loaded components" map instead of loading it itself through
+`import()`.
+
+This works, and has some added benefits!
+
+* Hot Module Reloading can still be achieved if the client synchronously loads
+components instead of asynchronously. This is a simple matter of bundling the
+client with the same `NaromalModuleReplacementPlugin` trick as with the server.
+* We can prevent waterfall downloading, by taking the registered routes after
+the app rendered on the server side, and use those keys to add `<preload />`
+statements to the header on the server side.
+
+The downside is that it introduces overhead, and is not very declarative.
+Two files must be created for each route we want to load asynchronously, and
+the key must be correct in a few places for it to work. The overhead is not
+to bad, as no tree walking occurs (which other solutions implement). The gains
+we achieve also greatly outweigh the overhead. With small app components, the
+code for any page of the app will download very fast, and even faster with the
+`<preload />` trick. These components are also cacheable, so revisits are fast.
+The overhead in constructing the `<preload />` serverside is small.
+
 ## TODOs
 
 * Relative paths in `server/index.js` should not have `dist/` in front, the
@@ -207,19 +270,23 @@ if(process.env.NODE_ENV === 'production'){
 ```
 
 * Switch to [preact](https://github.com/developit/preact) to decrease bundle
-size.
+size. `preact-compat` should give us very little change. Maybe `preact-compat`
+for production?
 * Optional polyfills/fetch/Promise/assign/keys bundle for old browsers, so we
 don't need to include it in main bundle. [Link](https://gist.github.com/davidgilbertson/6a66e05d6f193281a4c6b54d19acf3fd#file-optional-polyfill-js).
 * Look into service workers. Just [this](https://hackernoon.com/10-things-i-learned-making-the-fastest-site-in-the-world-18a0e1cdf4a7#.54l8nvqy8)
-article in general.
+article in general. Maybe because of `async`/`await` we can't just take it out?
 * Can we change fonts to native ones? So we don't need external ones?
+* Make the `import()` statements use our custom splits created by the
+`CommonChunksPlugin`, so they don't bundle and load the parts of the vendor
+library they use.
 * Preload/prefetch bundle
-* Use WebpackHtmlPlugin to generate the html page we serve. Should link instead
-of statically serving.
+* Implement preload of bundle(s) we send. Remember chunk hashes for production
 * Split CSS into modules that can load asynchronously. Take the non-minified
 CSS theme we have, and split it. Load it with links separately, with the most
 important modules linked first. Most important module would be body and navbar
 stuff, rest loads in along the way. All this should be very cacheable.
+* Consider using `nprogress` for things?
 
 
 ## Random Notes

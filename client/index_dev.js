@@ -11,16 +11,6 @@ import { AppContainer } from 'react-hot-loader';
 // for each registered route
 console.log(state);
 console.log(state.registeredRoutes);
-/*if(state.registeredRoutes){
-    Object.keys(state.registeredRoutes).forEach(async function(route) {
-        console.log('We have to wait for '+route);
-        //console.log('What is this? '+async_map[route]());
-        //import_components.push( async_map[route]() )
-        let c = await async_map[route]();
-        console.log('Wait is over');
-        set_resolved_component(route,c);
-    });
-}*/
 
 function asyncFunction (route, cb) {
     async_map[route]().then((c)=>{
@@ -31,20 +21,11 @@ function asyncFunction (route, cb) {
     });
 }
 
-/*let requests = Object.keys(state.registeredRoutes).reduce((promiseChain, item) => {
-    return promiseChain.then(() => new Promise((resolve) => {
-        asyncFunction(item, resolve);
-    }));
-}, Promise.resolve());*/
 let requests = Object.keys(state.registeredRoutes).map((item) => {
     return new Promise((resolve) => {
         asyncFunction(item, resolve);
     });
-})
-
-//let components = await Promise.all(import_components);
-//console.log(components);
-//set_resolved_components(components);
+});
 
 const renderApp = (Component) => ReactDOM.render(<AppContainer><Component/></AppContainer>,
     document.getElementById('react-view'));
