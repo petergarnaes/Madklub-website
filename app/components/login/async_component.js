@@ -18,7 +18,7 @@ class AsyncLogin extends React.Component {
         // Checks if route was registered, ie. SSR loaded.
         if(!this.props.routeRegistered){
             if ( this.state.Component === null ) {
-                import('./index').then(m => m.default).then(Component => {
+                new Promise((resolve) => require.ensure([],() => resolve(require('./index')),'login')).then(m => m.default).then(Component => {
                     AsyncLogin.Component = Component;
                     console.log('Loading async, routeRegistered was: '+this.props.routeRegistered);
                     if ( this.mounted ) {

@@ -3,17 +3,20 @@ var webpack = require('webpack');
 
 var config = {
     devtool: 'inline-source-map',
-    entry: [
-        // activate HMR for React
-        //'babel-polyfill',
-        'react-hot-loader/patch',
-        'webpack-hot-middleware/client',
-        './client/index_dev.js'
-    ],
+    entry: {
+        bundle: [
+            // activate HMR for React
+            //'babel-polyfill',
+            'react-hot-loader/patch',
+            'webpack-hot-middleware/client',
+            './client/index_dev.js'
+        ],
+    },
     // Bundle should be in public folder
     output: {
         path: path.join(__dirname,'dist/'),
-        filename: 'bundle.js',
+        filename: '[name].js',
+        chunkFilename: "[name].js",
         publicPath: '/public/'
     },
     plugins: [

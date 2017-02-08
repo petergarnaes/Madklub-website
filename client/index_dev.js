@@ -13,7 +13,7 @@ console.log(state);
 console.log(state.registeredRoutes);
 
 function asyncFunction (route, cb) {
-    async_map[route]().then((c)=>{
+    new Promise((resolve) => async_map[route](resolve)).then((c)=>{
         console.log('We now have loaded '+route);
         console.log(c);
         set_resolved_component(route,c.default);
