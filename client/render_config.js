@@ -36,6 +36,8 @@ const client = new ApolloClient({
     networkInterface
 });
 
+export const state = window.__PRELOADED_STATE__;
+
 const store = createStore(
     combineReducers({
         ...reducers,

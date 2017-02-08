@@ -194,7 +194,18 @@ Apollo with webpack when bundling. This should decrease bundle size, as
 `graphql-tag` is no longer required client side, and speed up client side
 because client does not need to do AST processing.
 * [Compress client side bundle](https://github.com/webpack-contrib/compression-webpack-plugin).
-Should make our bundle well below 200kb, which is somewhat better.
+Should make our bundle well below 200kb, which is somewhat better. Make server
+send a
+```
+if(process.env.NODE_ENV === 'production'){
+    app.get('*.js', function (req, res, next) {
+        req.url = req.url + '.gz';
+        res.set('Content-Encoding', 'gzip');
+        next();
+    });
+}
+```
+
 * Switch to [preact](https://github.com/developit/preact) to decrease bundle
 size.
 * Optional polyfills/fetch/Promise/assign/keys bundle for old browsers, so we

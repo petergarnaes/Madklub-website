@@ -13,6 +13,15 @@ fs.readdirSync('node_modules')
 
 //new webpack.NormalModuleReplacementPlugin(/\.css$/, 'node-noop')
 
+function replacePath(newResource){
+    let request = newResource.request;
+    console.log('Replacing '+request);
+    newResource.request = request.replace(/async_component$/,'sync_component');
+    console.log("With "+newResource.request);
+    //console.log(newResource);
+    return newResource;
+}
+
 module.exports = {
     entry: [
         'babel-polyfill',
@@ -28,6 +37,14 @@ module.exports = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1
+        }),
+        new webpack.NormalModuleReplacementPlugin(
+            /\/async_component/,
+            replacePath
+            //'/sync_component'
+        ),
         //new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: true }),
         new ExtractTextPlugin({
             filename: "/public/styles.css",
