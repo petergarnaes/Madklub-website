@@ -1,5 +1,4 @@
 import React from 'react';
-import withRouter from 'react-router-dom/withRouter';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
@@ -8,15 +7,6 @@ import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-/*import {
-    FormGroup,
-    ControlLabel,
-    FormControl,
-    HelpBlock,
-    Button,
-    Grid,
-    Row,
-    Col} from 'react-bootstrap';*/
 
 const FieldGroup = ({ id, label, validate, help, ...props }) => (
     <FormGroup controlId={id}
@@ -29,11 +19,6 @@ const FieldGroup = ({ id, label, validate, help, ...props }) => (
 );
 
 class LoginComponent extends React.Component {
-    /*static propTypes = {
-        router: React.PropTypes.object.isRequired,
-        mutate: React.PropTypes.func.isRequired,
-        login: React.PropTypes.func.isRequired,
-    }*/
 
     constructor(props){
         super(props);
@@ -150,4 +135,4 @@ const mapDispatchToProps = (dispatch) => ({
  export default connect(mapStateToProps,mapDispatchToProps)(graphql(loginMutation)(withRouter(LoginComponent)))
 */
 
-export default withRouter(LoginComponent)
+export default LoginComponent

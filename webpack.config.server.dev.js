@@ -16,7 +16,7 @@ fs.readdirSync('node_modules')
 function replacePath(newResource){
     let request = newResource.request;
     console.log('Replacing '+request);
-    newResource.request = request.replace(/async_component$/,'sync_component');
+    newResource.request = request.replace(/async_version$/,'sync_version');
     console.log("With "+newResource.request);
     //console.log(newResource);
     return newResource;
@@ -41,7 +41,7 @@ module.exports = {
             maxChunks: 1
         }),
         new webpack.NormalModuleReplacementPlugin(
-            /\/async_component/,
+            /\/async_version/,
             replacePath
             //'/sync_component'
         ),

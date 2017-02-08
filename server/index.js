@@ -73,9 +73,6 @@ if(process.env.NODE_ENV === 'production'){
     // TODO handle css compressed with gzip when we figure css out
     console.log("We register right?");
     app.get(/.+\.js$/, function (req, res, next) {
-        console.log('We did tell it right? '+req.url);
-        //req.url = req.url + '.gz';
-        //req.url = req.url;
         res.set('Content-Encoding', 'gzip');
         next();
     });
@@ -207,7 +204,6 @@ function renderFullPage(html, preloadedState){
         Object.keys(preloadedState.registeredRoutes).forEach((route)=>{
             // Keys MUST match up with chunk name (declared by require.ensure).
             let chunkFullName = chunkMapManifest[route+'.js'];
-            console.log('Sending out '+chunkFullName);
             preloads += '<link rel="preload" href="/public/'+chunkFullName+'" as="script">\n';
             prefetches += '<link rel="prefetch" href="/public/'+chunkFullName+'">\n';
         });
@@ -239,36 +235,6 @@ function renderFullPage(html, preloadedState){
     `
 }
 
-//<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
-//<style type="text/css">${css}</style>
-//<link rel="stylesheet" type="text/css" href="/styles.css">
-
-/**
- * Site requests are handled here, takes care of routing and server-side rendering
- **/
-/* Old way with react-router < v4, kept because new one is in beta
-app.use((req, res) => {
-    console.log('Page request! Client asked for '+req.url);
-    match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
-        if(error){
-            res.status(500).send(error.message)
-        } else if (redirectLocation) {
-            res.redirect(302, redirectLocation.pathname + redirectLocation.search)
-        } else if (renderProps) {
-            // You can also check renderProps.components or renderProps.routes for
-            // your "not found" component or route respectively, and send a 404 as
-            // below, if you're using a catch-all route.
-            handleRender(renderProps,req,res)
-            //res.status(200).send(
-            //    renderFullPage(renderToString(<RouterContext {...renderProps} />))
-            //)
-        } else {
-            //TODO: make a nicer 404 page
-            res.status(404).send('Not found')
-        }
-    });
-});
-*/
 app.use((req,res)=>{
     handleRender(req,res);
 });

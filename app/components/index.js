@@ -3,7 +3,7 @@
 import React from 'react';
 import Route from 'react-router-dom/Route';
 import Main from './main';
-import Login from './login/async_component';
+import Login from './login/async_version';
 import NavBar from './nav_bar';
 import '../themes/css/theme.min.css';
 

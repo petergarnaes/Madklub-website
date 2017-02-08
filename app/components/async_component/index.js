@@ -1,25 +1,28 @@
 /**
- * Created by peter on 2/7/17.
+ * Created by peter on 2/8/17.
  */
-//import Login from './index';
 import React from 'react';
 import { connect } from 'react-redux';
 import { resolved_components } from '../../async/resolved_components';
 
-class AsyncLogin extends React.Component {
+class AsyncComponent extends React.Component {
+    static propTypes = {
+        routeIdentifier: React.PropTypes.string.isRequired,
+        retrieveComponent: React.PropTypes.func.isRequired,
+    };
     static Component = null;
     mounted = false;
 
     state = {
-        Component: AsyncLogin.Component
+        Component: AsyncComponent.Component
     };
 
     componentWillMount() {
         // Checks if route was registered, ie. SSR loaded.
         if(!this.props.routeRegistered){
             if ( this.state.Component === null ) {
-                new Promise((resolve) => require.ensure([],() => resolve(require('./index')),'login')).then(m => m.default).then(Component => {
-                    AsyncLogin.Component = Component;
+                new Promise((resolve) => this.props.retrieveComponent(resolve)).then(m => m.default).then(Component => {
+                    AsyncComponent.Component = Component;
                     console.log('Loading async, routeRegistered was: '+this.props.routeRegistered);
                     if ( this.mounted ) {
                         console.log('We render async route');
@@ -31,7 +34,7 @@ class AsyncLogin extends React.Component {
             // If route WAS registered, we know it has been resolved before rendering, so we can get it from resolved
             // components
             console.log('route was registered, should see an identical render');
-            AsyncLogin.Component = resolved_components['login'];
+            AsyncComponent.Component = resolved_components[this.props.routeIdentifier];
         }
     }
 
@@ -48,7 +51,7 @@ class AsyncLogin extends React.Component {
         if(this.props.routeRegistered){
             console.log('Just to be sure, routeRegistered was: '+this.props.routeRegistered);
             // Route rendered on server
-            Component = AsyncLogin.Component;
+            Component = AsyncComponent.Component;
         } else {
             // Route is pulled asynchronously
             console.log('Async route detected');
@@ -64,11 +67,8 @@ class AsyncLogin extends React.Component {
     }
 }
 
-//const AsyncLogin = ({routeRegistered}) => {
-//};
-
-const mapStateToProps = (state) => ({
-    routeRegistered: state.registeredRoutes['login']
+const mapStateToProps = (state, ownProps) => ({
+    routeRegistered: state.registeredRoutes[ownProps.routeIdentifier]
 });
 
-export default connect(mapStateToProps)(AsyncLogin);
+export default connect(mapStateToProps)(AsyncComponent);
