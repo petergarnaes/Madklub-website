@@ -96,7 +96,7 @@ var config = {
             },
             compress: {
                 screw_ie8: true,
-                drop_console: true, // strips console statements
+                //drop_console: true, // strips console statements
                 unused: true,
                 dead_code: true, // big one--strip code that will never execute
             },

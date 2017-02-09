@@ -245,7 +245,7 @@ function renderFullPage(html, preloadedState,registered_components){
                     // WARNING: See the following for Security isues with this approach:
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
                     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)};
-                    window.__REGISTERED_ROUTES__ = ${JSON.stringify(registered_components)}
+                    window.__REGISTERED_COMPONENTS__ = ${JSON.stringify(registered_components)}
                 </script>
                 ${manifestDecl}
                 ${vendorDecl}

@@ -11,8 +11,10 @@ import App from '../app/components';
 import * as reducers from '../app/reducers';
 import async_map from '../app/async/components';
 import {set_resolved_component} from '../app/async/resolved_components';
+import RegisterComponentContainer from '../app/async/component_register_container';
 
 let initialState = window.__PRELOADED_STATE__;
+let registeredComponents = window.__REGISTERED_COMPONENTS__;
 
 const networkInterface = createNetworkInterface({
     uri: '/graphql',
@@ -47,7 +49,7 @@ const store = createStore(
     }),
     initialState, // initial state
     compose(
-        applyMiddleware(client.middleware()),
+        applyMiddleware(client.middleware())
         // If you are using the devToolsExtension, you can add it here also
         //window.devToolsExtension ? window.devToolsExtension() : f => f,
     )
@@ -62,7 +64,7 @@ function asyncFunction (route, cb) {
     });
 }
 
-export let requests = window.__REGISTERED_ROUTES__.map((item) => {
+export let requests = registeredComponents.map((item) => {
     return new Promise((resolve) => {
         asyncFunction(item, resolve);
     });
@@ -71,7 +73,9 @@ export let requests = window.__REGISTERED_ROUTES__.map((item) => {
 export default () => (
     <ApolloProvider store={store} client={client}>
         <BrowserRouter>
-            <App />
+            <RegisterComponentContainer registeredComponents={registeredComponents}>
+                <App />
+            </RegisterComponentContainer>
         </BrowserRouter>
     </ApolloProvider>
 );

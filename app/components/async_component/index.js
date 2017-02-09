@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { withComponentRegister } from '../../async/component_register_container';
+import { resolved_components } from '../../async/resolved_components.js';
 
 class AsyncComponent extends React.Component {
     static propTypes = {

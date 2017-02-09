@@ -6,8 +6,6 @@ import React from 'react';
 class RegisterComponentContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.registeredComponents =
-            this.props.registeredComponents ? this.props.registeredComponents : [];
     }
 
     static childContextTypes = {
@@ -16,7 +14,7 @@ class RegisterComponentContainer extends React.Component {
 
     getChildContext() {
         return {
-            registeredComponents: this.registeredComponents
+            registeredComponents: this.props.registeredComponents
         }
     }
 
@@ -31,7 +29,7 @@ class RegisterComponentContainer extends React.Component {
 }
 
 RegisterComponentContainer.propTypes = {
-    registeredComponents: React.PropTypes.arrayOf(React.PropTypes.string)
+    registeredComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
 };
 
 export const withComponentRegister = (component) => {
