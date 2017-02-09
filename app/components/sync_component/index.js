@@ -1,14 +1,15 @@
 /**
  * Created by peter on 2/8/17.
  */
-//import Login from './index';
 import React from 'react';
-import { connect } from 'react-redux';
-import { registerRoute } from '../../actions/async_routes';
+import { withComponentRegister } from '../../async/component_register_container';
 
-const SyncComponent = ({routeIdentifier,retrieveComponent,markAsSSR}) => {
+const SyncComponent = ({routeIdentifier,retrieveComponent,registerComponent}) => {
     console.log('Loading route synchronously');
-    markAsSSR(routeIdentifier);
+    /*if(process.env.EXECUTION_ENV === 'server'){
+     registerComponent(routeIdentifier);
+    }*/
+    registerComponent(routeIdentifier);
     let Component = retrieveComponent();
     return <Component />;
 };
@@ -18,9 +19,4 @@ SyncComponent.propTypes = {
     retrieveComponent: React.PropTypes.func.isRequired,
 };
 
-//const mapStateToProps = () => ({});
-const mapDispatchToProps = (dispatch) => ({
-    markAsSSR: (route) => dispatch(registerRoute(route))
-});
-
-export default connect(() => {return{}},mapDispatchToProps)(SyncComponent);
+export default withComponentRegister(SyncComponent);

@@ -2,8 +2,7 @@
  * Created by peter on 2/8/17.
  */
 import React from 'react';
-import { connect } from 'react-redux';
-import { resolved_components } from '../../async/resolved_components';
+import { withComponentRegister } from '../../async/component_register_container';
 
 class AsyncComponent extends React.Component {
     static propTypes = {
@@ -19,11 +18,11 @@ class AsyncComponent extends React.Component {
 
     componentWillMount() {
         // Checks if route was registered, ie. SSR loaded.
-        if(!this.props.routeRegistered){
+        if(!this.props.isRegistered(this.props.routeIdentifier)){
             if ( this.state.Component === null ) {
                 new Promise((resolve) => this.props.retrieveComponent(resolve)).then(m => m.default).then(Component => {
                     AsyncComponent.Component = Component;
-                    console.log('Loading async, routeRegistered was: '+this.props.routeRegistered);
+                    console.log('Loading async, routeRegistered was: '+this.props.isRegistered(this.props.routeIdentifier));
                     if ( this.mounted ) {
                         console.log('We render async route');
                         this.setState({Component});
@@ -48,8 +47,8 @@ class AsyncComponent extends React.Component {
 
     render() {
         var Component = null;
-        if(this.props.routeRegistered){
-            console.log('Just to be sure, routeRegistered was: '+this.props.routeRegistered);
+        if(this.props.isRegistered(this.props.routeIdentifier)){
+            console.log('Just to be sure, routeRegistered was: '+this.props.isRegistered(this.props.routeIdentifier));
             // Route rendered on server
             Component = AsyncComponent.Component;
         } else {
@@ -67,8 +66,8 @@ class AsyncComponent extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+/*const mapStateToProps = (state, ownProps) => ({
     routeRegistered: state.registeredRoutes[ownProps.routeIdentifier]
-});
+});*/
 
-export default connect(mapStateToProps)(AsyncComponent);
+export default withComponentRegister(AsyncComponent);

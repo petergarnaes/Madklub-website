@@ -62,7 +62,7 @@ function asyncFunction (route, cb) {
     });
 }
 
-export let requests = Object.keys(initialState.registeredRoutes).map((item) => {
+export let requests = window.__REGISTERED_ROUTES__.map((item) => {
     return new Promise((resolve) => {
         asyncFunction(item, resolve);
     });

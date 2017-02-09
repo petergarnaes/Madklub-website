@@ -29,6 +29,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 //import routes from '../app/routes';
 import App from '../app/components';
+import RegisterComponentContainer from '../app/async/component_register_container';
 
 const crypto = require('crypto');
 const app = express();
@@ -157,11 +158,16 @@ async function handleRender(req,res){
     // This context object contains the results of the render
     const context = {};
 
+    // Will be mutated by RegisterComponentContainer to contain the keys components that the client should know about
+    var registered_components = [];
+
     // Sets up app to be rendered
     var app = (
         <ApolloProvider store={store} client={client}>
             <StaticRouter location={req.url} context={context}>
-                <App />
+                <RegisterComponentContainer registeredComponents={registered_components}>
+                    <App />
+                </RegisterComponentContainer>
             </StaticRouter>
         </ApolloProvider>
     );
@@ -169,6 +175,8 @@ async function handleRender(req,res){
     // Renders app with data loaded, and Redux store initial state propagated
     const html = await renderToStringWithData(app);
 
+    console.log('We now registered:');
+    console.log(registered_components);
     // Sets initial state for apollo, so client bundle knows what is loaded and whatnot
     const preloadedState = store.getState();
 
@@ -180,14 +188,14 @@ async function handleRender(req,res){
     //    res.redirect(context.url);
     //} else {
         // Send the rendered page back to the client
-    res.status(200).send(renderFullPage(html, preloadedState));
+    res.status(200).send(renderFullPage(html, preloadedState,registered_components));
     //}
 }
 
 /**
  * Renders react app instance to a html document
  **/
-function renderFullPage(html, preloadedState){
+function renderFullPage(html, preloadedState,registered_components){
     // Loads all of app css statically, which is statically compiled.
     // TODO
     const css = fs.readFileSync('./dist/public/styles.css');
@@ -211,7 +219,7 @@ function renderFullPage(html, preloadedState){
         preloads += '<link rel="preload" href="/public/'+vendorFullName+'" as="script">\n';
         prefetches += '<link rel="prefetch" href="/public/'+vendorFullName+'">\n';
         vendorDecl = '<script type="application/javascript" src="/public/'+vendorFullName+'"></script>';
-        Object.keys(preloadedState.registeredRoutes).forEach((route)=>{
+        registered_components.forEach((route)=>{
             // Keys MUST match up with chunk name (declared by require.ensure).
             let chunkFullName = chunkMapManifest[route+'.js'];
             preloads += '<link rel="preload" href="/public/'+chunkFullName+'" as="script">\n';
@@ -236,7 +244,8 @@ function renderFullPage(html, preloadedState){
                 <script>
                     // WARNING: See the following for Security isues with this approach:
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
-                    window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
+                    window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)};
+                    window.__REGISTERED_ROUTES__ = ${JSON.stringify(registered_components)}
                 </script>
                 ${manifestDecl}
                 ${vendorDecl}
