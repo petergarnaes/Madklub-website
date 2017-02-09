@@ -5,6 +5,7 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 var CompressionPlugin = require("compression-webpack-plugin");
 var ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
 var ManifestPlugin = require('webpack-manifest-plugin');
+var WebpackChunkHash = require("webpack-chunk-hash");
 
 function isVendor(module) {
     // this assumes your vendor imports exist in the node_modules directory
@@ -76,8 +77,10 @@ var config = {
         // (see isVendor)
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
-            //chunks: ['app'],
             minChunks: isVendor
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest'
         }),
         // Creates a manifest file, which is somehow necessary to keep vendor chunkhash the same if nothing changed.
         /*new webpack.optimize.CommonsChunkPlugin({
@@ -99,6 +102,8 @@ var config = {
             },
             comments: false
         }),
+        new webpack.HashedModuleIdsPlugin(),
+        new WebpackChunkHash(),
         new ChunkManifestPlugin({
             filename: "chunk-manifest.json",
             manifestVariable: "webpackManifest"

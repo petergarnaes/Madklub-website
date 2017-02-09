@@ -121,21 +121,21 @@ changed unless behavior of asynchronous components change.
 
 ## Building App
 
-When running `npm run build` as of now, the app will be built in the `dist` 
-folder. The idea is that the files there is the complete app. As of now, the 
-client side Javascript app is built to `bundle.js` and `bundle.js.map`. The map
-is for debugging, because `devtool: 'source-map'` is defined, maybe remove for
-build/production?
+When running `npm run build` as of now, the app will be built in the
+`dist/public` folder. The idea is that the files there is the complete client
+side app. For production, names include chunk hash, with means they change and
+can be cache busted on updates.
 
 Server is also transpiled and bundled with webpack. For production build, 
 uglifying and no hot reload can be used exactly like with client, but with 
-`target: node` of course, as we see in `webpack.config.server.dev.js`.
+`target: node` of course, as we see in `webpack.config.server.dev.js`. The
+server is put in `dist/backend.js`.
 
-Point is, that `dist` folder should contain the finished app that is minified 
-and transpiled to es5. This means both client and server code in a bundled, 
-transpiled and minified state. The client `bundle.js` should be available for 
-the HTML document to load, so in the future it should probably be in something 
-like `dist/public`, along with other assets.
+To put into production run these commands:
+* `npm run-script build`: Will build all client side assets, ie. vendor code,
+async chunk, css etc.
+* `npm run-script build-server`: Will build server
+* `node dist/backend.js`: Will start production server
 
 ## Security
 
@@ -185,7 +185,7 @@ extensions which does not increase bundle size that much.
 Bootstrap is fairly well optimized for the modern browser, so pulling the whole
 thing is not to bad (ca. 118 kb). This also seem to be the standard, as there
 are not a lot of work done on isomorphic style loading (only one repo as far as
-I can see).
+I can see). Can be compressed with gzip to something like 20 kb.
 
 ### Async components
 

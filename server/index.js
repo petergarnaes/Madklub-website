@@ -73,7 +73,10 @@ if(process.env.NODE_ENV === 'production'){
     // TODO handle css compressed with gzip when we figure css out
     console.log("We register right?");
     app.get(/.+\.js$/, function (req, res, next) {
-        res.set('Content-Encoding', 'gzip');
+        // TODO find a way to solve this better so we avoid name clashes
+        if(!req.url.includes('manifest')){
+            res.set('Content-Encoding', 'gzip');
+        }
         next();
     });
 }
@@ -192,15 +195,22 @@ function renderFullPage(html, preloadedState){
     var prefetches = '';
     // This is developer name of bundle
     var mainFullName = 'main.js';
-    var vendorFullName = 'vendor.js';
+    // Since development is one big bundle, we only do manifest and vendor on production.
+    var manifestDecl = '';
+    var vendorDecl = '';
     // This will setup preload/prefetch statements for both main bundle, as well as
     if(process.env.NODE_ENV === 'production'){
+        let manifestFullName = chunkMapManifest['manifest.js'];
+        preloads += '<link rel="preload" href="/public/'+manifestFullName+'" as="script">\n';
+        prefetches += '<link rel="prefetch" href="/public/'+manifestFullName+'">\n';
+        manifestDecl = '<script type="application/javascript" src="/public/'+manifestFullName+'"></script>';
         mainFullName = chunkMapManifest['main.js'];
         preloads += '<link rel="preload" href="/public/'+mainFullName+'" as="script">\n';
         prefetches += '<link rel="prefetch" href="/public/'+mainFullName+'">\n';
-        vendorFullName = chunkMapManifest['vendor.js'];
+        var vendorFullName = chunkMapManifest['vendor.js'];
         preloads += '<link rel="preload" href="/public/'+vendorFullName+'" as="script">\n';
         prefetches += '<link rel="prefetch" href="/public/'+vendorFullName+'">\n';
+        vendorDecl = '<script type="application/javascript" src="/public/'+vendorFullName+'"></script>';
         Object.keys(preloadedState.registeredRoutes).forEach((route)=>{
             // Keys MUST match up with chunk name (declared by require.ensure).
             let chunkFullName = chunkMapManifest[route+'.js'];
@@ -228,7 +238,8 @@ function renderFullPage(html, preloadedState){
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
                     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
                 </script>
-                <script type="application/javascript" src="/public/${vendorFullName}"></script>
+                ${manifestDecl}
+                ${vendorDecl}
                 <script type="application/javascript" src="/public/${mainFullName}"></script>
             </body>
         </html>
