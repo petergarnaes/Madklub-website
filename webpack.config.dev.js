@@ -12,13 +12,16 @@ function replacePath(newResource){
 }
 
 var config = {
-    devtool: 'inline-source-map',
+    devtool: 'eval',
     entry: {
         main: [
             // activate HMR for React
             //'babel-polyfill',
             'react-hot-loader/patch',
             'webpack-hot-middleware/client',
+            'webpack/hot/only-dev-server',
+            // bundle the client for hot reloading
+            // only- means to only hot reload for successful updates
             './client/index_dev.js'
         ],
     },
@@ -29,11 +32,11 @@ var config = {
         publicPath: '/public/'
     },
     plugins: [
-        /*new webpack.NormalModuleReplacementPlugin(
+        new webpack.NormalModuleReplacementPlugin(
             /\/async_version/,
             replacePath
             //'/sync_component'
-        ),*/
+        ),
         new webpack.HotModuleReplacementPlugin(),
         // prints more readable module names in the browser console on HMR updates
         new webpack.NamedModulesPlugin(),

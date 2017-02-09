@@ -21,8 +21,10 @@ Promise.all(requests).then(() => {
 // Hot Module Replacement API
 if (module.hot) {
     console.log("Hi mom!");
-    module.hot.accept('./index_dev.js');
-    module.hot.accept('../app/components/index', () => {
+    //
+    // module.hot.accept('./index_dev.js');
+    module.hot.accept(() => {
+        //const NextApp = require('../app/components').default;
         renderApp(App)
     });
 }
