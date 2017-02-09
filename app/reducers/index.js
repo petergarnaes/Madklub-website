@@ -4,6 +4,5 @@
  * Here we should just export all reducers in this folder
  */
 import isLoggedIn from './login';
-import registeredRoutes from './async_routes';
 
-export {isLoggedIn,registeredRoutes};
+export {isLoggedIn};
