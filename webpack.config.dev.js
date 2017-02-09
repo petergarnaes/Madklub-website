@@ -2,6 +2,15 @@ var path = require('path');
 var webpack = require('webpack');
 var ManifestPlugin = require('webpack-manifest-plugin');
 
+function replacePath(newResource){
+    let request = newResource.request;
+    console.log('Replacing '+request);
+    newResource.request = request.replace(/async_version$/,'sync_version');
+    console.log("With "+newResource.request);
+    //console.log(newResource);
+    return newResource;
+}
+
 var config = {
     devtool: 'inline-source-map',
     entry: {
@@ -16,11 +25,15 @@ var config = {
     // Bundle should be in public folder
     output: {
         path: path.join(__dirname,'dist/'),
-        filename: '[name].js',
-        chunkFilename: "[name].js",
+        filename: 'main.js',
         publicPath: '/public/'
     },
     plugins: [
+        /*new webpack.NormalModuleReplacementPlugin(
+            /\/async_version/,
+            replacePath
+            //'/sync_component'
+        ),*/
         new webpack.HotModuleReplacementPlugin(),
         // prints more readable module names in the browser console on HMR updates
         new webpack.NamedModulesPlugin(),
@@ -94,6 +107,7 @@ var config = {
  limit: "100000",
  mimetype: "image/svg+xml"
  }
- }*/
+ }*/        chunkFilename: "[name].js",
+
 
 module.exports = config;

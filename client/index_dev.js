@@ -8,7 +8,6 @@ import { AppContainer } from 'react-hot-loader';
 
 // for each registered route
 //console.log(state);
-console.log(state.registeredRoutes);
 
 const renderApp = (Component) => ReactDOM.render(<AppContainer><Component/></AppContainer>,
     document.getElementById('react-view'));
@@ -22,7 +21,8 @@ Promise.all(requests).then(() => {
 // Hot Module Replacement API
 if (module.hot) {
     console.log("Hi mom!");
-    module.hot.accept('./render_config', () => {
+    module.hot.accept('./index_dev.js');
+    module.hot.accept('../app/components/index', () => {
         renderApp(App)
     });
 }
