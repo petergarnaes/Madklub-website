@@ -9,7 +9,7 @@ const LoadingIcon = ({message}) =>{
     var msg = null;
     if(message) msg = <p className="loading-icon-message">{message}</p>;
     return (
-        <div>
+        <div className="loading-icon-container">
             <Glyphicon
                 className="loading-icon"
                 glyph="refresh" />

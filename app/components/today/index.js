@@ -14,7 +14,7 @@ const TodayWithData = ({data}) => {
     if(loading){
         // TODO make a proper loading component
         return (
-            <p>Loading...</p>
+            <LoadingIcon message="Loading..."/>
         )
     }
     // TODO error!

@@ -1,9 +1,11 @@
+.loading-icon-container {
+    text-align: center;
+}
+
 .loading-icon {
     color: #4d0051;
     font-size: 4em;
     margin-top: 0.5em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
     -animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
 }
@@ -11,9 +13,8 @@
 .loading-icon-message {
     color: #4d0051;
     font-size: 1em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
 }
 
 @-webkit-keyframes spin2 {

@@ -2,11 +2,11 @@
     border-radius: 100%;
     width:6em;
     height:6em;
-    border: 2px solid #bbbbbb;
+    border: 2px solid black;
     margin: 1em;
     outline:none;
 }
 
 .glyphicon.the-icon {
-    font-size: 2em;
+    font-size: 3em;
 }

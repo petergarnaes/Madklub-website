@@ -6,43 +6,31 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
-import Grid from 'react-bootstrap/lib/Grid';
-import Row from 'react-bootstrap/lib/Row';
-//import Col from 'react-bootstrap/lib/Col';
-/*import {
-    Grid,
-    Row,
-    Col} from 'react-bootstrap';*/
+import './styling.css';
 import moment from 'moment';
 import CookComponent from '../cook_component';
 import RoundIconButton from '../round_icon_button';
 
 const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,hasCancelled}) => (
-    <Grid>
-        <Row><h2>Der er mad kl. {moment(dinnerClub.at).format("H:mm")}</h2></Row>
-        <Row><h3>Vi skal have {dinnerClub.meal}!</h3></Row>
-        <Row>
+    <div className="front-page-dinnerclub-container">
+        <h2>Der er mad kl. {moment(dinnerClub.at).format("H:mm")}</h2>
+        <h3>Vi skal have {dinnerClub.meal}!</h3>
             <CookComponent
                 cook={dinnerClub.cook}/>
-        </Row>
-        <Row>
             <p>Cancelled: {""+dinnerClub.cancelled}, shopping is: {""+dinnerClub.shopping_complete}</p>
-        </Row>
-        <Row>
             <RoundIconButton
                 glyph="ok"
-                onClick={()=>console.log("Totally clicked that shit!")}
+                onClick={()=>console.log("Totally clicked that shit! ")}
                 isActive={isParticipating && !hasCancelled}
-                activeColor="#BDE4B9"
+                activeColor="#1a591a"
                 activeColorIcon="white"/>
             <RoundIconButton
                 glyph="remove"
                 onClick={()=>console.log("Totally clicked that other shit!")}
                 isActive={hasCancelled || !isParticipating}
-                activeColor="#e4b9b9"
+                activeColor="#b73835"
                 activeColorIcon="white"/>
-        </Row>
-    </Grid>
+    </div>
 );
 
 FrontPageDinnerClubComponent.fragments = {

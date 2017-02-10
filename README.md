@@ -300,16 +300,3 @@ is just another JWT token but with a different secret/header. Our API should
 then be able to verifiy either cookie+csrf or HTTP header with 
 `Authorization: Bearer jwt-api-key` which is the standard OAuth pattern. A 
 separate login page might be in order here.
-
-### Async loading
-
-With new version of react-router, it is simply a matter of asynchronously
-loading components, which there are many guides on.
-
-#### react-router < v4
-To add asynchronously loaded libraries and components see [medium blog post](https://medium.com/@lavrton/progressive-loading-for-modern-web-applications-via-code-splitting-fb43999735c6#.yvw7jdab4)
-or [code splitting](https://webpack.js.org/guides/code-splitting-require/).
-
-For asynchronously loaded routes see react router [dynamic routing](https://github.com/ReactTraining/react-router/blob/master/docs/guides/DynamicRouting.md)
-
-

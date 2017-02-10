@@ -20,7 +20,7 @@ const NavBar = ({loggedIn,push}) => {
         <NavItem eventKey="login" onSelect={goTo(push)}>Login</NavItem>
     ) : (
         <NavDropdown title="Account" id="basic-nav-dropdown">
-            <MenuItem eventKey="settings" onSelect={goTo(push)}>Settings</MenuItem>
+            <MenuItem eventKey="settings" onSelect={goTo(push)}>Indstillinger</MenuItem>
             <MenuItem divider />
             <MenuItem href="/logout">Logout</MenuItem>
         </NavDropdown>
