@@ -12,7 +12,6 @@ const TodayWithData = ({data}) => {
     let {loading,error,me} = data;
     console.log(me);
     if(loading){
-        // TODO make a proper loading component
         return (
             <LoadingIcon message="Loading..."/>
         )
@@ -37,14 +36,10 @@ const TodayWithData = ({data}) => {
         {isParticipating: false,hasCancelled: false}
     );
     return (
-        <div>
-            <p>We have that {me.display_name} is logged in and they live in room {me.room_number}</p>
-            <br/>
-            <FrontPageDinnerClubComponent
-                dinnerClub={dinnerClubToday}
-                isParticipating={isParticipating}
-                hasCancelled={hasCancelled}/>
-        </div>
+        <FrontPageDinnerClubComponent
+            dinnerClub={dinnerClubToday}
+            isParticipating={isParticipating}
+            hasCancelled={hasCancelled}/>
     );
 };
 
@@ -62,8 +57,6 @@ const currentUserQuery = gql`
     query currentUserQuery($todayStart: String!, $todayEnd: String!) {
         me {
             id
-            display_name
-            room_number
             kitchen {
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     ...FrontPageDinnerClubComponentDinnerClub

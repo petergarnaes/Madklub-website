@@ -25,16 +25,20 @@ const NavBar = ({loggedIn,push}) => {
             <MenuItem href="/logout">Logout</MenuItem>
         </NavDropdown>
     );
+    let CalendarComponent = (loggedIn) ?
+        <NavItem eventKey="calendar" onSelect={goTo(push)}>Uge Oversigt</NavItem> :
+        null;
     return (
         <Navbar inverse collapseOnSelect>
             <Navbar.Header>
                 <Navbar.Brand>
-                    <Link to="/">Madklub</Link>
+                    <Link to="/">Madklub!</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
                 <Nav pullRight>
+                    {CalendarComponent}
                     {SessionComponent}
                 </Nav>
             </Navbar.Collapse>
