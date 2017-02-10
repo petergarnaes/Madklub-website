@@ -262,6 +262,8 @@ The overhead in constructing the `<preload />` serverside is small.
 * Relative paths in `server/index.js` should not have `dist/` in front, the
 `dist` folder should be self contained. This is important for making the
 production bundle work.
+* Decide on some immutability library or something. Then rework front page
+participation mutation, so it clones better and code is a little nicer.
 * [Pre-process GraphQL ASTs](http://dev.apollodata.com/react/webpack.html) for
 Apollo with webpack when bundling. This should decrease bundle size, as
 `graphql-tag` is no longer required client side, and speed up client side
