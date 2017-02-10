@@ -26,18 +26,20 @@ const TodayWithData = ({data}) => {
             <p>No Dinner club today peeps!</p>
         );
     }
-    let {isParticipating,hasCancelled} = dinnerClubToday.participants.reduce(
+    let {isParticipating,participationID,hasCancelled} = dinnerClubToday.participants.reduce(
         (pc,part) => {
             return ({
                 isParticipating: pc.isParticipating || (part.user.id === me.id),
+                participationID: (part.user.id === me.id) ? part.id : pc.participationID,
                 hasCancelled: pc.hasCancelled || ((part.user.id === me.id) && part.cancelled)
             })
         },
-        {isParticipating: false,hasCancelled: false}
+        {isParticipating: false,participationID: '',hasCancelled: false}
     );
     return (
         <FrontPageDinnerClubComponent
             dinnerClub={dinnerClubToday}
+            participationID={participationID}
             isParticipating={isParticipating}
             hasCancelled={hasCancelled}/>
     );
@@ -61,6 +63,7 @@ const currentUserQuery = gql`
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     ...FrontPageDinnerClubComponentDinnerClub
                     participants {
+                        id
                         cancelled
                         user {
                             id

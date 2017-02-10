@@ -3,6 +3,7 @@
  */
 
 import {
+  GraphQLID as ID,
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 import {resolver} from 'graphql-sequelize';
@@ -14,7 +15,11 @@ import {createdAtDoc,updatedAtDoc} from '../docs/created_updated';
 
 const UserParticipationType = new ObjectType({
     name: 'UserParticipation',
-    fields: Object.assign(attributeFields(Participation,{exclude: ['id','dp_key','up_key','createdAt','updatedAt']}),{ // Extra fields
+    fields: Object.assign(attributeFields(Participation,{exclude: ['dp_key','up_key','createdAt','updatedAt']}),{ // Extra fields
+        id: {
+            type: ID,
+            description: 'ID of the participation'
+        },
         createdAt: {
             type: DateType,
             description: createdAtDoc

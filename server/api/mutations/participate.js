@@ -69,7 +69,7 @@ const participate = {
       // If integer, its the id of the element we want to return, if not it is the create object
     ).then((res)=>Number.isInteger(res) ? resolver(Participation)(root, {id: res}, context, info) : res);
   },
-  description: 'Changes dinnerclub fields, only cook can change a dinnerclub'
+  description: 'Changes or creates participation, based on if current user is participating'
 };
 
 export default participate;
