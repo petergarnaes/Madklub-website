@@ -11,27 +11,34 @@ import moment from 'moment';
 import CookComponent from '../cook_component';
 import RoundIconButton from '../round_icon_button';
 
-const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,hasCancelled}) => (
-    <div className="front-page-dinnerclub-container">
-        <h2>Der er mad kl. {moment(dinnerClub.at).format("H:mm")}</h2>
-        <h3>Vi skal have {dinnerClub.meal}!</h3>
+const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,hasCancelled}) => {
+    console.log('Cancelled: '+dinnerClub.cancelled+' and shopping: '+dinnerClub.shopping_complete);
+    const dinnerclub_date = moment(dinnerClub.at);
+    // Its to late to cancel when dinnerclub has already been held REMEMBER TO VERIFY SERVER SIDE
+    const to_late = dinnerclub_date.isBefore(moment());
+    return (
+        <div className="front-page-dinnerclub-container">
+            <h2>Der er mad kl. {dinnerclub_date.format("H:mm")}</h2>
+            <h3>Vi skal have {dinnerClub.meal}!</h3>
             <CookComponent
                 cook={dinnerClub.cook}/>
-            <p>Cancelled: {""+dinnerClub.cancelled}, shopping is: {""+dinnerClub.shopping_complete}</p>
             <RoundIconButton
                 glyph="ok"
                 onClick={()=>console.log("Totally clicked that shit! ")}
                 isActive={isParticipating && !hasCancelled}
                 activeColor="#1a591a"
+                isDisabled={dinnerClub.shopping_complete || dinnerClub.cancelled || to_late}
                 activeColorIcon="white"/>
             <RoundIconButton
                 glyph="remove"
                 onClick={()=>console.log("Totally clicked that other shit!")}
                 isActive={hasCancelled || !isParticipating}
+                isDisabled={dinnerClub.shopping_complete  || dinnerClub.cancelled || to_late}
                 activeColor="#b73835"
                 activeColorIcon="white"/>
-    </div>
-);
+        </div>
+    );
+};
 
 FrontPageDinnerClubComponent.fragments = {
     dinnerclub: gql`
