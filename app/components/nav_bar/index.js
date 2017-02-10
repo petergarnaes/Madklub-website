@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
@@ -26,13 +27,18 @@ const NavBar = ({loggedIn,push}) => {
         </NavDropdown>
     );
     let CalendarComponent = (loggedIn) ?
-        <NavItem eventKey="calendar" onSelect={goTo(push)}>Uge Oversigt</NavItem> :
+        <NavItem eventKey="calendar" onSelect={goTo(push)}>
+            Uge Oversigt
+            <Glyphicon
+                style={{paddingLeft:1+'em'}}
+                glyph="calendar"/>
+        </NavItem> :
         null;
     return (
         <Navbar inverse collapseOnSelect>
             <Navbar.Header>
                 <Navbar.Brand>
-                    <Link to="/">Madklub!</Link>
+                    <Link to="/">Madklub</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />
             </Navbar.Header>
