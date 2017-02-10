@@ -277,9 +277,6 @@ article in general. Maybe because of `async`/`await` we can't just take it out?
 * Make the `import()` statements use our custom splits created by the
 `CommonChunksPlugin`, so they don't bundle and load the parts of the vendor
 library they use.
-* For dev mode, change css loading to `css-loader`, so changes are hot-loaded.
-Remove `extract-text-plugin` from development server bundling, and send no
-stylesheet link or inlined styling in dev mode?
 * Split CSS into modules that can load asynchronously. Take the non-minified
 CSS theme we have, and split it. Load it with links separately, with the most
 important modules linked first. Most important module would be body and navbar
