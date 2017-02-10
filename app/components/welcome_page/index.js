@@ -4,6 +4,7 @@
 import React from 'react';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import Grid from 'react-bootstrap/lib/Grid';
+import LoadingIcon from '../loading_icon';
 //import Button from 'react-bootstrap/lib/Button';
 //import { Jumbotron, Grid,Button } from 'react-bootstrap';
 
@@ -15,6 +16,8 @@ const WelcomePage = () => (
                 For at se om der er madklub i aften, skal i logge ind. Så vil i være logget ind i 180 dage.
                 Jeres bruger har email 10xx@test og kodeordet er værelsesnummeret.
             </p>
+            <LoadingIcon />
+            <LoadingIcon message="Very long loading message!"/>
         </Grid>
     </Jumbotron>
 );
