@@ -72,7 +72,7 @@ if(process.env.NODE_ENV === 'production'){
     // decrypts it
     // TODO handle css compressed with gzip when we figure css out
     console.log("We register right?");
-    app.get(/.+\.js$/, function (req, res, next) {
+    app.get(/.+\.(js|css)$/, function (req, res, next) {
         // TODO find a way to solve this better so we avoid name clashes
         if(!req.url.includes('manifest')){
             res.set('Content-Encoding', 'gzip');
@@ -197,7 +197,7 @@ async function handleRender(req,res){
 function renderFullPage(html, preloadedState,registered_components){
     // Loads all of app css statically, which is statically compiled.
     // TODO
-    const css = fs.readFileSync('./dist/public/styles.css');
+    //const css = fs.readFileSync('./dist/public/styles.css');
     var preloads = '';
     var prefetches = '';
     // This is developer name of bundle
@@ -205,8 +205,10 @@ function renderFullPage(html, preloadedState,registered_components){
     // Since development is one big bundle, we only do manifest and vendor on production.
     var manifestDecl = '';
     var vendorDecl = '';
+    var cssDecl = '';
     // This will setup preload/prefetch statements for both main bundle, as well as
     if(process.env.NODE_ENV === 'production'){
+        cssDecl = '<link rel="stylesheet" type="text/css" href="/public/styles.css" />';
         let manifestFullName = chunkMapManifest['manifest.js'];
         preloads += '<link rel="preload" href="/public/'+manifestFullName+'" as="script">\n';
         prefetches += '<link rel="prefetch" href="/public/'+manifestFullName+'">\n';
@@ -234,9 +236,9 @@ function renderFullPage(html, preloadedState,registered_components){
                 <script>
                 window.webpackManifest = ${chunkManifest}
                 </script>
+                ${cssDecl}
                 ${preloads}
                 ${prefetches}
-                <style type="text/css">${css}</style>
             </head>
             <body>
                 <div id="react-view">${html}</div>

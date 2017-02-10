@@ -46,11 +46,6 @@ module.exports = {
             //'/sync_component'
         ),
         //new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: true }),
-        new ExtractTextPlugin({
-            filename: "/public/styles.css",
-            disable: false,
-            allChunks: true
-        })
     ],
     module: {
         rules: [
@@ -61,25 +56,8 @@ module.exports = {
                 ],
                 exclude: /node_modules/
             },
+            { test: /\.css$/, loader: 'ignore-loader' }
             // Root parameter sets the root folder of url references
-            {
-                test: /\.css$/,
-                //loader: ExtractTextPlugin.extract("style-loader","css-loader?root=public/"),
-                loader: ExtractTextPlugin.extract({
-                    fallbackLoader: "style-loader",
-                    loader: "css-loader",
-                    publicPath: "/public/"})
-            },
-            // We ensure all files loaded server side are put in the public folder
-            {
-                test: /\.(woff|woff2|png|jpg|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file-loader',
-                options: {
-                    publicPath: '/public/',
-                    outputPath: '/public/',
-                    name: '[name].[ext]'
-                }
-           }
         ]
     },
     devtool: 'sourcemap'

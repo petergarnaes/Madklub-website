@@ -115,7 +115,7 @@ var config = {
             asset: "[path]",
             algorithm: "gzip",
             // TODO add css ie. '|\.css$' when css has been properly dealt with
-            test: /\.js$|\.html$/,
+            test: /\.js$|\.html$|\.css$/,
             threshold: 10240,
             minRatio: 0.8
         })
