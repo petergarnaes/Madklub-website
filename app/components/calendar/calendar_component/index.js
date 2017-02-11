@@ -5,12 +5,27 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import Table from 'react-bootstrap/lib/Table';
+import GlyphIcon from 'react-bootstrap/lib/Glyphicon.js';
 import moment from 'moment';
 import './styling.css';
 import DayComponent from '../day_component';
+import LoadingIcon from '../../loading_icon';
 
-const CalendarComponent = () => {
-    console.log("the current user is: "+username);
+const CalendarComponent = ({data}) => {
+    let {loading,error,me} = data;
+    if(loading){
+        return <LoadingIcon message="Loading data..."/>
+    }
+
+    // TODO handle error
+
+    // Index dinnerclubs by date, if several on same day, the latest will be the winner...
+    var dinnerclubMap = new Map();
+    me.kitchen.dinnerclubs.forEach((d)=>{
+        dinnerclubMap.set(moment(d.at).date(),d);
+    });
+
+    // Data loaded, we can initialize calendar
     let today = moment();
     let month = today.format("MMMM");
     let weeks = [];
@@ -33,6 +48,7 @@ const CalendarComponent = () => {
                     <DayComponent
                         key={date.toISOString()}
                         date={date}
+                        dinnerclub={dinnerclubMap.get(date.date())}
                         thisMonth={date.month() == today.month()} />
                 )}
             </tr>
@@ -42,7 +58,15 @@ const CalendarComponent = () => {
         <Table bordered condensed className="calendar-table">
             <thead>
             <tr>
-                <th colSpan="8" style={{textAlign: "center"}}>{month}</th>
+                <th style={{textAlign: "center",cursor: "pointer"}}>
+                    <GlyphIcon
+                        glyph="chevron-left"/>
+                </th>
+                <th colSpan="6" style={{textAlign: "center"}}>{month}</th>
+                <th style={{textAlign: "center",cursor: "pointer"}}>
+                    <GlyphIcon
+                        glyph="chevron-right"/>
+                </th>
             </tr>
             <tr>
                 <th style={{textAlign: "center"}}>Uge #</th>
@@ -62,4 +86,30 @@ const CalendarComponent = () => {
     );
 };
 
-export default CalendarComponent;
+const currentUserQuery = gql`
+    query currentUserQuery($todayStart: String!, $todayEnd: String!) {
+        me {
+            kitchen {
+                dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
+                    at
+                    ...DayComponentDinnerClub
+                }
+            }
+        }
+    }
+    ${DayComponent.fragments.dinnerclub}
+`;
+
+// TODO set range to entire month
+let todayStart = moment().startOf('month').startOf('date').toISOString();
+let todayEnd = moment().endOf('month').endOf('date').toISOString();
+console.log("Calendar from "+todayStart+" To "+todayEnd);
+
+export default graphql(currentUserQuery,{
+    options: {
+        variables: {
+            todayStart: todayStart,
+            todayEnd: todayEnd
+        }
+    }
+})(CalendarComponent);

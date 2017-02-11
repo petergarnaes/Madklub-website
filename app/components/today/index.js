@@ -7,6 +7,7 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import moment from 'moment';
 import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
+import LoadingIcon from '../loading_icon';
 
 const TodayWithData = ({data}) => {
     let {loading,error,me} = data;
