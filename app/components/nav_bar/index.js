@@ -16,11 +16,11 @@ const goTo = (push) => (key) => {
 };
 
 // NavItem can have an eventKey prop, which is sent to onSelect on Nav.
-const NavBar = ({loggedIn,push}) => {
+const NavBar = ({loggedIn,username,push}) => {
     let SessionComponent = (!loggedIn) ? (
         <NavItem eventKey="login" onSelect={goTo(push)}>Login</NavItem>
     ) : (
-        <NavDropdown title="Account" id="basic-nav-dropdown">
+        <NavDropdown title={username} id="basic-nav-dropdown">
             <MenuItem eventKey="settings" onSelect={goTo(push)}>Indstillinger</MenuItem>
             <MenuItem divider />
             <MenuItem href="/logout">Logout</MenuItem>
@@ -54,7 +54,8 @@ const NavBar = ({loggedIn,push}) => {
 
 let mapStateToProps = (state) => {
     return {
-        loggedIn: state.isLoggedIn
+        loggedIn: state.isLoggedIn,
+        username: (state.isLoggedIn) ? state.currentUser.userDisplayName : ''
     }
 };
 

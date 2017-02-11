@@ -139,6 +139,10 @@ async function handleRender(req,res){
 
     // Sets correct initial Redux state, indicating if we are logged in or not
     let loginState = (req != null && req.user != null);
+    var userState = {};
+    if(loginState){
+        userState = {userID: req.user.id,userDisplayName: req.user.display_name}
+    }
 
     // Explicitly set up apollo store, which we also use as our own Redux store
     const store = createStore(
@@ -147,7 +151,7 @@ async function handleRender(req,res){
             //isLoggedIn: (state = loginState,action) => state,
             apollo: client.reducer()
         }),
-        {isLoggedIn: loginState}, // Initial state
+        {isLoggedIn: loginState, currentUser: userState}, // Initial state
         // Dunno if this is necessary, my guess is only we define middleware, but we might do server side middleware
         // some day :)
         compose(

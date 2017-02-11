@@ -1,0 +1,16 @@
+.calendar-date-cell {
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5em;
+}
+
+.todayDot {
+    background:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='0.7em' height='0.7em'><circle fill='#4d0051' cx='50%' cy='50%' r='50%'/></svg>") top left no-repeat
+;
+}
+
+.calendar-date-cell-inactive {
+    text-align: center;
+    color: grey;
+}

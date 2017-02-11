@@ -12,6 +12,10 @@ import * as reducers from '../app/reducers';
 import async_map from '../app/async/components';
 import {set_resolved_component} from '../app/async/resolved_components';
 import RegisterComponentContainer from '../app/async/component_register_container';
+import moment from 'moment';
+
+// Setting locale for entire app
+moment.locale("da");
 
 let initialState = window.__PRELOADED_STATE__;
 let registeredComponents = window.__REGISTERED_COMPONENTS__;

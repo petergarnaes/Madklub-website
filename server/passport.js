@@ -60,12 +60,12 @@ passport.use(new FacebookStrategy({
                 });
                 done(null, {
                     id: user.id,
-                    email: user.email,
+                    display_name: user.display_name,
                 });
             }
         } else {
             const users = await User.findAll({
-                attributes: ['id', 'email'],
+                attributes: ['id', 'display_name'],
                 where: { '$logins.name$': loginName, '$logins.key$': profile.id },
                 include: [
                     {
@@ -107,7 +107,7 @@ passport.use(new FacebookStrategy({
                     });
                     done(null, {
                         id: user.id,
-                        email: user.email,
+                        display_name: user.display_name,
                     });
                 }
             }
@@ -138,7 +138,7 @@ passport.use(new LocalStrategy(
                     account.getUser().then(function (user) {
                         return done(null,{
                             id: user.id,
-                            email: account.email
+                            display_name: user.display_name
                         });
                     });
                 } else {

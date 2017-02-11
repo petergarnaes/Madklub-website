@@ -4,5 +4,6 @@
  * Here we should just export all reducers in this folder
  */
 import isLoggedIn from './login';
+import currentUser from './current_user';
 
-export {isLoggedIn};
+export {isLoggedIn,currentUser};
