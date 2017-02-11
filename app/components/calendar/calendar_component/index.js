@@ -4,14 +4,16 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { connect } from 'react-redux';
 import Table from 'react-bootstrap/lib/Table';
 import GlyphIcon from 'react-bootstrap/lib/Glyphicon.js';
 import moment from 'moment';
 import './styling.css';
 import DayComponent from '../day_component';
 import LoadingIcon from '../../loading_icon';
+import { selectMonth } from '../../../actions/calendar';
 
-const CalendarComponent = ({data}) => {
+const CalendarComponent = ({data,selectedMonth,selectMonth}) => {
     let {loading,error,me} = data;
     if(loading){
         return <LoadingIcon message="Loading data..."/>
@@ -26,12 +28,12 @@ const CalendarComponent = ({data}) => {
     });
 
     // Data loaded, we can initialize calendar
-    let today = moment();
-    let month = today.format("MMMM");
+    let dateMonthSelection = selectedMonth.startOf('month');
+    let month = dateMonthSelection.format("MMMM YY");
     let weeks = [];
-    var index = moment(today).date(1).day(1);
+    var index = moment(dateMonthSelection).date(1).day(1);
     // Constructs all dates till the end of the month
-    while(index.month() <= today.month()){
+    while(index.month() <= dateMonthSelection.month()){
         let week = index.week();
         var dates = [];
         while(index.week() == week){
@@ -49,7 +51,7 @@ const CalendarComponent = ({data}) => {
                         key={date.toISOString()}
                         date={date}
                         dinnerclub={dinnerclubMap.get(date.date())}
-                        thisMonth={date.month() == today.month()} />
+                        thisMonth={date.month() == dateMonthSelection.month()} />
                 )}
             </tr>
         )
@@ -58,12 +60,16 @@ const CalendarComponent = ({data}) => {
         <Table bordered condensed className="calendar-table">
             <thead>
             <tr>
-                <th style={{textAlign: "center",cursor: "pointer"}}>
+                <th
+                    style={{textAlign: "center",cursor: "pointer"}}
+                    onClick={() => selectMonth(false,selectedMonth)}>
                     <GlyphIcon
                         glyph="chevron-left"/>
                 </th>
                 <th colSpan="6" style={{textAlign: "center"}}>{month}</th>
-                <th style={{textAlign: "center",cursor: "pointer"}}>
+                <th
+                    style={{textAlign: "center",cursor: "pointer"}}
+                    onClick={() => selectMonth(true,selectedMonth)}>
                     <GlyphIcon
                         glyph="chevron-right"/>
                 </th>
@@ -100,16 +106,32 @@ const currentUserQuery = gql`
     ${DayComponent.fragments.dinnerclub}
 `;
 
-// TODO set range to entire month
-let todayStart = moment().startOf('month').startOf('date').toISOString();
-let todayEnd = moment().endOf('month').endOf('date').toISOString();
-console.log("Calendar from "+todayStart+" To "+todayEnd);
+const mapStateToProps = (state) => ({
+    selectedMonth: moment(state.calendar.selectedMonth)
+});
 
-export default graphql(currentUserQuery,{
-    options: {
-        variables: {
-            todayStart: todayStart,
-            todayEnd: todayEnd
-        }
+const mapDispatchToProps = (dispatch) => ({
+    selectMonth: (forwards,date) => {
+        var dateCopy = moment(date);
+        let newMonth = (forwards) ? dateCopy.add(1,'month') : dateCopy.subtract(1,'month');
+        dispatch(selectMonth(newMonth.toISOString()))
     }
-})(CalendarComponent);
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(
+    graphql(currentUserQuery,{
+        options: ({selectedMonth}) => {
+            // This is enough for the Apollo cache, as it will know if it has run this exact
+            // query before, with these exact arguments.
+            let todayStart = moment(selectedMonth).startOf('month').startOf('date').toISOString();
+            let todayEnd = moment(selectedMonth).endOf('month').endOf('date').toISOString();
+            return {
+                variables: {
+                    todayStart: todayStart,
+                    todayEnd: todayEnd
+                }
+            }
+        }
+    })
+    (CalendarComponent)
+);

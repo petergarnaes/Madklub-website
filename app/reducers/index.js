@@ -5,5 +5,6 @@
  */
 import isLoggedIn from './login';
 import currentUser from './current_user';
+import calendar from './calendar';
 
-export {isLoggedIn,currentUser};
+export {isLoggedIn,currentUser,calendar};
