@@ -27,7 +27,7 @@ const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate}) => {
         <td
             onClick={
                 () =>
-                    selectDetailDate(date.date())
+                    selectDetailDate(date)
             }>
                 <div className={className}>
                     <span style={{color: dinnerclubStatus,paddingRight: "0.5em"}}>&#11044;</span>
@@ -66,7 +66,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    selectDetailDate: (day) => dispatch(selectDetailDate(day))
+    selectDetailDate: (date) => dispatch(selectDetailDate(date.toISOString()))
 });
 
 export default connect(mapStateToProps,mapDispatchToProps)(DayComponent);

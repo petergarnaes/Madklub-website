@@ -58,7 +58,7 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate}) => {
         )
     });
     // If a date is selected, ie. a valid date number
-    var dateDetailComponent = (selectedDate > 0 && selectedDate < 32) ?
+    var dateDetailComponent = (moment(selectedDate).isValid()) ?
         <DateDetailComponent
             dinnerclub={dinnerclubMap.get(moment(selectedMonth).date(selectedDate))} /> :
         null;

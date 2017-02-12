@@ -12,9 +12,9 @@ export function selectMonth(date){
     }
 }
 
-export function selectDetailDate(day){
+export function selectDetailDate(date){
     return {
         type: SELECT_DETAIL_DATE,
-        day: day
+        date: date
     }
 }

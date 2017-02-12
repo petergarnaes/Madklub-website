@@ -6,7 +6,7 @@ import {SELECT_MONTH,SELECT_DETAIL_DATE} from '../actions/calendar';
 
 // Selected detail date is 0 when unselected, selectedMonth is just a date, where
 // we only use the month
-const initialState = {selectedMonth: moment().toISOString(),selectedDetailDate: 0};
+const initialState = {selectedMonth: moment().toISOString(),selectedDetailDate: moment.invalid().toISOString()};
 
 export default function calendar(state = initialState, action) {
     switch(action.type) {
@@ -19,7 +19,7 @@ export default function calendar(state = initialState, action) {
         case SELECT_DETAIL_DATE:
             const newState2 = {
                 selectedMonth: state.selectedMonth,
-                selectedDetailDate: action.day
+                selectedDetailDate: action.date
             };
             return newState2;
         default:
