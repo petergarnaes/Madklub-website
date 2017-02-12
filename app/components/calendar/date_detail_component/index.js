@@ -7,22 +7,38 @@ import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-const DateDetailComponent = ({selectedDate}) => {
+const DateDetailComponent = ({selectedDate,dinnerclub}) => {
     // If this component is rendered, selectedDate is a valid date, and we can
     // safely use it to construct a date
     console.log("Month should be ISO string: "+selectedDate);
     const theDate = moment(selectedDate);
-    return (
-        <div>
-            <h3>{theDate.format("D MMMM YYYY")}</h3>
-        </div>
-    );
+    if(dinnerclub){
+        return (
+            <div>
+                <h3>{theDate.format("D MMMM YYYY")}</h3>
+                <p>We have dinnerclub today</p>
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                <h3>{theDate.format("D MMMM YYYY")}</h3>
+                <p>No dinnerclub today</p>
+            </div>
+        )
+    }
 };
 
 DateDetailComponent.fragments = {
     dinnerclub: gql`
         fragment DayDetailComponentDinnerClub on DinnerClub {
             cancelled
+            at
+            meal
+            shopping_complete
+            cook {
+                display_name
+            }
             participants {
                 cancelled
                 user {
