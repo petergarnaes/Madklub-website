@@ -6,10 +6,11 @@ import gql from 'graphql-tag';
 import './styling.css';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { selectDetailDate } from '../../../actions/calendar';
 
 // current user ID is at the top level of the query, maybe should be new Redux reducer? Then it could also include name
 // so the users name could be displayed in top left.
-const DayComponent = ({date,thisMonth,dinnerclub,userID}) => {
+const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate}) => {
     var className = (thisMonth) ? "calendar-date-cell" : "calendar-date-cell-inactive";
     var todayDot = "";
     let today = moment();
@@ -26,7 +27,7 @@ const DayComponent = ({date,thisMonth,dinnerclub,userID}) => {
         <td
             onClick={
                 () =>
-                    console.log("BBB")
+                    selectDetailDate(date.date())
             }>
                 <div className={className}>
                     <span style={{color: dinnerclubStatus,paddingRight: "0.5em"}}>&#11044;</span>
@@ -64,4 +65,8 @@ const mapStateToProps = (state) => ({
     userID: state.currentUser.userID
 });
 
-export default connect(mapStateToProps)(DayComponent);
+const mapDispatchToProps = (dispatch) => ({
+    selectDetailDate: (day) => dispatch(selectDetailDate(day))
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(DayComponent);

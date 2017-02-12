@@ -12,8 +12,9 @@ import './styling.css';
 import DayComponent from '../day_component';
 import LoadingIcon from '../../loading_icon';
 import { selectMonth } from '../../../actions/calendar';
+import DateDetailComponent from '../date_detail_component';
 
-const CalendarComponent = ({data,selectedMonth,selectMonth}) => {
+const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate}) => {
     let {loading,error,me} = data;
     if(loading){
         return <LoadingIcon message="Loading data..."/>
@@ -56,39 +57,47 @@ const CalendarComponent = ({data,selectedMonth,selectMonth}) => {
             </tr>
         )
     });
+    // If a date is selected, ie. a valid date number
+    var dateDetailComponent = (selectedDate > 0 && selectedDate < 32) ?
+        <DateDetailComponent
+            dinnerclub={dinnerclubMap.get(moment(selectedMonth).date(selectedDate))} /> :
+        null;
     return (
-        <Table bordered condensed className="calendar-table">
-            <thead>
-            <tr>
-                <th
-                    style={{textAlign: "center",cursor: "pointer"}}
-                    onClick={() => selectMonth(false,selectedMonth)}>
-                    <GlyphIcon
-                        glyph="chevron-left"/>
-                </th>
-                <th colSpan="6" style={{textAlign: "center"}}>{month}</th>
-                <th
-                    style={{textAlign: "center",cursor: "pointer"}}
-                    onClick={() => selectMonth(true,selectedMonth)}>
-                    <GlyphIcon
-                        glyph="chevron-right"/>
-                </th>
-            </tr>
-            <tr>
-                <th style={{textAlign: "center"}}>Uge #</th>
-                <th style={{textAlign: "center"}}>Mandag</th>
-                <th style={{textAlign: "center"}}>Tirsdag</th>
-                <th style={{textAlign: "center"}}>Onsdag</th>
-                <th style={{textAlign: "center"}}>Torsdag</th>
-                <th style={{textAlign: "center"}}>Fredag</th>
-                <th style={{textAlign: "center"}}>Lørdag</th>
-                <th style={{textAlign: "center"}}>Søndag</th>
-            </tr>
-            </thead>
-            <tbody>
-            {rows.map((row)=>row)}
-            </tbody>
-        </Table>
+        <div>
+            <Table bordered condensed className="calendar-table">
+                <thead>
+                <tr>
+                    <th
+                        style={{textAlign: "center",cursor: "pointer"}}
+                        onClick={() => selectMonth(false,selectedMonth)}>
+                        <GlyphIcon
+                            glyph="chevron-left"/>
+                    </th>
+                    <th colSpan="6" style={{textAlign: "center"}}>{month}</th>
+                    <th
+                        style={{textAlign: "center",cursor: "pointer"}}
+                        onClick={() => selectMonth(true,selectedMonth)}>
+                        <GlyphIcon
+                            glyph="chevron-right"/>
+                    </th>
+                </tr>
+                <tr>
+                    <th style={{textAlign: "center"}}>Uge #</th>
+                    <th style={{textAlign: "center"}}>Mandag</th>
+                    <th style={{textAlign: "center"}}>Tirsdag</th>
+                    <th style={{textAlign: "center"}}>Onsdag</th>
+                    <th style={{textAlign: "center"}}>Torsdag</th>
+                    <th style={{textAlign: "center"}}>Fredag</th>
+                    <th style={{textAlign: "center"}}>Lørdag</th>
+                    <th style={{textAlign: "center"}}>Søndag</th>
+                </tr>
+                </thead>
+                <tbody>
+                {rows.map((row)=>row)}
+                </tbody>
+            </Table>
+            {dateDetailComponent}
+        </div>
     );
 };
 
@@ -99,15 +108,18 @@ const currentUserQuery = gql`
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     at
                     ...DayComponentDinnerClub
+                    ...DayDetailComponentDinnerClub
                 }
             }
         }
     }
     ${DayComponent.fragments.dinnerclub}
+    ${DateDetailComponent.fragments.dinnerclub}
 `;
 
 const mapStateToProps = (state) => ({
-    selectedMonth: moment(state.calendar.selectedMonth)
+    selectedMonth: moment(state.calendar.selectedMonth),
+    selectedDate: state.calendar.selectedDetailDate
 });
 
 const mapDispatchToProps = (dispatch) => ({

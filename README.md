@@ -284,6 +284,8 @@ CSS theme we have, and split it. Load it with links separately, with the most
 important modules linked first. Most important module would be body and navbar
 stuff, rest loads in along the way. All this should be very cacheable.
 * Consider using `nprogress` for things?
+* Fix selected date detail to use a full date, and not just the date number, 
+since changing month leads to buggy behaviour.
 
 
 ## Random Notes
