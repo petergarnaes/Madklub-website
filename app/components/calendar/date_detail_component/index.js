@@ -13,10 +13,13 @@ const DateDetailComponent = ({selectedDate,dinnerclub}) => {
     console.log("Month should be ISO string: "+selectedDate);
     const theDate = moment(selectedDate);
     if(dinnerclub){
+        const shop_message = (dinnerclub.shopping_complete) ? 'Shopping has completed' : 'No shopping yet';
+        // TODO participants table or something
         return (
             <div>
-                <h3>{theDate.format("D MMMM YYYY")}</h3>
-                <p>We have dinnerclub today</p>
+                <h3>{theDate.format("D MMMM YYYY")} at {moment(dinnerclub.at).format('k:mm')}</h3>
+                <p>We are having {dinnerclub.meal} today!</p>
+                <p>{shop_message}</p>
             </div>
         )
     } else {
@@ -43,6 +46,7 @@ DateDetailComponent.fragments = {
                 cancelled
                 user {
                     id
+                    display_name
                 }
             }
         }

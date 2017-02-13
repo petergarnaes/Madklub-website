@@ -2,6 +2,7 @@
  * Created by peter on 2/8/17.
  */
 import React from 'react';
+import LoadingIcon from '../loading_icon';
 import { withComponentRegister } from '../../async/component_register_container';
 import { resolved_components } from '../../async/resolved_components.js';
 
@@ -63,7 +64,7 @@ class AsyncComponent extends React.Component {
             return <Component {...this.props} />
         }
         console.log('Are we getting here?');
-        return null; // or <div /> with a loading spinner, etc..
+        return <LoadingIcon message="Loading page..."/>; // or <div /> with a loading spinner, etc..
     }
 }
 
