@@ -5,7 +5,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import React       from 'react';
 import { BrowserRouter }  from 'react-router-dom';
 import * as Cookies from "js-cookie";
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import ApolloClient, { createNetworkInterface,toIdValue } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import App from '../app/components';
 import * as reducers from '../app/reducers';
@@ -13,6 +13,7 @@ import async_map from '../app/async/components';
 import {set_resolved_component} from '../app/async/resolved_components';
 import RegisterComponentContainer from '../app/async/component_register_container';
 import moment from 'moment';
+import dataIdFromObject from '../app/util/data_id_from_object';
 
 // Setting locale for entire app
 moment.locale("da");
@@ -42,15 +43,47 @@ networkInterface.use([{
     }
 }]);
 
+/*const dataIdFromObject = (result) => {
+    if (result.id && result.__typename) {
+        console.log("Something: "+result.__typename + result.id);
+        return result.__typename + result.id
+    }
+    return null
+};*/
+
 const client = new ApolloClient({
-    dataIdFromObject: (result) => {
-        if (result.id && result.__typename) {
-            return result.__typename + result.id
-        }
-        return null
+    dataIdFromObject: dataIdFromObject,
+    addTypename: true,
+    customResolvers: {
+        Query: {
+            me: {
+                kitchen: {
+                    dinnerclub: (bob, args) => {
+                        console.log("Trying cache!");
+                        console.log(bob);
+                        return toIdValue(dataIdFromObject({ __typename: 'DinnerClub', id: args['id'] }))
+                    }
+                }
+            },
+            dinnerclub: (_, args) => {
+                return toIdValue(dataIdFromObject({ __typename: 'DinnerClub', id: args['id'] }))
+            },
+        },
     },
     networkInterface
 });
+
+const composeEnhancers =
+    typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+            // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+        }) : compose;
+
+const enhancer = composeEnhancers(
+    applyMiddleware(client.middleware()),
+    // other store enhancers if any
+);
 
 const store = createStore(
     combineReducers({
@@ -58,11 +91,7 @@ const store = createStore(
         apollo: client.reducer()
     }),
     initialState, // initial state
-    compose(
-        applyMiddleware(client.middleware())
-        // If you are using the devToolsExtension, you can add it here also
-        //window.devToolsExtension ? window.devToolsExtension() : f => f,
-    )
+    enhancer
 );
 
 function asyncFunction (route, cb) {

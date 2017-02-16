@@ -14,11 +14,13 @@ import LoadingIcon from '../../loading_icon';
 import { selectMonth } from '../../../actions/calendar';
 import DateDetailComponent from '../date_detail_component';
 
-const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate}) => {
+const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selectedDinnerclubID}) => {
     let {loading,error,me} = data;
     if(loading){
         return <LoadingIcon message="Loading data..."/>
     }
+
+    console.log(me);
 
     // TODO handle error
 
@@ -58,9 +60,8 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate}) => {
         )
     });
     // If a date is selected, ie. a valid date number
-    var dateDetailComponent = (moment(selectedDate).isValid()) ?
-        <DateDetailComponent
-            dinnerclub={dinnerclubMap.get(moment(selectedDate).date())} /> :
+    var dateDetailComponent = (selectedDinnerclubID) ?
+        <DateDetailComponent /> :
         null;
     return (
         <div>
@@ -106,9 +107,10 @@ const currentUserQuery = gql`
         me {
             kitchen {
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
+                    id
                     at
                     ...DayComponentDinnerClub
-                    ...DayDetailComponentDinnerClub
+                    ...DateDetailComponentDinnerClub
                 }
             }
         }
@@ -119,7 +121,8 @@ const currentUserQuery = gql`
 
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),
-    selectedDate: state.calendar.selectedDetailDate
+    selectedDate: state.calendar.selectedDetailDate,
+    selectedDinnerclubID: state.calendar.selectedDinnerclubId
 });
 
 const mapDispatchToProps = (dispatch) => ({

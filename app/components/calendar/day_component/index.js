@@ -6,11 +6,11 @@ import gql from 'graphql-tag';
 import './styling.css';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { selectDetailDate } from '../../../actions/calendar';
+import { selectDetailDate,selectDinnerclubWithId } from '../../../actions/calendar';
 
 // current user ID is at the top level of the query, maybe should be new Redux reducer? Then it could also include name
 // so the users name could be displayed in top left.
-const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate}) => {
+const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate,selectDinnerclub}) => {
     var className = (thisMonth) ? "calendar-date-cell" : "calendar-date-cell-inactive";
     var todayDot = "";
     let today = moment();
@@ -26,8 +26,9 @@ const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate}) => {
     return (
         <td
             onClick={
-                () =>
-                    selectDetailDate(date)
+                () => {
+                    if(dinnerclub){selectDinnerclub(dinnerclub.id);}else{selectDetailDate(date)}
+                }
             }>
                 <div className={className}>
                     <span style={{color: dinnerclubStatus,paddingRight: "0.5em"}}>&#11044;</span>
@@ -50,6 +51,7 @@ DayComponent.propTypes = {
 DayComponent.fragments = {
     dinnerclub: gql`
         fragment DayComponentDinnerClub on DinnerClub {
+            id
             cancelled
             participants {
                 cancelled
@@ -66,7 +68,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    selectDetailDate: (date) => dispatch(selectDetailDate(date.toISOString()))
+    selectDetailDate: (date) => dispatch(selectDetailDate(date.toISOString())),
+    selectDinnerclub: (id) => dispatch(selectDinnerclubWithId(id))
 });
 
 export default connect(mapStateToProps,mapDispatchToProps)(DayComponent);

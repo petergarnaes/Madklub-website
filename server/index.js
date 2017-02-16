@@ -29,6 +29,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 //import routes from '../app/routes';
 import App from '../app/components';
+import dataIdFromObject from '../app/util/data_id_from_object';
 import RegisterComponentContainer from '../app/async/component_register_container';
 
 const crypto = require('crypto');
@@ -133,7 +134,16 @@ app.use('/graphql',expressGraphQL((req,res) => ({
 async function handleRender(req,res){
     // Sets up network interface to load data locally not using network. Should be both faster and work with Heruko
     // since they apparently have some restrictions on local network requests
-    const options = {networkInterface: createLocalInterface(graphql, schema,{rootValue: { request: req, response: res }}),ssrMode: true};
+    const options = {
+        dataIdFromObject: dataIdFromObject,
+        networkInterface: createLocalInterface(graphql, schema,{
+            rootValue: {
+                request: req,
+                response: res
+            }
+        }),
+        ssrMode: true
+    };
     // Sets up Apollo client to load data when rendering
     const client = new ApolloClient(options);
 

@@ -6,13 +6,21 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import LoadingIcon from '../../loading_icon';
 
-const DateDetailComponent = ({selectedDate,dinnerclub}) => {
+const DateDetailComponent = ({data}) => {
+    let {loading,error,dinnerclub} = data;
+    console.log(data);
+    console.log(dinnerclub);
+    if(loading){
+        return <LoadingIcon message="Henter Madklub..."/>
+    }
+    //var dinnerclub = me.kitchen.dinnerclub;
     // If this component is rendered, selectedDate is a valid date, and we can
     // safely use it to construct a date
-    console.log("Month should be ISO string: "+selectedDate);
-    const theDate = moment(selectedDate);
+    //console.log("Month should be ISO string: "+selectedDate);
     if(dinnerclub){
+        const theDate = moment(dinnerclub.at);
         const shop_message = (dinnerclub.shopping_complete) ? 'Shopping has completed' : 'No shopping yet';
         // TODO participants table or something
         return (
@@ -25,8 +33,7 @@ const DateDetailComponent = ({selectedDate,dinnerclub}) => {
     } else {
         return (
             <div>
-                <h3>{theDate.format("D MMMM YYYY")}</h3>
-                <p>No dinnerclub today</p>
+                <h3>No dinnerclub today</h3>
             </div>
         )
     }
@@ -34,7 +41,8 @@ const DateDetailComponent = ({selectedDate,dinnerclub}) => {
 
 DateDetailComponent.fragments = {
     dinnerclub: gql`
-        fragment DayDetailComponentDinnerClub on DinnerClub {
+        fragment DateDetailComponentDinnerClub on DinnerClub {
+            id
             cancelled
             at
             meal
@@ -53,9 +61,46 @@ DateDetailComponent.fragments = {
     `
 };
 
+const dinnerclubWithIdQuery = gql`
+    query dinnerclubWithIdQuery($dinnerclubID: ID!) {
+        me {
+            kitchen {
+                dinnerclub(id: $dinnerclubID) {
+                    id
+                    ...DateDetailComponentDinnerClub
+                }
+            }
+        }
+    }
+    ${DateDetailComponent.fragments.dinnerclub}
+`;
+
+const dinnerclubWithIdQuery2 = gql`
+    query dinnerclubWithIdQuery2($dinnerclubID: String!) {
+        dinnerclub(id: $dinnerclubID) {
+            id
+            ...DateDetailComponentDinnerClub
+        }
+    }
+    ${DateDetailComponent.fragments.dinnerclub}
+`;
+
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),
-    selectedDate: state.calendar.selectedDetailDate
+    selectedDate: state.calendar.selectedDetailDate,
+    selectedDinnerclubId: state.calendar.selectedDinnerclubId
 });
 
-export default connect(mapStateToProps)(DateDetailComponent);
+export default connect(mapStateToProps)(
+    graphql(dinnerclubWithIdQuery2,{
+        options: ({selectedDinnerclubId}) => {
+            console.log("Input arg: "+selectedDinnerclubId);
+            return {
+                variables: {
+                    dinnerclubID: selectedDinnerclubId
+                }
+            }
+        }
+    })
+    (DateDetailComponent)
+);
