@@ -43,28 +43,13 @@ networkInterface.use([{
     }
 }]);
 
-/*const dataIdFromObject = (result) => {
-    if (result.id && result.__typename) {
-        console.log("Something: "+result.__typename + result.id);
-        return result.__typename + result.id
-    }
-    return null
-};*/
-
 const client = new ApolloClient({
     dataIdFromObject: dataIdFromObject,
     addTypename: true,
     customResolvers: {
-        Query: {
-            me: {
-                kitchen: {
-                    dinnerclub: (bob, args) => {
-                        console.log("Trying cache!");
-                        console.log(bob);
-                        return toIdValue(dataIdFromObject({ __typename: 'DinnerClub', id: args['id'] }))
-                    }
-                }
-            },
+        // Specify __typename on which the customResolver of a field goes,
+        // if top-level field the typename is Query, like in the examples
+        Kitchen: {
             dinnerclub: (_, args) => {
                 return toIdValue(dataIdFromObject({ __typename: 'DinnerClub', id: args['id'] }))
             },

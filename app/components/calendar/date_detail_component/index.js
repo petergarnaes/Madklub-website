@@ -9,13 +9,12 @@ import moment from 'moment';
 import LoadingIcon from '../../loading_icon';
 
 const DateDetailComponent = ({data}) => {
-    let {loading,error,dinnerclub} = data;
-    console.log(data);
-    console.log(dinnerclub);
+    let {loading,error,me} = data;
+    //console.log(dinnerclub);
     if(loading){
         return <LoadingIcon message="Henter Madklub..."/>
     }
-    //var dinnerclub = me.kitchen.dinnerclub;
+    var dinnerclub = me.kitchen.dinnerclub;
     // If this component is rendered, selectedDate is a valid date, and we can
     // safely use it to construct a date
     //console.log("Month should be ISO string: "+selectedDate);
@@ -75,16 +74,6 @@ const dinnerclubWithIdQuery = gql`
     ${DateDetailComponent.fragments.dinnerclub}
 `;
 
-const dinnerclubWithIdQuery2 = gql`
-    query dinnerclubWithIdQuery2($dinnerclubID: String!) {
-        dinnerclub(id: $dinnerclubID) {
-            id
-            ...DateDetailComponentDinnerClub
-        }
-    }
-    ${DateDetailComponent.fragments.dinnerclub}
-`;
-
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),
     selectedDate: state.calendar.selectedDetailDate,
@@ -92,9 +81,8 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(
-    graphql(dinnerclubWithIdQuery2,{
+    graphql(dinnerclubWithIdQuery,{
         options: ({selectedDinnerclubId}) => {
-            console.log("Input arg: "+selectedDinnerclubId);
             return {
                 variables: {
                     dinnerclubID: selectedDinnerclubId

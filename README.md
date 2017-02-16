@@ -284,6 +284,7 @@ CSS theme we have, and split it. Load it with links separately, with the most
 important modules linked first. Most important module would be body and navbar
 stuff, rest loads in along the way. All this should be very cacheable.
 * Consider using `nprogress` for things?
+* Remove Redux dev tools from production code.
 
 ## Random Notes
 
