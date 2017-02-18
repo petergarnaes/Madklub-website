@@ -285,6 +285,16 @@ important modules linked first. Most important module would be body and navbar
 stuff, rest loads in along the way. All this should be very cacheable.
 * Consider using `nprogress` for things?
 * Remove Redux dev tools from production code.
+* Create actual endpoint for
+```
+{
+    me {
+        kitchen {
+            dinnerclub(id: ID!)
+        }
+    }
+}
+```
 
 ## Random Notes
 

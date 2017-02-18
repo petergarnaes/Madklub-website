@@ -19,7 +19,8 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
     if(loading){
         return <LoadingIcon message="Loading data..."/>
     }
-
+    console.log("Rly?");
+    console.log(data);
     console.log(me);
 
     // TODO handle error
@@ -105,6 +106,7 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
 const currentUserQuery = gql`
     query currentUserQuery($todayStart: String!, $todayEnd: String!) {
         me {
+            id
             kitchen {
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     id
@@ -140,6 +142,7 @@ export default connect(mapStateToProps,mapDispatchToProps)(
             // query before, with these exact arguments.
             let todayStart = moment(selectedMonth).startOf('month').startOf('date').toISOString();
             let todayEnd = moment(selectedMonth).endOf('month').endOf('date').toISOString();
+            console.log("Going from "+todayStart+" to "+todayEnd);
             return {
                 variables: {
                     todayStart: todayStart,

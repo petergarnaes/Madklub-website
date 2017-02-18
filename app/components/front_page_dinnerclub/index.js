@@ -65,6 +65,7 @@ FrontPageDinnerClubComponent.fragments = {
             shopping_complete
             meal
             cook {
+                id
                 ...CookComponentSimpleUser
             }
         }

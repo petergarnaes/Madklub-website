@@ -42,7 +42,7 @@ export default async function(db){
     frida.setAccount(frida_account);
 
     var erik = await db.User.create({
-        display_name: 'Erik ???',
+        display_name: 'Erik Stender Hornstrup',
         picture: null,
         room_number: '1003',
         active: true,

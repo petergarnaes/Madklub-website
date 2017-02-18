@@ -5,12 +5,26 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
+import Table from 'react-bootstrap/lib/Table';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Col';
+import Col from 'react-bootstrap/lib/Col';
+import Image from 'react-bootstrap/lib/Image';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import moment from 'moment';
 import LoadingIcon from '../../loading_icon';
 
+const iconWidth = 6;
+
+const tooltip = (name) => <Tooltip>{name}</Tooltip>;
+
+const defaultImage = "http://www.worldji.com/img/profile_default.png";
+
 const DateDetailComponent = ({data}) => {
     let {loading,error,me} = data;
-    //console.log(dinnerclub);
+    console.log("Ello!");
+    console.log(me.kitchen.dinnerclub);
     if(loading){
         return <LoadingIcon message="Henter Madklub..."/>
     }
@@ -20,13 +34,35 @@ const DateDetailComponent = ({data}) => {
     //console.log("Month should be ISO string: "+selectedDate);
     if(dinnerclub){
         const theDate = moment(dinnerclub.at);
-        const shop_message = (dinnerclub.shopping_complete) ? 'Shopping has completed' : 'No shopping yet';
-        // TODO participants table or something
+        const shop_message = (dinnerclub.shopping_complete) ? 'Der er købt ind' : 'Der er ikke købt ind';
+        let participants = dinnerclub.participants;
+        let nrParticipating = participants.reduce((acc,p)=>acc + ((p.cancelled) ? 0 : 1),0);
+        var participantIcons = participants.map((p) =>
+            <Col key={p.id} xs={8} sm={4} md={3} lg={2}>
+                <OverlayTrigger placement="top" overlay={tooltip(p.user.display_name)}>
+                    <Image src={(p.user.picture) ? p.user.picture : defaultImage} circle responsive/>
+                </OverlayTrigger>
+            </Col>
+        );
         return (
             <div>
-                <h3>{theDate.format("D MMMM YYYY")} at {moment(dinnerclub.at).format('k:mm')}</h3>
-                <p>We are having {dinnerclub.meal} today!</p>
-                <p>{shop_message}</p>
+                <Grid>
+                    <Row>
+                        <h3>{theDate.format("D MMMM")} kl {theDate.format('k:mm')} <small>{theDate.format("YYYY")}</small></h3>
+                    </Row>
+                    <Row>
+                        <p>Retten er {dinnerclub.meal}</p>
+                    </Row>
+                    <Row>
+                        <p>{shop_message}</p>
+                    </Row>
+                    <Row>
+                        <p>Antal deltagere: {nrParticipating}</p>
+                    </Row>
+                    <Row>
+                        {participantIcons}
+                    </Row>
+                </Grid>
             </div>
         )
     } else {
@@ -54,6 +90,7 @@ DateDetailComponent.fragments = {
                 user {
                     id
                     display_name
+                    picture
                 }
             }
         }
@@ -63,6 +100,7 @@ DateDetailComponent.fragments = {
 const dinnerclubWithIdQuery = gql`
     query dinnerclubWithIdQuery($dinnerclubID: ID!) {
         me {
+            id
             kitchen {
                 dinnerclub(id: $dinnerclubID) {
                     id
