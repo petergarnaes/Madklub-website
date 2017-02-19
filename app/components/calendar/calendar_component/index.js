@@ -64,7 +64,9 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
     console.log("Do we have it? "+moment(selectedDate).isValid());
     // If a date is selected, ie. a valid date number
     var dateDetailComponent = (moment(selectedDate).isValid()) ?
-        <ClaimDateComponent /> :
+        <ClaimDateComponent
+            kitchen={me.kitchen}
+            date={selectedDate}/> :
         (selectedDinnerclubID) ?
         <DateDetailComponent /> :
         null;
@@ -112,6 +114,7 @@ const currentUserQuery = gql`
         me {
             id
             kitchen {
+                ...ClaimDateComponentKitchen
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     id
                     at
@@ -123,6 +126,7 @@ const currentUserQuery = gql`
     }
     ${DayComponent.fragments.dinnerclub}
     ${DateDetailComponent.fragments.dinnerclub}
+    ${ClaimDateComponent.fragments.kitchen}
 `;
 
 const mapStateToProps = (state) => ({

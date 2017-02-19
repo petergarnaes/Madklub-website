@@ -27,7 +27,13 @@ const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate,selectD
         <td
             onClick={
                 () => {
-                    if(dinnerclub){selectDinnerclub(dinnerclub.id);}else{selectDetailDate(date)}
+                    if(dinnerclub){
+                        selectDinnerclub(dinnerclub.id);
+                    } else {
+                        if(date.isSameOrAfter(today.startOf('date'))){
+                            selectDetailDate(date)
+                        }
+                    }
                 }
             }>
                 <div className={className}>
