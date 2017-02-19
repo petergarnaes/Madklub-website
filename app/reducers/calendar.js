@@ -2,6 +2,7 @@
  * Created by peter on 2/11/17.
  */
 import moment from 'moment';
+import update from 'immutability-helper';
 import {
     SELECT_MONTH,
     SELECT_DETAIL_DATE,
@@ -20,28 +21,24 @@ const initialState = {
 export default function calendar(state = initialState, action = {}) {
     switch(action.type) {
         case SELECT_MONTH:
-            const newState = {
-                selectedMonth: action.date,
-                selectedDetailDate: state.selectedDetailDate
-            };
+            const newState = update(state,{
+                selectedMonth: {$set: action.date}
+            });
             return newState;
         case SELECT_DETAIL_DATE:
-            const newState2 = {
-                selectedMonth: state.selectedMonth,
+            const newState2 = update(state,{
                 selectedDetailDate: {
-                    date: action.date,
-                    dinnerclubId: ''
+                    date: {$set: action.date}
                 }
-            };
+            });
             return newState2;
         case SELECT_DINNERCLUB_WITH_ID:
-            const newState3 = {
-                selectedMonth: state.selectedMonth,
+            console.log("We here?");
+            const newState3 = update(state,{
                 selectedDetailDate: {
-                    date: moment.invalid().toISOString(),
-                    dinnerclubId: action.dinnerclubId
+                    dinnerclubId: {$set: action.dinnerclubId}
                 }
-            };
+            });
             return newState3;
         default:
             return state;

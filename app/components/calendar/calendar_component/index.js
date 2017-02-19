@@ -20,9 +20,8 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
     if(loading){
         return <LoadingIcon message="Loading data..."/>
     }
-    console.log("Rly?");
-    console.log(data);
-    console.log(me);
+    //console.log(data);
+    //console.log(me);
 
     // TODO handle error
 
@@ -150,7 +149,7 @@ export default connect(mapStateToProps,mapDispatchToProps)(
             // query before, with these exact arguments.
             let todayStart = moment(selectedMonth).startOf('month').startOf('date').toISOString();
             let todayEnd = moment(selectedMonth).endOf('month').endOf('date').toISOString();
-            console.log("Going from "+todayStart+" to "+todayEnd);
+            //console.log("Going from "+todayStart+" to "+todayEnd);
             return {
                 variables: {
                     todayStart: todayStart,
