@@ -37,7 +37,7 @@ const DateDetailComponent = ({data}) => {
         let participants = dinnerclub.participants;
         let nrParticipating = participants.reduce((acc,p)=>acc + ((p.cancelled) ? 0 : 1),0);
         var participantIcons = participants.map((p) =>
-            <Col key={p.id} xs={8} sm={4} md={3} lg={2}>
+            <Col key={p.id} xs={6} sm={4} md={3} lg={2}>
                 <OverlayTrigger placement="top" overlay={tooltip(p.user.display_name)}>
                     <Image src={(p.user.picture) ? p.user.picture : defaultImage} circle responsive/>
                 </OverlayTrigger>
