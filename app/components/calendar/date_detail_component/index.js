@@ -82,9 +82,11 @@ DateDetailComponent.fragments = {
             meal
             shopping_complete
             cook {
+                id
                 display_name
             }
             participants {
+                id
                 cancelled
                 user {
                     id

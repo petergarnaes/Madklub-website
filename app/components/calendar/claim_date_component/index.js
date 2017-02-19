@@ -5,6 +5,7 @@ import React from 'react';
 import './styling.css';
 import 'rc-time-picker/assets/index.css';
 import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
 import Form from 'react-bootstrap/lib/Form';
@@ -15,6 +16,8 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
+import DayComponent from '../day_component';
+import DateDetailComponent from '../date_detail_component';
 
 class ClaimDateComponent extends React.Component {
     constructor(props){
@@ -51,13 +54,15 @@ class ClaimDateComponent extends React.Component {
     }
 
     onSubmit(){
-        //TODO
+        this.props.submit(this.state.mealtime,this.state.meal);
     }
 
 
-    componentWillReceiveProps(_){
+    componentWillReceiveProps({date,kitchen}){
+        let times = kitchen.default_mealtime.split(":");
         this.setState({
-            claimed: false
+            claimed: false,
+            mealtime: moment(date).set({'hour':times[0],'minute':times[1],'second':times[2]})
         })
     }
 
@@ -121,8 +126,22 @@ class ClaimDateComponent extends React.Component {
 }
 
 ClaimDateComponent.propTypes = {
-    kitchen: React.PropTypes.object
-}
+    kitchen: React.PropTypes.object.isRequired,
+    submit: React.PropTypes.func.isRequired
+};
+
+const createDinnerclubMutation = gql`
+    mutation createDinnerClub($at: String!,$meal: String){
+        createDinnerClub(at: $at,meal: $meal){
+            id
+            at
+            ...DayComponentDinnerClub
+            ...DateDetailComponentDinnerClub
+        }
+    }
+    ${DayComponent.fragments.dinnerclub}
+    ${DateDetailComponent.fragments.dinnerclub}
+`;
 
 ClaimDateComponent.fragments = {
     kitchen: gql`
@@ -132,4 +151,33 @@ ClaimDateComponent.fragments = {
     `
 };
 
-export default ClaimDateComponent;
+export default graphql(createDinnerclubMutation,{
+    props: ({ownProps,mutate}) => ({
+        submit: (at,meal) => mutate({
+            variables: {
+                at: at.toISOString(),
+                meal: meal
+            },
+            //TODO Because we do not know the id, we would have to make some thing where we
+            // update the dinnerclub with this EXACT date, and if not exist, add it to dinerclubs.
+            // Right now creating new dinnerclub simply creates a slight delay
+            /*optimisticResponse: {
+                __typename: 'Mutation',
+                createDinnerClub: {
+                    __typename: 'DinnerClub',
+                    at: at.toISOString(),
+                    cancelled: false
+                }
+            },*/
+            updateQueries: {
+                currentUserQuery: (previousResult, { mutationResult }) => {
+                    const newDinnerclub = mutationResult.data.createDinnerClub;
+                    console.log("We have id: "+newDinnerclub.id);
+                    var newResult = (JSON.parse(JSON.stringify(previousResult)));
+                    newResult.me.kitchen.dinnerclubs.push(newDinnerclub);
+                    return newResult;
+                }
+            }
+        })
+    })
+})(ClaimDateComponent);

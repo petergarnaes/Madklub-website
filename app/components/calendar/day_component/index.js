@@ -60,6 +60,7 @@ DayComponent.fragments = {
             id
             cancelled
             participants {
+                id
                 cancelled
                 user {
                     id
