@@ -5,6 +5,7 @@ import React from 'react';
 import './styling.css';
 import 'rc-time-picker/assets/index.css';
 import gql from 'graphql-tag';
+import update from 'immutability-helper';
 import { graphql } from 'react-apollo';
 import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
@@ -172,9 +173,15 @@ export default graphql(createDinnerclubMutation,{
             updateQueries: {
                 currentUserQuery: (previousResult, { mutationResult }) => {
                     const newDinnerclub = mutationResult.data.createDinnerClub;
-                    console.log("We have id: "+newDinnerclub.id);
-                    var newResult = (JSON.parse(JSON.stringify(previousResult)));
-                    newResult.me.kitchen.dinnerclubs.push(newDinnerclub);
+                    let newResult = update(previousResult,{
+                        me: {
+                            kitchen: {
+                                dinnerclubs: {
+                                    $push: [newDinnerclub]
+                                }
+                            }
+                        }
+                    });
                     return newResult;
                 }
             }
