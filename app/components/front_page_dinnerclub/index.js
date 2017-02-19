@@ -4,6 +4,7 @@
 
 import React from 'react';
 import gql from 'graphql-tag';
+import update from 'immutability-helper';
 import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
 import './styling.css';
@@ -114,10 +115,22 @@ export default graphql(cancelParticipateDinnerclubMutation,{
                             const newParticipation = mutationResult.data.participate;
                             const newPartID = newParticipation.id;
                             const newCancel = newParticipation.cancelled;
-                            // TODO find better way to handle immutability
-                            // Ugly but semi efficient deep clone
-                            var newResult = (JSON.parse(JSON.stringify(previousResult)));
-                            ((newResult.me.kitchen.dinnerclubs.filter((d)=>d.id === dinnerclubID)[0]).participants.filter((p) =>p.id === newPartID)[0]).cancelled = newCancel;
+                            const updateDinnerclubIndex = previousResult.me.kitchen.
+                                dinnerclubs.findIndex((d)=>d.id === dinnerclubID);
+                            const updateParticipantsIndex = previousResult.me.kitchen.
+                                dinnerclubs[updateDinnerclubIndex].
+                                participants.findIndex((p) =>p.id === newPartID);
+                            let newResult = update(previousResult,{
+                                me: {
+                                    kitchen: {
+                                        dinnerclubs: {$apply: (l)=>{
+                                            l[updateDinnerclubIndex].
+                                                participants[updateParticipantsIndex].cancelled = newCancel;
+                                            return l;
+                                        }}
+                                    }
+                                }
+                            });
                             return newResult;
                         }
                     }
