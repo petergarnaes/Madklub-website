@@ -23,8 +23,7 @@ const defaultImage = "http://www.worldji.com/img/profile_default.png";
 
 const DateDetailComponent = ({data}) => {
     let {loading,error,me} = data;
-    console.log("Ello!");
-    console.log(me.kitchen.dinnerclub);
+    //console.log(me.kitchen.dinnerclub);
     if(loading){
         return <LoadingIcon message="Henter Madklub..."/>
     }
@@ -114,8 +113,8 @@ const dinnerclubWithIdQuery = gql`
 
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),
-    selectedDate: state.calendar.selectedDetailDate,
-    selectedDinnerclubId: state.calendar.selectedDinnerclubId
+    selectedDate: state.calendar.selectedDetailDate.date,
+    selectedDinnerclubId: state.calendar.selectedDetailDate.dinnerclubId
 });
 
 export default connect(mapStateToProps)(

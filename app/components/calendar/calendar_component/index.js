@@ -13,6 +13,7 @@ import DayComponent from '../day_component';
 import LoadingIcon from '../../loading_icon';
 import { selectMonth } from '../../../actions/calendar';
 import DateDetailComponent from '../date_detail_component';
+import ClaimDateComponent from '../claim_date_component';
 
 const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selectedDinnerclubID}) => {
     let {loading,error,me} = data;
@@ -60,8 +61,11 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
             </tr>
         )
     });
+    console.log("Do we have it? "+moment(selectedDate).isValid());
     // If a date is selected, ie. a valid date number
-    var dateDetailComponent = (selectedDinnerclubID) ?
+    var dateDetailComponent = (moment(selectedDate).isValid()) ?
+        <ClaimDateComponent /> :
+        (selectedDinnerclubID) ?
         <DateDetailComponent /> :
         null;
     return (
@@ -123,8 +127,8 @@ const currentUserQuery = gql`
 
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),
-    selectedDate: state.calendar.selectedDetailDate,
-    selectedDinnerclubID: state.calendar.selectedDinnerclubId
+    selectedDate: state.calendar.selectedDetailDate.date,
+    selectedDinnerclubID: state.calendar.selectedDetailDate.dinnerclubId
 });
 
 const mapDispatchToProps = (dispatch) => ({
