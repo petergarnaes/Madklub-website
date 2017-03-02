@@ -36,6 +36,7 @@ export default function calendar(state = initialState, action = {}) {
             console.log("We here?");
             const newState3 = update(state,{
                 selectedDetailDate: {
+                    date: {$set: moment.invalid().toISOString()},
                     dinnerclubId: {$set: action.dinnerclubId}
                 }
             });
