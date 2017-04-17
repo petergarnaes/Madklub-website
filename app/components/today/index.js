@@ -7,6 +7,7 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import moment from 'moment';
 import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
+import FrontPageCookComponent from '../front_page_dinnerclub_cook';
 import LoadingIcon from '../loading_icon';
 
 const TodayWithData = ({data}) => {
@@ -37,13 +38,22 @@ const TodayWithData = ({data}) => {
         },
         {isParticipating: false,participationID: '',hasCancelled: false}
     );
-    return (
-        <FrontPageDinnerClubComponent
-            dinnerClub={dinnerClubToday}
-            participationID={participationID}
-            isParticipating={isParticipating}
-            hasCancelled={hasCancelled}/>
-    );
+    let isCook = me.id === dinnerClubToday.cook.id;
+    console.log("Are we the cook today? "+isCook);
+    if(isCook){
+        return (
+            <FrontPageCookComponent
+                dinnerClub={dinnerClubToday}/>
+        );
+    } else {
+        return (
+            <FrontPageDinnerClubComponent
+                dinnerClub={dinnerClubToday}
+                participationID={participationID}
+                isParticipating={isParticipating}
+                hasCancelled={hasCancelled}/>
+        );
+    }
 };
 
 TodayWithData.propTypes = {
@@ -63,6 +73,9 @@ const currentUserQuery = gql`
             kitchen {
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     ...FrontPageDinnerClubComponentDinnerClub
+                    cook {
+                        id
+                    }
                     participants {
                         id
                         cancelled
@@ -75,6 +88,7 @@ const currentUserQuery = gql`
         }
     }
     ${FrontPageDinnerClubComponent.fragments.dinnerclub}
+    ${FrontPageCookComponent.fragments.dinnerclub}
 `;
 
 // Queries all of today (midnight to midnight), so we can pick the first upcoming one.
