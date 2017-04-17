@@ -49,6 +49,32 @@ afterthought, as static will be fine.
 We need to define a [custom stylesheet](http://getbootstrap.com/customize/) 
 that does not include style for components we do not use. For production we 
 should also minify the css which `css-loader` is capable of.
+* Use *above the fold rendering*, to defer some rendering to client side.
+Could be useful for all the less important stuff on a page, or just 
+expensive stuff that would make the page hang, for example a complicated 
+graph or something. In that case a loading icon is better. Ideally we 
+could package it so Server Side checks for *above the fold*, while client
+does not waste time checking. Check if async server side has exactly 
+this effect, I think it might have. If it has, we should expand the 
+functionality so that we can prefetch in html header regardless, for 
+slightly faster client side render when we defer.
+* [electrode-react-ssr-caching](https://github.com/electrode-io/electrode-react-ssr-caching).
+Is a way of cahing and templating *simple* react components, so the 
+javascript does not need to run every time we render the component. A 
+great example would be our navigation bar, which is static except for 
+the username. This library supports templates with simple prop 
+replacements, so the navigation bar could be rendered a lot faster.
+* Pre-cache remaining routes using service workers, see `sw-precache`
+* Maybe use [node-ensure](https://github.com/bauerca/node-ensure) for 
+synchronous SSR of components instead of our complicated setup?
+* Consider HTTP/2 server push, so assets can be sent along with request
+for page, for better load speeds.
+* [HTTP/2](https://webapplog.com/http2-node/) + 
+preload should be implemented, try and see how fast and how little 
+waterfall we have with HTTP/2. We could also use the preload system to
+figure out what to push. Use `spdy` on `npm` to do HTTP/2.
+* HTTP/2 does not seem worth it, slightly faster but not fully supported.
+
 
 ## Setup Test Environment
 
@@ -113,7 +139,6 @@ history with the router, getting initial store state from HTML header sent from
 server into Redux, setting up Apollo and such.
 * `app`: Folder containing the app, ie. the shared code between client and
 server.
-* `app/routes.js`: Contain the route tree
 * `app/components`: Contains a folder for each component in the app. As of now 
 each folder will mostly just contain the `index.js` file, as it can all be
 contained within the app. Here everything from Redux/Apollo containers to 
@@ -293,6 +318,30 @@ stuff, rest loads in along the way. All this should be very cacheable.
     }
 }
 ```
+
+## TODO features
+* Kok forside
+    * Indkøb knap
+    * Måltid rettelse
+* Dato detaljer
+    * Tilmeld
+* Kok dato detaljer
+    * Aflyse madklub (tids begrænsning)
+    * Rette måltid
+    * Købt ind (tidligst 24 timer inden)
+* Madklubs indstillinger
+    * perioder
+    * tidligst indkøb madklub
+    * senest aflysning af madklub
+* Madklubs indstillinger for admin
+    * alle madklubs indstillinger
+    * Opret ny bruger
+    * Slet bruger
+    * Overdrag admin til andet køkkenmedlem
+* Bruger indstillinger
+    * navn
+    * billed
+    * etc.
 
 ## Random Notes
 

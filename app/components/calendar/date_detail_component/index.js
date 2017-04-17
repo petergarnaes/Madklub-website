@@ -43,6 +43,7 @@ const DateDetailComponent = ({data}) => {
                 </OverlayTrigger>
             </Col>
         );
+        let dinnerclubText = (dinnerclub.meal) ? 'Retten er '+dinnerclub.meal : 'Retten ikke besluttet endnu';
         return (
             <div>
                 <Grid>
@@ -50,7 +51,10 @@ const DateDetailComponent = ({data}) => {
                         <h3>{theDate.format("D MMMM")} kl {theDate.format('k:mm')} <small>{theDate.format("YYYY")}</small></h3>
                     </Row>
                     <Row>
-                        <p>Retten er {dinnerclub.meal}</p>
+                        <p>{dinnerclub.cook.display_name} laver mad</p>
+                    </Row>
+                    <Row>
+                        <p>{dinnerclubText}</p>
                     </Row>
                     <Row>
                         <p>{shop_message}</p>
