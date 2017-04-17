@@ -320,7 +320,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
 ```
 
 ## TODO features
-* Kok forside
+* ~~Kok forside~~
     * ~~Indkøb knap~~
     * Måltid rettelse
 * Dato detaljer

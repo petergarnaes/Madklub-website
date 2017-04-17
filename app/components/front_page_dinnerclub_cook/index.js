@@ -11,16 +11,19 @@ import moment from 'moment';
 import RoundIconButton from '../round_icon_button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Button from 'react-bootstrap/lib/Button';
+import MealComponent from '../meal_edit';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
 
 const FrontPageCookComponent = ({dinnerClub,setShoppingComplete}) => {
     const dinnerclub_date = moment(dinnerClub.at);
     return (
         <div>
             <h2>Madklub kl. {dinnerclub_date.format("H:mm")}</h2>
-            <h3>
-                Menu: {dinnerClub.meal} <Button bsStyle="primary"><Glyphicon glyph="pencil"/></Button>
-            </h3>
-            <h3>Deltagere: {dinnerClub.participants.length}</h3>
+            <MealComponent
+                dinnerClub={dinnerClub}/>
+            <h3>Antal deltagere: {dinnerClub.participants.length}</h3>
             <RoundIconButton
                 glyph="ok"
                 onClick={
@@ -59,6 +62,7 @@ FrontPageCookComponent.fragments = {
                 id
             }
         }
+        ${MealComponent.fragments.dinnerclub}
     `
 };
 
