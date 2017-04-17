@@ -8,6 +8,7 @@ import update from 'immutability-helper';
 import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
 import moment from 'moment';
+import '../front_page_dinnerclub/styling.css';
 import RoundIconButton from '../round_icon_button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Button from 'react-bootstrap/lib/Button';
@@ -19,11 +20,12 @@ import Col from 'react-bootstrap/lib/Col';
 const FrontPageCookComponent = ({dinnerClub,setShoppingComplete}) => {
     const dinnerclub_date = moment(dinnerClub.at);
     return (
-        <div>
+        <div className="front-page-dinnerclub-container">
             <h2>Madklub kl. {dinnerclub_date.format("H:mm")}</h2>
             <MealComponent
                 dinnerClub={dinnerClub}/>
             <h3>Antal deltagere: {dinnerClub.participants.length}</h3>
+            <p><b>Købt ind</b></p>
             <RoundIconButton
                 glyph="ok"
                 onClick={

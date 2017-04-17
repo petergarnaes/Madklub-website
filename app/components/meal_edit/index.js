@@ -25,6 +25,9 @@ class MealEditComponent extends React.Component {
     toggleMealEdit(){
         console.log("Hay?");
         // TODO save and mutate meal
+        // If true, we are going to false
+        if(this.state.editToggled)
+            this.props.setMeal(this.props.dinnerClub.id,this.state.meal);
         this.setState({
             editToggled: !this.state.editToggled
         })
@@ -65,13 +68,15 @@ class MealEditComponent extends React.Component {
 MealEditComponent.fragments = {
     dinnerclub: gql`
         fragment MealEditDinnerClub on DinnerClub {
+            id
             meal
         }
     `
 };
 
 MealEditComponent.propTypes = {
-    dinnerClub: propType(MealEditComponent.fragments.dinnerclub).isRequired
+    dinnerClub: propType(MealEditComponent.fragments.dinnerclub).isRequired,
+    setMeal: React.PropTypes.func.isRequired
 };
 
 const mealEditMutation = gql`

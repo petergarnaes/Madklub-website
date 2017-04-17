@@ -322,7 +322,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
 ## TODO features
 * ~~Kok forside~~
     * ~~Indkøb knap~~
-    * Måltid rettelse
+    * ~~Måltid rettelse~~
 * Dato detaljer
     * Tilmeld
 * Kok dato detaljer
