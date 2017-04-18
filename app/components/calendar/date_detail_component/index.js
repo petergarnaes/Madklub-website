@@ -16,8 +16,7 @@ import moment from 'moment';
 import LoadingIcon from '../../loading_icon';
 import participationReducer, {participationFragment} from '../../../util/participation_reducer';
 import MealEdit from '../../meal_edit';
-import Switch from 'react-bootstrap-switch';
-import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
+import ShoppingCompleteDateDetail from '../../shopping_set/date_detail';
 
 const iconWidth = 6;
 
@@ -44,20 +43,15 @@ const DateDetailComponent = ({data}) => {
         const theDate = moment(dinnerclub.at);
         const shop_message = (dinnerclub.shopping_complete) ? 'Der er købt ind' : 'Der er ikke købt ind';
         let shop_component = (isCook) ?
-            <h3>
-                Indkøb:&emsp;
-                <Switch
-                    value={dinnerclub.shopping_complete}
-                    onColor="success"
-                    onChange={(el,state)=>console.log('Gotta get that: '+state)}/>
-            </h3> :
+            <ShoppingCompleteDateDetail
+                dinnerClub={dinnerclub} /> :
             <p>{shop_message}</p>;
         // Create cancel component for either cook or participant
-        let cancelComponent = (isCook) ?
+        /*let cancelComponent = (isCook) ?
             <CookCancelDinnerclub/> :
             (isParticipating) ?
                 <ParticipantCancelDinnerclub/> : <ParticipantParticipateDinnerclub/>;
-        // Count nr of participants
+        */// Count nr of participants
         let participants = dinnerclub.participants;
         let nrParticipating = participants.reduce((acc,p)=>acc + ((p.cancelled) ? 0 : 1),0);
         // TODO grey out participants who has cancelled
@@ -108,8 +102,8 @@ const DateDetailComponent = ({data}) => {
 DateDetailComponent.fragments = {
     dinnerclub: gql`
         fragment DateDetailComponentDinnerClub on DinnerClub {
+            ...ShoppingCompleteComponentDinnerClub
             id
-            cancelled
             at
             meal
             shopping_complete
@@ -129,6 +123,7 @@ DateDetailComponent.fragments = {
             }
         }
         ${participationFragment}
+        ${ShoppingCompleteDateDetail.fragments.dinnerclub}
     `
 };
 

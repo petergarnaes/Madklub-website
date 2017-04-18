@@ -328,7 +328,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
 * Kok dato detaljer
     * Aflyse madklub (tids begrænsning)
     * ~~Rette måltid~~
-    * Købt ind (tidligst 24 timer inden)
+    * ~~Købt ind (tidligst 24 timer inden)~~ (mangler backend verificering)
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
