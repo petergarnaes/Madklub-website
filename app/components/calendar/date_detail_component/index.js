@@ -16,6 +16,8 @@ import moment from 'moment';
 import LoadingIcon from '../../loading_icon';
 import participationReducer, {participationFragment} from '../../../util/participation_reducer';
 import MealEdit from '../../meal_edit';
+import Switch from 'react-bootstrap-switch';
+import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
 
 const iconWidth = 6;
 
@@ -41,8 +43,24 @@ const DateDetailComponent = ({data}) => {
         // Parsing dinnerclub data for presentation
         const theDate = moment(dinnerclub.at);
         const shop_message = (dinnerclub.shopping_complete) ? 'Der er købt ind' : 'Der er ikke købt ind';
+        let shop_component = (isCook) ?
+            <h3>
+                Indkøb:&emsp;
+                <Switch
+                    value={dinnerclub.shopping_complete}
+                    onColor="success"
+                    onChange={(el,state)=>console.log('Gotta get that: '+state)}/>
+            </h3> :
+            <p>{shop_message}</p>;
+        // Create cancel component for either cook or participant
+        let cancelComponent = (isCook) ?
+            <CookCancelDinnerclub/> :
+            (isParticipating) ?
+                <ParticipantCancelDinnerclub/> : <ParticipantParticipateDinnerclub/>;
+        // Count nr of participants
         let participants = dinnerclub.participants;
         let nrParticipating = participants.reduce((acc,p)=>acc + ((p.cancelled) ? 0 : 1),0);
+        // TODO grey out participants who has cancelled
         var participantIcons = participants.map((p) =>
             <Col key={p.id} xs={6} sm={4} md={3} lg={2}>
                 <OverlayTrigger placement="top" overlay={tooltip(p.user.display_name)}>
@@ -50,27 +68,27 @@ const DateDetailComponent = ({data}) => {
                 </OverlayTrigger>
             </Col>
         );
-        let dinnerclubText = (dinnerclub.meal) ? 'Menu '+dinnerclub.meal : 'Retten ikke besluttet endnu';
+        let dinnerclubText = (dinnerclub.meal) ? 'Menu: '+dinnerclub.meal : 'Retten ikke besluttet endnu';
         let dinnerclubComponent = (isCook) ?
             <MealEdit
-                dinnerClub={dinnerclub}/> : dinnerclubText;
+                dinnerClub={dinnerclub}/> : <p>{dinnerclubText}</p>;
         return (
             <div>
                 <Grid>
                     <Row>
-                        <h3>{theDate.format("D MMMM")} kl {theDate.format('k:mm')} <small>{theDate.format("YYYY")}</small></h3>
+                        <h2>{theDate.format("D MMMM")} kl {theDate.format('k:mm')} <small>{theDate.format("YYYY")}</small></h2>
                     </Row>
                     <Row>
-                        <p>Kok: {dinnerclub.cook.display_name}</p>
+                        <h3>Kok: {dinnerclub.cook.display_name}</h3>
                     </Row>
                     <Row>
-                        <p>{dinnerclubComponent}</p>
+                        {dinnerclubComponent}
                     </Row>
                     <Row>
-                        <p>{shop_message}</p>
+                        {shop_component}
                     </Row>
                     <Row>
-                        <p>Antal deltagere: {nrParticipating}</p>
+                        <h3>Antal deltagere: {nrParticipating}</h3>
                     </Row>
                     <Row>
                         {participantIcons}
