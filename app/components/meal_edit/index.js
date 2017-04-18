@@ -53,7 +53,7 @@ class MealEditComponent extends React.Component {
         } else {
             return (
                 <h3>
-                    {this.state.meal}&emsp;
+                    Menu: {this.state.meal}&emsp;
                     <Button
                         bsStyle="primary"
                         onClick={this.toggleMealEdit}>

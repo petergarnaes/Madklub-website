@@ -14,6 +14,8 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import moment from 'moment';
 import LoadingIcon from '../../loading_icon';
+import participationReducer, {participationFragment} from '../../../util/participation_reducer';
+import MealEdit from '../../meal_edit';
 
 const iconWidth = 6;
 
@@ -32,6 +34,11 @@ const DateDetailComponent = ({data}) => {
     // safely use it to construct a date
     //console.log("Month should be ISO string: "+selectedDate);
     if(dinnerclub){
+        // Determining currents users relation to the current dinnerclub
+        let {isParticipating,participationID,hasCancelled} =
+            participationReducer(dinnerclub.participants,me.id);
+        let isCook = me.id === dinnerclub.cook.id;
+        // Parsing dinnerclub data for presentation
         const theDate = moment(dinnerclub.at);
         const shop_message = (dinnerclub.shopping_complete) ? 'Der er købt ind' : 'Der er ikke købt ind';
         let participants = dinnerclub.participants;
@@ -43,7 +50,10 @@ const DateDetailComponent = ({data}) => {
                 </OverlayTrigger>
             </Col>
         );
-        let dinnerclubText = (dinnerclub.meal) ? 'Retten er '+dinnerclub.meal : 'Retten ikke besluttet endnu';
+        let dinnerclubText = (dinnerclub.meal) ? 'Menu '+dinnerclub.meal : 'Retten ikke besluttet endnu';
+        let dinnerclubComponent = (isCook) ?
+            <MealEdit
+                dinnerClub={dinnerclub}/> : dinnerclubText;
         return (
             <div>
                 <Grid>
@@ -51,10 +61,10 @@ const DateDetailComponent = ({data}) => {
                         <h3>{theDate.format("D MMMM")} kl {theDate.format('k:mm')} <small>{theDate.format("YYYY")}</small></h3>
                     </Row>
                     <Row>
-                        <p>{dinnerclub.cook.display_name} laver mad</p>
+                        <p>Kok: {dinnerclub.cook.display_name}</p>
                     </Row>
                     <Row>
-                        <p>{dinnerclubText}</p>
+                        <p>{dinnerclubComponent}</p>
                     </Row>
                     <Row>
                         <p>{shop_message}</p>
@@ -90,6 +100,7 @@ DateDetailComponent.fragments = {
                 display_name
             }
             participants {
+                ...isParticipatingDinnerClubParticipation
                 id
                 cancelled
                 user {
@@ -99,6 +110,7 @@ DateDetailComponent.fragments = {
                 }
             }
         }
+        ${participationFragment}
     `
 };
 

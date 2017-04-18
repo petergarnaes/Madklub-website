@@ -55,6 +55,7 @@ const FrontPageCookComponent = ({dinnerClub,setShoppingComplete}) => {
 FrontPageCookComponent.fragments = {
     dinnerclub: gql`
         fragment FrontPageCookComponentDinnerClub on DinnerClub {
+            ...MealEditDinnerClub
             id
             at
             cancelled

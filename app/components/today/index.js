@@ -9,6 +9,7 @@ import moment from 'moment';
 import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
 import FrontPageCookComponent from '../front_page_dinnerclub_cook';
 import LoadingIcon from '../loading_icon';
+import participationReducer, {participationFragment} from '../../util/participation_reducer';
 
 const TodayWithData = ({data}) => {
     let {loading,error,me} = data;
@@ -28,16 +29,7 @@ const TodayWithData = ({data}) => {
             <p>No Dinner club today peeps!</p>
         );
     }
-    let {isParticipating,participationID,hasCancelled} = dinnerClubToday.participants.reduce(
-        (pc,part) => {
-            return ({
-                isParticipating: pc.isParticipating || (part.user.id === me.id),
-                participationID: (part.user.id === me.id) ? part.id : pc.participationID,
-                hasCancelled: pc.hasCancelled || ((part.user.id === me.id) && part.cancelled)
-            })
-        },
-        {isParticipating: false,participationID: '',hasCancelled: false}
-    );
+    // Figures out if current user is the cook
     let isCook = me.id === dinnerClubToday.cook.id;
     console.log("Are we the cook today? "+isCook);
     if(isCook){
@@ -46,6 +38,9 @@ const TodayWithData = ({data}) => {
                 dinnerClub={dinnerClubToday}/>
         );
     } else {
+        // Figuring out if current user participates
+        let {isParticipating,participationID,hasCancelled} =
+            participationReducer(dinnerClubToday.participants,me.id);
         return (
             <FrontPageDinnerClubComponent
                 dinnerClub={dinnerClubToday}
@@ -73,15 +68,12 @@ const currentUserQuery = gql`
             kitchen {
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     ...FrontPageDinnerClubComponentDinnerClub
+                    ...FrontPageCookComponentDinnerClub
                     cook {
                         id
                     }
                     participants {
-                        id
-                        cancelled
-                        user {
-                            id
-                        }
+                        ...isParticipatingDinnerClubParticipation
                     }
                 }
             }
@@ -89,6 +81,7 @@ const currentUserQuery = gql`
     }
     ${FrontPageDinnerClubComponent.fragments.dinnerclub}
     ${FrontPageCookComponent.fragments.dinnerclub}
+    ${participationFragment}
 `;
 
 // Queries all of today (midnight to midnight), so we can pick the first upcoming one.
