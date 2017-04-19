@@ -17,6 +17,8 @@ const ShoppingCompleteDateDetail = ({dinnerClub,setShoppingComplete}) => (
         <Switch
             value={dinnerClub.shopping_complete}
             onColor="success"
+            onText="Købt ind"
+            offText="Ikke handlet"
             disabled={dinnerClub.cancelled}
             onChange={(el,state)=>setShoppingComplete(dinnerClub.id,state)}/>
     </h3>

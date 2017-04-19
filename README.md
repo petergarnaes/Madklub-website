@@ -326,10 +326,15 @@ stuff, rest loads in along the way. All this should be very cacheable.
 * Dato detaljer
     * Aflys/tilmeld deltagelse
     * Tilmeld
-* Kok dato detaljer
+* ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~ (mangler backend tids begrænsning)
     * ~~Rette måltid~~
     * ~~Købt ind (tidligst 24 timer inden)~~ (mangler backend verificering)
+* Backend tilføjelser
+    * Deadline for aflysning af madklub, måske gemmes som minutter inden den
+    afholdes?
+    * deadline for hvor tidligt man kan handle ind, også gemmes i minutter
+    inden madklubben afholdes?
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
