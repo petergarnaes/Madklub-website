@@ -324,9 +324,10 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Indkøb knap~~
     * ~~Måltid rettelse~~
 * Dato detaljer
+    * Aflys/tilmeld deltagelse
     * Tilmeld
 * Kok dato detaljer
-    * Aflyse madklub (tids begrænsning)
+    * ~~Aflyse madklub~~ (mangler backend tids begrænsning)
     * ~~Rette måltid~~
     * ~~Købt ind (tidligst 24 timer inden)~~ (mangler backend verificering)
 * Madklubs indstillinger

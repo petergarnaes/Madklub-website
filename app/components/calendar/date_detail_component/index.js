@@ -17,6 +17,7 @@ import LoadingIcon from '../../loading_icon';
 import participationReducer, {participationFragment} from '../../../util/participation_reducer';
 import MealEdit from '../../meal_edit';
 import ShoppingCompleteDateDetail from '../../shopping_set/date_detail';
+import CancelDinnerclubComponent from '../../cancel_dinnerclub_component';
 
 const iconWidth = 6;
 
@@ -45,11 +46,12 @@ const DateDetailComponent = ({data}) => {
         let shop_component = (isCook) ?
             <ShoppingCompleteDateDetail
                 dinnerClub={dinnerclub} /> :
-            <p>{shop_message}</p>;
+            <h3>{shop_message}</h3>;
         // Create cancel component for either cook or participant
-        /*let cancelComponent = (isCook) ?
-            <CookCancelDinnerclub/> :
-            (isParticipating) ?
+        let cancelComponent = (isCook) ?
+            <CancelDinnerclubComponent
+                dinnerclub={dinnerclub}/> : <div/>;
+            /*(isParticipating) ?
                 <ParticipantCancelDinnerclub/> : <ParticipantParticipateDinnerclub/>;
         */// Count nr of participants
         let participants = dinnerclub.participants;
@@ -65,7 +67,7 @@ const DateDetailComponent = ({data}) => {
         let dinnerclubText = (dinnerclub.meal) ? 'Menu: '+dinnerclub.meal : 'Retten ikke besluttet endnu';
         let dinnerclubComponent = (isCook) ?
             <MealEdit
-                dinnerClub={dinnerclub}/> : <p>{dinnerclubText}</p>;
+                dinnerClub={dinnerclub}/> : <h3>{dinnerclubText}</h3>;
         return (
             <div>
                 <Grid>
@@ -83,6 +85,9 @@ const DateDetailComponent = ({data}) => {
                     </Row>
                     <Row>
                         <h3>Antal deltagere: {nrParticipating}</h3>
+                    </Row>
+                    <Row>
+                        {cancelComponent}
                     </Row>
                     <Row>
                         {participantIcons}
@@ -103,6 +108,7 @@ DateDetailComponent.fragments = {
     dinnerclub: gql`
         fragment DateDetailComponentDinnerClub on DinnerClub {
             ...ShoppingCompleteComponentDinnerClub
+            ...CancelDinnerclubComponentDinnerClub
             id
             at
             meal
@@ -124,6 +130,7 @@ DateDetailComponent.fragments = {
         }
         ${participationFragment}
         ${ShoppingCompleteDateDetail.fragments.dinnerclub}
+        ${CancelDinnerclubComponent.fragments.dinnerclub}
     `
 };
 
