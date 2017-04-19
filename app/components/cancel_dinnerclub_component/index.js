@@ -14,7 +14,7 @@ const CancelDinnerclubComponent = ({dinnerclub,setCancelDinnerclub}) => (
         Aflyst:&emsp;
         <Switch
             value={dinnerclub.cancelled}
-            onColor="success"
+            onColor="danger"
             onText="Aflyst"
             offText="Afholdes"
             onChange={(el,state)=>setCancelDinnerclub(dinnerclub.id,state)}/>

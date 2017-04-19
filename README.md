@@ -323,8 +323,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
 * ~~Kok forside~~
     * ~~Indkøb knap~~
     * ~~Måltid rettelse~~
-* Dato detaljer
-    * Aflys/tilmeld deltagelse
+* ~~Dato detaljer~~
+    * ~~Aflys/tilmeld deltagelse~~
     * Tilmeld
 * ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~ (mangler backend tids begrænsning)
