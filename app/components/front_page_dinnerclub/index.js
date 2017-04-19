@@ -4,16 +4,14 @@
 
 import React from 'react';
 import gql from 'graphql-tag';
-import update from 'immutability-helper';
 import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
 import './styling.css';
 import moment from 'moment';
 import CookComponent from '../cook_component';
-import RoundIconButton from '../round_icon_button';
+import CancelParticipationFrontPage from '../cancel_participation_component/front_page';
 
-const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationID,hasCancelled,setCancel}) => {
-    console.log('Cancelled: '+dinnerClub.cancelled+' and shopping: '+dinnerClub.shopping_complete);
+const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationID,hasCancelled}) => {
     const dinnerclub_date = moment(dinnerClub.at);
     // Its to late to cancel when dinnerclub has already been held REMEMBER TO VERIFY SERVER SIDE
     const to_late = dinnerclub_date.isBefore(moment());
@@ -23,36 +21,11 @@ const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationI
             <h3>Vi skal have {dinnerClub.meal}!</h3>
             <CookComponent
                 cook={dinnerClub.cook}/>
-            <RoundIconButton
-                glyph="ok"
-                onClick={
-                    () => {
-                        let participating = isParticipating && !hasCancelled;
-                        console.log("We have that participating: "+participating);
-                        if(!participating){
-                            setCancel(dinnerClub.id,participationID,false);
-                        }
-                    }
-                }
-                isActive={isParticipating && !hasCancelled}
-                activeColor="#1a591a"
-                isDisabled={dinnerClub.shopping_complete || dinnerClub.cancelled || to_late}
-                activeColorIcon="white"/>
-            <RoundIconButton
-                glyph="remove"
-                onClick={
-                    ()=> {
-                        let participating = isParticipating && !hasCancelled;
-                        console.log("We have that participating: "+participating);
-                        if(participating){
-                            setCancel(dinnerClub.id,participationID,true);
-                        }
-                    }
-                }
-                isActive={hasCancelled || !isParticipating}
-                isDisabled={dinnerClub.shopping_complete  || dinnerClub.cancelled || to_late}
-                activeColor="#b73835"
-                activeColorIcon="white"/>
+            <CancelParticipationFrontPage 
+                dinnerClub={dinnerClub}
+                isParticipating={isParticipating}
+                participationID={participationID}
+                hasCancelled={hasCancelled}/>
         </div>
     );
 };
@@ -62,26 +35,17 @@ FrontPageDinnerClubComponent.fragments = {
         fragment FrontPageDinnerClubComponentDinnerClub on DinnerClub {
             id
             at
-            cancelled
-            shopping_complete
             meal
+            ...CancelParticipationComponentDinnerClub
             cook {
                 id
                 ...CookComponentSimpleUser
             }
         }
         ${CookComponent.fragments.simpleUser}
+        ${CancelParticipationFrontPage.fragments.dinnerclub}
     `
 };
-
-const cancelParticipateDinnerclubMutation = gql`
-    mutation participate($dinnerclubID: String!,$cancel: Boolean!){
-        participate(id: $dinnerclubID,participating:{cancelled:$cancel}) {
-            id
-            cancelled
-        }
-    }
-`;
 
 FrontPageDinnerClubComponent.propTypes = {
     dinnerClub: propType(FrontPageDinnerClubComponent.fragments.dinnerclub).isRequired,
@@ -90,52 +54,4 @@ FrontPageDinnerClubComponent.propTypes = {
     hasCancelled: React.PropTypes.bool.isRequired
 };
 
-export default graphql(cancelParticipateDinnerclubMutation,{
-    props({ _,mutate }) {
-        return {
-            setCancel(dinnerclubID,participationID,cancel){
-                console.log(dinnerclubID);
-                console.log(participationID);
-                console.log(cancel);
-                return mutate({
-                    variables: {
-                        dinnerclubID: dinnerclubID,
-                        cancel: cancel
-                    },
-                    optimisticResponse: {
-                        __typename: 'Mutation',
-                        participate: {
-                            __typename: 'UserParticipation',
-                            id: participationID,
-                            cancelled: cancel
-                        }
-                    },
-                    updateQueries: {
-                        currentUserQuery: (previousResult, { mutationResult }) => {
-                            const newParticipation = mutationResult.data.participate;
-                            const newPartID = newParticipation.id;
-                            const newCancel = newParticipation.cancelled;
-                            const updateDinnerclubIndex = previousResult.me.kitchen.
-                                dinnerclubs.findIndex((d)=>d.id === dinnerclubID);
-                            const updateParticipantsIndex = previousResult.me.kitchen.
-                                dinnerclubs[updateDinnerclubIndex].
-                                participants.findIndex((p) =>p.id === newPartID);
-                            let newResult = update(previousResult,{
-                                me: {
-                                    kitchen: {
-                                        dinnerclubs: {$apply: (l)=>{
-                                            l[updateDinnerclubIndex].
-                                                participants[updateParticipantsIndex].cancelled = newCancel;
-                                            return l;
-                                        }}
-                                    }
-                                }
-                            });
-                            return newResult;
-                        }
-                    }
-                })
-            }
-        }
-    }
-})(FrontPageDinnerClubComponent);
+export default FrontPageDinnerClubComponent;

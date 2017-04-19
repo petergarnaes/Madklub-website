@@ -18,6 +18,7 @@ import participationReducer, {participationFragment} from '../../../util/partici
 import MealEdit from '../../meal_edit';
 import ShoppingCompleteDateDetail from '../../shopping_set/date_detail';
 import CancelDinnerclubComponent from '../../cancel_dinnerclub_component';
+import CancelParticipationDateDetail from '../../cancel_participation_component/date_detail';
 
 const iconWidth = 6;
 
@@ -50,9 +51,14 @@ const DateDetailComponent = ({data}) => {
         // Create cancel component for either cook or participant
         let cancelComponent = (isCook) ?
             <CancelDinnerclubComponent
-                dinnerclub={dinnerclub}/> : <div/>;
-            /*(isParticipating) ?
-                <ParticipantCancelDinnerclub/> : <ParticipantParticipateDinnerclub/>;
+                dinnerclub={dinnerclub}/> : 
+                (isParticipating) ?
+                    <CancelParticipationDateDetail
+                        dinnerClub={dinnerclub}
+                        isParticipating={isParticipating}
+                        participationID={participationID}
+                        hasCancelled={hasCancelled}/> : <div/>;
+                /*<ParticipantParticipateDinnerclub/>;
         */// Count nr of participants
         let participants = dinnerclub.participants;
         let nrParticipating = participants.reduce((acc,p)=>acc + ((p.cancelled) ? 0 : 1),0);
@@ -109,6 +115,7 @@ DateDetailComponent.fragments = {
         fragment DateDetailComponentDinnerClub on DinnerClub {
             ...ShoppingCompleteComponentDinnerClub
             ...CancelDinnerclubComponentDinnerClub
+            ...CancelParticipationComponentDinnerClub
             id
             at
             meal
@@ -131,6 +138,7 @@ DateDetailComponent.fragments = {
         ${participationFragment}
         ${ShoppingCompleteDateDetail.fragments.dinnerclub}
         ${CancelDinnerclubComponent.fragments.dinnerclub}
+        ${CancelParticipationDateDetail.fragments.dinnerclub}
     `
 };
 
