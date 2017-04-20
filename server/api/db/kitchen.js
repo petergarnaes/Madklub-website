@@ -30,12 +30,22 @@ module.exports = function(sequelize, DataTypes) {
         is: /^([01]\d|2[0123])(:([0-5]\d)){2}$/
       }
     },
-    // In time before meal, can be set to null and if so only dinnerclubs shopping_complete will limit participation
-    // doesn't make much sense to have it though, participants are welcome before shopping right?
-    /*default_participation_deadline: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },*/
+    // How must time before 'at' it is legal to cancel, in minutes
+    cancellation_deadline: {
+      type: DataTypes.INTEGER,
+      // If 0, this restriction is disabled
+      defaultValue: 0
+    },
+    // How must time before 'at' it is legal to have shopped, in minutes
+    shopping_open_at: {
+      type: DataTypes.INTEGER,
+      // If 0, this restriction is disabled
+      defaultValue: 0
+    },
+    priceloft_applies: { // Wether a price loft is enforced, some might don't care
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     default_priceloft: { // The maximum per person price of a meal
       type: DataTypes.FLOAT,
       defaultValue: 100.0
@@ -55,7 +65,10 @@ module.exports = function(sequelize, DataTypes) {
         });
         Kitchen.DinnerClubs = Kitchen.hasMany(models.DinnerClub,{
           as: 'dinnerclub',
-          onDelete: "CASCADE"
+          onDelete: "CASCADE",
+          foreignKey: {
+            name: 'associatedKitchenId'
+          }
         });
         // We want kitchen to point to only one user, not the other way
         Kitchen.Admin = Kitchen.belongsTo(models.User,{

@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
     at: { // Date AND time of the dinner
       type: DataTypes.DATE,
       allowNull: false,
-      unique: 'comp', // Composite index so (at,KitchenId) can be unique
+      //unique: 'comp', // Composite index so (at,KitchenId) can be unique
       validate: {
         isDate: true
       }
@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
     KitchenId: { // Foreign key of kitchen which our association will default to, so we can use unique
       type: DataTypes.INTEGER,
       //allowNull: false,
-      unique: 'comp' // Composite index so (at,KitchenId) can be unique
+      //unique: 'comp' // Composite index so (at,KitchenId) can be unique
     },
     cancelled: { // Whether the dinner will be held
       type: DataTypes.BOOLEAN,
@@ -41,6 +41,11 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        DinnerClub.belongsTo(models.Kitchen,{
+          foreignKey: {
+            name: 'associatedKitchenId'
+          }
+        });
         DinnerClub.Cook = DinnerClub.belongsTo(models.User,{
           as: 'cook'
         });

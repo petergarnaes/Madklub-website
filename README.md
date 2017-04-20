@@ -320,6 +320,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
 ```
 
 ## TODO features
+* Fejl håndtering, hvis API afviser request
 * ~~Kok forside~~
     * ~~Indkøb knap~~
     * ~~Måltid rettelse~~
@@ -327,14 +328,15 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Aflys/tilmeld deltagelse~~
     * Tilmeld
 * ~~Kok dato detaljer~~
-    * ~~Aflyse madklub~~ (mangler backend tids begrænsning)
+    * ~~Aflyse madklub~~
     * ~~Rette måltid~~
-    * ~~Købt ind (tidligst 24 timer inden)~~ (mangler backend verificering)
+    * ~~Købt ind~~
 * Backend tilføjelser
-    * Deadline for aflysning af madklub, måske gemmes som minutter inden den
-    afholdes?
-    * deadline for hvor tidligt man kan handle ind, også gemmes i minutter
-    inden madklubben afholdes?
+    * ~~Deadline for aflysning af madklub, gemmes som minutter~~
+    * ~~deadline for hvor tidligt man kan handle ind, gemmes i minutter~~
+    * ~~Er priceloft verification~~
+    * ~~DinnerClub belongsTo kitchen~~
+    * Inkluder gæster i prislofts beregninger
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
