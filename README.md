@@ -209,7 +209,8 @@ question. Does the user have the right permissions? Is time restrictions and
 deadlines held? All mutations with several steps should be transactions. 
 Writes should be infrequent, so transactions will do.
 
-ALL INPUT MUST BE SANITIZED!
+ALL INPUT MUST BE SANITIZED! Seems like it is default, so no html 
+characters, I could not inject through meal;
 
 ## Structure and architecture
 
@@ -337,7 +338,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Er priceloft verification~~
     * ~~DinnerClub belongsTo kitchen~~
     * ~~Inkluder gæster i prislofts beregninger~~
-    * Re-enable csrf_check for changeDinnerclub_
+    * Re-enable csrf_check for changeDinnerclub
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub

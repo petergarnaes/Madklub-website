@@ -36,7 +36,7 @@ const changeDinnerClub = {
             // and thereby check if the priceloft is broken
             attributes: { include: [
                 [sequelize.fn('COUNT', sequelize.col('participant.id')), 'nrPart'],
-                [sequelize.fin('SUM',sequelize.col('participant.guest_count')), 'guestCountPart']
+                [sequelize.fn('SUM',sequelize.col('participant.guest_count')), 'guestCountPart']
             ]},
             include: [
                 {
@@ -73,11 +73,8 @@ const changeDinnerClub = {
                 }
                 // - verify shopping complete is not set from true to false, it seems non-sensical
 
-                // TODO account for guests!
                 // verify total_cost is not to high
                 if(kitchen.priceloft_applies){
-                    // THIS IS IT!!!
-                    //console.log(dinnerclub.get('nrPart'));
                     let participant_count = dinnerclub.get('nrPart');
                     let guest_count = dinnerclub.get('guestCountPart');
                     let total_part_count = participant_count+guest_count;
