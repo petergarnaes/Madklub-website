@@ -34,11 +34,14 @@ const changeDinnerClub = {
             transaction: t,
             // We count the number of participants so we can calculate the individual price
             // and thereby check if the priceloft is broken
-            attributes: { include: [[sequelize.fn('COUNT', sequelize.col('participant.id')), 'nrPart']]},
+            attributes: { include: [
+                [sequelize.fn('COUNT', sequelize.col('participant.id')), 'nrPart'],
+                [sequelize.fin('SUM',sequelize.col('participant.guest_count')), 'guestCountPart']
+            ]},
             include: [
                 {
                     // Only id required, since we just need to count
-                    attributes: ['id'],
+                    attributes: ['id','guest_count'],
                     model: Participation,
                     // This 'as' must match the association name in db
                     as: 'participant',
@@ -51,6 +54,7 @@ const changeDinnerClub = {
             ]
         }).then((dinnerclub)=>{
             console.log('So it begins:');
+            console.log(dinnerclub.get('guestCountPart'));
             if(!dinnerclub)
                 Promise.reject('No such dinnerclub with that ID');
             return dinnerclub.getKitchen({transaction: t}).then((kitchen)=>{
@@ -58,13 +62,13 @@ const changeDinnerClub = {
                 let at = moment(dinnerclub.at);
                 // Verify cancelling is not to late
                 let deadline = kitchen.cancellation_deadline;
-                if(deadline > 0 && current.isAfter(at.subtract(deadline,'minutes'))){
+                if(deadline > 0 && current.isAfter(moment(at).subtract({'minutes': deadline}))){
                     return Promise.reject('You are trying to cancel after the cancel deadline ' +
                         'is passed');
                 }
                 // Verify shopping complete is not to early
                 let shop_at = kitchen.shopping_open_at;
-                if(shop_at > 0 && current.isBefore(at.subtract(shop_at,'minutes'))){
+                if(shop_at > 0 && current.isBefore(moment(at).subtract({'minutes': shop_at}))){
                     return Promise.reject('You are trying to shop to early!');
                 }
                 // - verify shopping complete is not set from true to false, it seems non-sensical
@@ -73,10 +77,12 @@ const changeDinnerClub = {
                 // verify total_cost is not to high
                 if(kitchen.priceloft_applies){
                     // THIS IS IT!!!
-                    console.log(dinnerclub.get('nrPart'));
+                    //console.log(dinnerclub.get('nrPart'));
                     let participant_count = dinnerclub.get('nrPart');
-                    args.total_cost = ((dinnerclub.total_cost/participant_count) > kitchen.default_priceloft) ?
-                        (kitchen.default_priceloft*participant_count) : dinnerclub.total_cost;
+                    let guest_count = dinnerclub.get('guestCountPart');
+                    let total_part_count = participant_count+guest_count;
+                    args.total_cost = ((dinnerclub.total_cost/total_part_count) > kitchen.default_priceloft) ?
+                        (kitchen.default_priceloft*total_part_count) : dinnerclub.total_cost;
                 }
 
                 // Verification successful, we perform the update

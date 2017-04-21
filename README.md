@@ -336,7 +336,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~deadline for hvor tidligt man kan handle ind, gemmes i minutter~~
     * ~~Er priceloft verification~~
     * ~~DinnerClub belongsTo kitchen~~
-    * Inkluder gæster i prislofts beregninger
+    * ~~Inkluder gæster i prislofts beregninger~~
+    * Re-enable csrf_check for changeDinnerclub_
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
@@ -350,6 +351,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * navn
     * billed
     * etc.
+* Graphiql should work with csrf
 
 ## Random Notes
 
