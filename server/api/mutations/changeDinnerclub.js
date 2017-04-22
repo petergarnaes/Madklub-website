@@ -27,9 +27,10 @@ const changeDinnerClub = {
     }),
     resolve: function(root, args, context, info) {
         // This is how we must do csrf checks for now...
-        //if(csrf_check(root)){
-        //    return Promise.reject(csrf_error_message);
-        //}
+        if(csrf_check(root)){
+            return Promise.reject(csrf_error_message);
+        }
+        // TODO if we do not mutate total cost, we don't have to do join
         return sequelize.transaction((t)=>DinnerClub.findById(args.id,{
             transaction: t,
             // We count the number of participants so we can calculate the individual price

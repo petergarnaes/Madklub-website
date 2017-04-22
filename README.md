@@ -327,18 +327,20 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Måltid rettelse~~
 * ~~Dato detaljer~~
     * ~~Aflys/tilmeld deltagelse~~
+    * Tilmeld gæster
     * Tilmeld
 * ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~
     * ~~Rette måltid~~
     * ~~Købt ind~~
+    * Tilmeld gæster
 * Backend tilføjelser
     * ~~Deadline for aflysning af madklub, gemmes som minutter~~
     * ~~deadline for hvor tidligt man kan handle ind, gemmes i minutter~~
     * ~~Er priceloft verification~~
     * ~~DinnerClub belongsTo kitchen~~
     * ~~Inkluder gæster i prislofts beregninger~~
-    * Re-enable csrf_check for changeDinnerclub
+    * ~~Re-enable csrf_check for changeDinnerclub~~
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
