@@ -4,6 +4,7 @@
 import {
   GraphQLObjectType as ObjectType,
   GraphQLList as ListType,
+    GraphQLBoolean as BooleanType
 } from 'graphql';
 import {resolver} from 'graphql-sequelize';
 import {Kitchen} from '../db';
@@ -66,7 +67,20 @@ const KitchenType = new ObjectType({
         },
         periods: {
             type: new ListType(PeriodType),
-            resolve: resolver(Kitchen.Periods),
+            args: {
+                archived: {
+                    type: BooleanType,
+                    description: 'Filters periods based on archived'
+                }
+            },
+            resolve: resolver(Kitchen.Periods,{
+                before: (options,args) => {
+                    if(args.archived){
+                        options.where.archived = args.archived;
+                    }
+                    return options;
+                }
+            }),
             description: 'List of all periods associated with this kitchen, both active' +
             'and inactive.'
         },

@@ -49,16 +49,17 @@ const PeriodType = new ObjectType({
                 console.log('Period root:');
                 console.log(root);
                 //return null;
+                var where = {
+                    // Finds appropriate dinnerclubs
+                    at: {
+                        $gt: root.started_at,
+                        $lt: root.ended_at
+                    },
+                    // So we only look at dinnerclubs for this periods kitchen
+                    associatedKitchenId: root.periodKitchenId
+                };
                 return DinnerClub.findAll({
-                    where: {
-                        // Finds appropriate dinnerclubs
-                        at: {
-                            $gt: root.started_at,
-                            $lt: root.ended_at
-                        },
-                        // So we only look at dinnerclubs for this periods kitchen
-                        associatedKitchenId: root.periodKitchenId
-                    }
+                    where: where
                 });
             },
         },

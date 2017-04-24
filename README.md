@@ -344,7 +344,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * periods:
         * ~~Create in db with proper associations~~
         * ~~Create querying fields in graphql~~
-        * Create filtering options in graphql
+        * ~~Create filtering options in graphql~~
         * Create field in PeriodType displaying accounting information
         * Create mutations:
             * If kitchens `period_length` is changed, change active
