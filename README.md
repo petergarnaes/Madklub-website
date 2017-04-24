@@ -345,7 +345,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
         * ~~Create in db with proper associations~~
         * ~~Create querying fields in graphql~~
         * ~~Create filtering options in graphql~~
-        * Create field in PeriodType displaying accounting information
+        * ~~Create field in PeriodType displaying accounting information~~
         * Create mutations:
             * If kitchens `period_length` is changed, change active
                 periods to use this interval.
@@ -354,7 +354,12 @@ stuff, rest loads in along the way. All this should be very cacheable.
                 archive dinnerclubs and participations for that period.
                 Maybe check period has ended? Archived dinnerclubs and 
                 participations should be immutable
+        * Periods optional?
     * `createDinnerclub` should incorporate `assume_attendance`
+    * `dinnerclub` should have `archived` field
+    * `changeDinnerclub` should be immutable when archived
+    * `participation` should have `archived` field
+    * `participate` should be immutable when archived
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub

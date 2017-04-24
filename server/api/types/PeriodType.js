@@ -4,15 +4,47 @@
 
 import {
     GraphQLObjectType as ObjectType,
+    GraphQLInt as IntType,
+    GraphQLFloat as FloatType,
     GraphQLList as ListType,
 } from 'graphql';
 import {resolver} from 'graphql-sequelize';
-import {sequelize,Period,DinnerClub} from '../db';
+import {sequelize,Period,DinnerClub,Participation,User} from '../db';
 import {attributeFields} from 'graphql-sequelize';
-//import DinnerClubParticipationType from './DinnerClubParticipationType';
 import DinnerClubType from './DinnerClubType';
+import {SimpleUserType} from './SimpleUserType';
 import DateType from './DateType';
 import {createdAtDoc,updatedAtDoc} from '../docs/created_updated';
+
+const getPeriodDinnerClubs = (root,extra) => {
+    var where = {
+        // Finds appropriate dinnerclubs
+        at: {
+            $gt: root.started_at,
+            $lt: root.ended_at
+        },
+        // So we only look at dinnerclubs for this periods kitchen
+        associatedKitchenId: root.periodKitchenId
+    };
+    return DinnerClub.findAll({
+        where: where,
+        ...extra
+    });
+};
+
+let AccountingSplitType = new ObjectType({
+    name: 'AccountingSplit',
+    fields: {
+        to_pay: {
+            type: FloatType,
+            description: 'Payment amount for this split'
+        },
+        user: {
+            type: SimpleUserType,
+            description: 'The user who needs to pay this split'
+        }
+    }
+});
 
 const PeriodType = new ObjectType({
     name: 'Period',
@@ -46,25 +78,62 @@ const PeriodType = new ObjectType({
             type: new ListType(DinnerClubType),
             description: 'The dinnerclubs in this period of this kitchen',
             resolve: (root, args, context, info) => {
-                console.log('Period root:');
-                console.log(root);
-                //return null;
-                var where = {
-                    // Finds appropriate dinnerclubs
-                    at: {
-                        $gt: root.started_at,
-                        $lt: root.ended_at
-                    },
-                    // So we only look at dinnerclubs for this periods kitchen
-                    associatedKitchenId: root.periodKitchenId
-                };
-                return DinnerClub.findAll({
-                    where: where
-                });
+                return getPeriodDinnerClubs(root,{});
             },
         },
-        // TODO create some Type and resolver that can calculate accounting information
-        // for this period. This type should maybe be per user?
+        // Gives the cost split for each user in this period
+        accounting_split: {
+            type: new ListType(AccountingSplitType),
+            description: 'The accounting split for every member in the kitchen' +
+            ' for the dinnerclubs they participated in.',
+            // Not terribly optimized, but called rarely, so its probably fine
+            resolve: (root, args, context, info) => {
+                let extra = {
+                    include: [
+                        {
+                            model: Participation,
+                            // This 'as' must match the association name in db
+                            as: 'participant',
+                            include: [{model: User}],
+                            // Ensures participant count is only people who have not cancelled
+                            where: {
+                                cancelled: false
+                            },
+                        }
+                    ]
+                };
+                return getPeriodDinnerClubs(root,extra).then((dinnerclubs)=>{
+                    // TODO join these maps
+                    var userPayMap = new Map();
+                    var uMap = new Map();
+
+                    dinnerclubs.forEach((d)=>{
+                        //console.log(d);
+                        //console.log(d.get('participant'));
+                        let participants = d.get('participant');
+                        let totalGuestCount = participants.map((p)=>p.guest_count).reduce((acc,cur)=>acc+cur);
+                        let totalPart = participants.length + totalGuestCount;
+                        let avg_price = d.total_cost / totalPart;
+                        participants.forEach((p)=>{
+                            // What a participant owes for this dinnerclub
+                            let dp_price = avg_price*(1.0+p.guest_count);
+                            // Accumulate cost of dinnerclub for the user
+                            let price = (userPayMap.has(p.up_key)) ? (userPayMap.get(p.up_key)+dp_price) : dp_price;
+                            userPayMap.set(p.up_key,price);
+                            uMap.set(p.up_key,p.User);
+                        });
+                    });
+                    var results = [];
+                    userPayMap.forEach((v,k,m)=>{
+                        results.push({
+                            to_pay: v,
+                            user: uMap.get(k)
+                        });
+                    });
+                    return results;
+                });
+            }
+        }
     }),
     description: 'A dinnerclub represents one dinner that the kitchen community have together'
 });
