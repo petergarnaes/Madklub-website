@@ -53,7 +53,20 @@ module.exports = function(sequelize, DataTypes) {
     assume_attendance: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
-    } // Whether a kitchen member should actively opt out of meals
+    }, // Whether a kitchen member should actively opt out of meals
+    period_length: { // Specified as a string following the ISO 8601 duration
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        // Regex for ISO 8601 durations
+        is: /^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d+[HMS])(\d+H)?(\d+M)?(\d+S)?)?$/
+      }
+    },
+    mandatory_dinnerclubs_in_period: { // Indicates how many times a participant
+      // is supposed to cook in a period. If 0, there are nothing mandatory
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   }, {
     classMethods: {
       associate: function(models) {
@@ -68,6 +81,13 @@ module.exports = function(sequelize, DataTypes) {
           onDelete: "CASCADE",
           foreignKey: {
             name: 'associatedKitchenId'
+          }
+        });
+        Kitchen.Periods = Kitchen.hasMany(models.Period,{
+          as: 'period',
+          onDelete: "CASCADE",
+          foreignKey: {
+            name: 'periodKitchenId'
           }
         });
         // We want kitchen to point to only one user, not the other way

@@ -17,7 +17,8 @@ let models = [require("./user"),
     require("./participation"),
     require("./user_account"),
     require("./user_claim"),
-    require("./user_profile")];
+    require("./user_profile"),
+    require("./period")];
 
 models.forEach(function(model) {
     let m = model(sequelize,Sequelize.DataTypes);
