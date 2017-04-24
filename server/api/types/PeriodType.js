@@ -108,9 +108,8 @@ const PeriodType = new ObjectType({
                     var uMap = new Map();
 
                     dinnerclubs.forEach((d)=>{
-                        //console.log(d);
-                        //console.log(d.get('participant'));
-                        let participants = d.get('participant');
+                        // Cancelled participations are naturally not counted
+                        let participants = d.get('participant').filter((p)=>!p.cancelled);
                         let totalGuestCount = participants.map((p)=>p.guest_count).reduce((acc,cur)=>acc+cur);
                         let totalPart = participants.length + totalGuestCount;
                         let avg_price = d.total_cost / totalPart;
