@@ -39,6 +39,7 @@ const createDinnerClub = {
       }),
     }
   }),
+  // TODO: incorporate assume_attendance
   resolve: function(root, args, context, info) {
     // This is how we must do csrf checks for now...
     if(csrf_check(root)){
