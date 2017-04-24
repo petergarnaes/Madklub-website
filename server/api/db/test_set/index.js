@@ -313,6 +313,14 @@ export default async function(db){
     });
     vest10.addDinnerclub(madklub3);
 
+    var period1 = await db.Period.create({
+        started_at: (moment().subtract(1,'day')).toISOString(),
+        ended_at: (moment().add(10,'day')).toISOString(),
+    });
+
+    period1.setKitchen(vest10);
+    vest10.setPeriod([period1]);
+
     var ost4 = await db.Kitchen.create({
         name: '4 Øst'
     });

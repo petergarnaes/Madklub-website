@@ -9,6 +9,7 @@ import {resolver} from 'graphql-sequelize';
 import {Kitchen} from '../db';
 import {attributeFields} from 'graphql-sequelize';
 import DinnerClubType from './DinnerClubType';
+import PeriodType from './PeriodType';
 import InputDateRangeType from './InputDateRangeType';
 import {SimpleUserType} from './SimpleUserType';
 import moment from 'moment';
@@ -62,6 +63,12 @@ const KitchenType = new ObjectType({
                 }
             }),
             description: 'List of dinnerclubs, both future and past, associated with this kitchen'
+        },
+        periods: {
+            type: new ListType(PeriodType),
+            resolve: resolver(Kitchen.Periods),
+            description: 'List of all periods associated with this kitchen, both active' +
+            'and inactive.'
         },
         members: {
             type: new ListType(SimpleUserType),

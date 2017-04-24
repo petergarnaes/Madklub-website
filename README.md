@@ -341,6 +341,20 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~DinnerClub belongsTo kitchen~~
     * ~~Inkluder gæster i prislofts beregninger~~
     * ~~Re-enable csrf_check for changeDinnerclub~~
+    * periods:
+        * ~~Create in db with proper associations~~
+        * ~~Create querying fields in graphql~~
+        * Create filtering options in graphql
+        * Create field in PeriodType displaying accounting information
+        * Create mutations:
+            * If kitchens `period_length` is changed, change active
+                periods to use this interval.
+            * Kitchen admin should be able to create periods.
+            * Periods should be able to be archived, if archived, should
+                archive dinnerclubs and participations for that period.
+                Maybe check period has ended? Archived dinnerclubs and 
+                participations should be immutable
+    * `createDinnerclub` should incorporate `assume_attendance`
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
