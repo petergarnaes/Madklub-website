@@ -106,8 +106,8 @@ const PeriodType = new ObjectType({
                     // TODO join these maps
                     var userPayMap = new Map();
                     var uMap = new Map();
-
-                    dinnerclubs.forEach((d)=>{
+                    var ds = dinnerclubs.filter((d)=>!d.cancelled);
+                    ds.forEach((d)=>{
                         // Cancelled participations are naturally not counted
                         let participants = d.get('participant').filter((p)=>!p.cancelled);
                         let totalGuestCount = participants.map((p)=>p.guest_count).reduce((acc,cur)=>acc+cur);
