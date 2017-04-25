@@ -10,6 +10,7 @@ import PeriodType from '../types/PeriodType';
 import {sequelize,Period,User,Kitchen} from '../db';
 import {csrf_check,csrf_error_message} from '../csrf_check';
 import moment from 'moment';
+import {verifyKitchenAdmin} from './utils';
 
 const createPeriod = {
     type: PeriodType,
@@ -33,20 +34,7 @@ const createPeriod = {
         // Dates must be valid
         if (start.isValid() && end.isValid() && start.isBefore(end)) {
             return sequelize.transaction((t) =>
-                User.findById(root.request.user.id,{
-                    transaction: t,
-                    attributes: ['id'],
-                    include: [
-                        {
-                            attributes: ['adminId'],
-                            model: Kitchen,
-                            as: 'kitchen'
-                        }
-                    ]
-                }).then((u)=>{
-                    if(u.id !== u.kitchen.adminId){
-                        return Promise.reject('You are not the admin of the kitchen!');
-                    }
+                verifyKitchenAdmin(root,t).then((_)=>{
                     // Check for overlapping periods
                     return Period.findAll({
                         transaction: t,

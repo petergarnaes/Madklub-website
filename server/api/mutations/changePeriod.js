@@ -11,6 +11,7 @@ import PeriodType from '../types/PeriodType';
 import {sequelize,Period} from '../db';
 import {csrf_check,csrf_error_message} from '../csrf_check';
 import moment from 'moment';
+import {verifyKitchenAdmin} from './utils';
 
 const changePeriod = {
     type: PeriodType,
@@ -63,20 +64,7 @@ const changePeriod = {
         if(!args.archived)
             return Promise.reject('Cannot un-archive a period');
         return sequelize.transaction((t)=>
-            User.findById(root.request.user.id,{
-                transaction: t,
-                attributes: ['id'],
-                include: [
-                    {
-                        attributes: ['adminId'],
-                        model: Kitchen,
-                        as: 'kitchen'
-                    }
-                ]
-            }).then((u)=> {
-                if (u.id !== u.kitchen.adminId) {
-                    return Promise.reject('You are not the admin of the kitchen!');
-                }
+            verifyKitchenAdmin(root,t).then((_)=> {
                 // Verify no overlapping dates
                 if(queries.length > 0)
                    return Period.findAll({
