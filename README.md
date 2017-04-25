@@ -341,12 +341,12 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~DinnerClub belongsTo kitchen~~
     * ~~Inkluder gæster i prislofts beregninger~~
     * ~~Re-enable csrf_check for changeDinnerclub~~
-    * periods:
+    * ~~periods:~~
         * ~~Create in db with proper associations~~
         * ~~Create querying fields in graphql~~
         * ~~Create filtering options in graphql~~
         * ~~Create field in PeriodType displaying accounting information~~
-        * Create mutations:
+        * ~~Create mutations:~~
             * ~~Kitchen admin should be able to create periods. Periods cannot
             overlap with other periods.~~
             * ~~Kitchen admin should be able to change periods, as long as they
@@ -356,8 +356,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
                 archive dinnerclubs and participations for that period.~~
                 Maybe check period has ended? ~~Archived dinnerclubs and
                 participations should be immutable~~
-        * Periods optional?
-    * `createDinnerclub` should incorporate `assume_attendance`
+        * ~~Periods optional?~~
+    * ~~`createDinnerclub` should incorporate `assume_attendance`~~
     * ~~`dinnerclub` should have `archived` field~~
     * ~~`changeDinnerclub` should be immutable when archived~~
     * ~~`participation` should have `archived` field~~
@@ -376,6 +376,11 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * billed
     * etc.
 * Graphiql should work with csrf
+
+## Bugs
+
+* When editing meal as cook in date detail, if we switch date the input
+field and content stays. We must reset it when the date changes!
 
 ## Random Notes
 

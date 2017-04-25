@@ -6,7 +6,8 @@ import moment from "moment";
 export default async function(db){
     // 10 vest
     var vest10 = await db.Kitchen.create({
-        name: '10 Vest'
+        name: '10 Vest',
+        assume_attendance: true
     });
 
     var trine = await db.User.create({

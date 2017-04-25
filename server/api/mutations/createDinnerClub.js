@@ -42,9 +42,9 @@ const createDinnerClub = {
   // TODO: incorporate assume_attendance
   resolve: function(root, args, context, info) {
     // This is how we must do csrf checks for now...
-    if(csrf_check(root)){
-      return Promise.reject(csrf_error_message);
-    }
+    //if(csrf_check(root)){
+    //  return Promise.reject(csrf_error_message);
+    //}
     // Test the date format is correct
     var inputDate = new Date(args.at);
     if(isNaN(inputDate.getTime())){
@@ -59,8 +59,30 @@ const createDinnerClub = {
 
     // First retrieve user
     return sequelize.transaction((t)=>{
-      return User.findById(root.request.user.id,{attributes: ['id','memberId'],transaction: t}).then((user)=>{
-        if(!user){
+      return User.findById(root.request.user.id,{
+        attributes: ['id','memberId','active'],
+        transaction: t,
+        include: [
+            // include kitchen assume_attendance, so we know whether to add everyone
+          {
+            model: Kitchen,
+            as: 'kitchen',
+            attributes: ['id','assume_attendance'],
+            include: [
+                // include active members of the kitchen, so they can attend if assume_attendance
+              {
+                model: User,
+                as: 'member',
+                attributes: ['id'],
+                where: {
+                  active: true
+                }
+              }
+            ]
+          }
+        ]
+      }).then((user)=>{
+        if(!user && !user.active){
           Promise.reject('You are currently not logged in');
         }
         // Retreive info to determine if the date clashes
@@ -76,15 +98,23 @@ const createDinnerClub = {
           if(results.length > 0){
             return Promise.reject('This date is already occupied');
           }
-          // Set up participation, defaults on all fields if not given anything
-          args.participant = args.participation ? args.participation : {};
-          args.participant.up_key = user.id;
+          
+          let ownParticipation = {
+            up_key: user.id
+          };
+          args.participant = [ownParticipation];
+          
+          // Add all active participants in the kitchen
+          if(user.kitchen.assume_attendance){
+            var bobs = user.kitchen.member.map((m) => ({up_key: m.id}) );
+            args.participant = bobs;
+          }
 
           args.at = inputDate;
           // The include will then automatically set the foreign key?
           var createArgs = {transaction: t,include: [{ model: Participation, as: 'participant'}]};
           args.cookId = user.id;
-          args.KitchenId = user.memberId;
+          args.associatedKitchenId = user.memberId;
           return DinnerClub.create(args,createArgs).then((dinnerclub)=>{
             // Can we return just the dinnerclub object? (we should be able to)
             return dinnerclub;
