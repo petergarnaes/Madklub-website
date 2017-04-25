@@ -83,26 +83,7 @@ const changePeriod = {
                         transaction: t,
                         where: {
                             // Either start or end overlaps with another period
-                            $or: [
-                                // start date overlaps with another period
-                                {
-                                    started_at: {
-                                        $lt: start.toISOString()
-                                    },
-                                    ended_at: {
-                                        $gt: start.toISOString()
-                                    }
-                                },
-                                // End date overlaps with another period
-                                {
-                                    started_at: {
-                                        $lt: end.toISOString()
-                                    },
-                                    ended_at: {
-                                        $gt: end.toISOString()
-                                    }
-                                }
-                            ],
+                            $or: queries,
                         }
                     }).then((p)=>(p.length > 0) ? Promise.reject('Period overlaps!') : null);
                 return null
