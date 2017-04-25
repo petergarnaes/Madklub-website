@@ -57,7 +57,9 @@ const changeDinnerClub = {
             console.log('So it begins:');
             console.log(dinnerclub.get('guestCountPart'));
             if(!dinnerclub)
-                Promise.reject('No such dinnerclub with that ID');
+                return Promise.reject('No such dinnerclub with that ID');
+            if(dinnerclub.archived)
+                return Promise.reject('Dinnerclub archived, cannot be changed now');
             return dinnerclub.getKitchen({transaction: t}).then((kitchen)=>{
                 let current = moment();
                 let at = moment(dinnerclub.at);

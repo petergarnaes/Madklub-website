@@ -52,12 +52,13 @@ const participate = {
                     transaction: t
                 }).then((dinnerclub)=>{
                     console.log(dinnerclub.participant);
-                    // TODO except will_be_late
+                    if(dinnerclub.archived)
+                        return Promise.reject('Dinnerclub archived, cannot be changed now');
                     if(dinnerclub.shopping_complete &&
                             // guest_count and cancelled can not be set if shopping is completed,
                             // will accept 'will_be_late' though
-                        (!('guest_count' in args.participating) || !('cancelled' in args.participating))){
-                        Promise.reject('Shopping has completed, and it is no longer possible to change participation');
+                        (('guest_count' in args.participating) || ('cancelled' in args.participating))){
+                        return Promise.reject('Shopping has completed, and it is no longer possible to change participation');
                     }
                     if(dinnerclub.participant){
                         // We update

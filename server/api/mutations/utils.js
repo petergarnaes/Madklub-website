@@ -23,3 +23,6 @@ export const verifyKitchenAdmin = (root,transaction) => {
         .then((u) => (u.id !== u.kitchen.adminId) ? Promise.reject('Current user is not admin!') : u);
 };
 
+export const verifyNotArchived = (dbObject) => {
+    
+};
