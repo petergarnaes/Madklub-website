@@ -349,13 +349,13 @@ stuff, rest loads in along the way. All this should be very cacheable.
         * Create mutations:
             * ~~Kitchen admin should be able to create periods. Periods cannot
             overlap with other periods.~~
-            * Kitchen admin should be able to change periods, as long as they
-            are not archived, ~~and start/end date does not overlap with other
+            * ~~Kitchen admin should be able to change periods, as long as they
+            are not archived, and start/end date does not overlap with other
             periods.~~
-            * Periods should be able to be archived, if archived, should
-                archive dinnerclubs and participations for that period.
-                Maybe check period has ended? Archived dinnerclubs and 
-                participations should be immutable
+            * ~~Periods should be able to be archived, if archived, should
+                archive dinnerclubs and participations for that period.~~
+                Maybe check period has ended? ~~Archived dinnerclubs and
+                participations should be immutable~~
         * Periods optional?
     * `createDinnerclub` should incorporate `assume_attendance`
     * ~~`dinnerclub` should have `archived` field~~

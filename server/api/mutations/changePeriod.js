@@ -8,7 +8,7 @@ import {
 } from 'graphql';
 import {attributeFields} from 'graphql-sequelize';
 import PeriodType from '../types/PeriodType';
-import {sequelize,Period} from '../db';
+import {sequelize,Period,DinnerClub} from '../db';
 import {csrf_check,csrf_error_message} from '../csrf_check';
 import moment from 'moment';
 import {verifyKitchenAdmin} from './utils';
@@ -64,31 +64,50 @@ const changePeriod = {
         if(!args.archived)
             return Promise.reject('Cannot un-archive a period');
         return sequelize.transaction((t)=>
-            verifyKitchenAdmin(root,t).then((_)=> {
+            verifyKitchenAdmin(root,t)
                 // Verify no overlapping dates
-                if(queries.length > 0)
-                   return Period.findAll({
+                .then((_)=> {
+                    if(queries.length > 0)
+                       return Period.findAll({
+                            transaction: t,
+                            where: {
+                                // Either start or end overlaps with another period
+                                $or: queries,
+                            }
+                        }).then((p)=>(p.length > 0) ? Promise.reject('Period overlaps!') : null);
+                    return null;
+                })
+                .then((_) =>
+                    Period.findById(args.id,{
+                        transaction: t
+                    })
+                )
+                .then((p) => {
+                    // Check the period is not already archived
+                    if (p.archived) Promise.reject('Period archived, cannot be mutated');
+                    // If archiving, then archive dinnerclubs and their participations
+                    if (args.archived) {
+                        // TODO update participations? We do not use it as of yet, only dinnerclub archive...
+                        return DinnerClub.update({archived: true}, {
+                            transaction: t,
+                            where: {
+                                at: {
+                                    $gt: p.started_at,
+                                    $lt: p.ended_at
+                                },
+                                KitchenId: p.periodKitchenId
+                            }
+                        })
+                    }
+                })
+                .then((_)=>
+                    Period.update(args, {
                         transaction: t,
                         where: {
-                            // Either start or end overlaps with another period
-                            $or: queries,
+                            id: args.id
                         }
-                    }).then((p)=>(p.length > 0) ? Promise.reject('Period overlaps!') : null);
-                return null
-            }).then((_)=>{
-                if(args.archive){
-                    // Ensure we are not archiving something that is already archived
-
-                    // If archiving, then archive dinnerclubs and their participations
-                    
-                }
-                return null;
-            }).then((_)=> Period.update(args,{
-                transaction: t,
-                where: {
-                    id: args.id
-                }
-            }))
+                    })
+                )
         );
     },
     description: 'Changes a period by ID. Cannot un-archive period, and start/end can still not overlap' +
