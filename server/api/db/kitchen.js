@@ -54,7 +54,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     }, // Whether a kitchen member should actively opt out of meals
-    period_length: { // Specified as a string following the ISO 8601 duration
+    default_period_length: { // Specified as a string following the ISO 8601 duration
       type: DataTypes.STRING,
       allowNull: true,
       validate: {

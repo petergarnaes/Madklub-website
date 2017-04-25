@@ -49,6 +49,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         ended_at: { // end of period, could be null, if period is ongoing
             type: DataTypes.DATE,
+            allowNull: false,
             validate: {
                 isDate: true
             }
