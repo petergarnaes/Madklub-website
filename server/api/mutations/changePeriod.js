@@ -62,15 +62,65 @@ const changePeriod = {
         // Ensures we only try and archive, ie. set it to true
         if(!args.archived)
             return Promise.reject('Cannot un-archive a period');
-        return sequelize.transaction((t)=> {
-            // Verify no overlapping dates
-            if(queries.length > 0){
-                
-            }
-            // Ensure we are not archiving something that is already archived
-            
-            // If archiving, then archive dinnerclubs and their participations
-        });
+        return sequelize.transaction((t)=>
+            User.findById(root.request.user.id,{
+                transaction: t,
+                attributes: ['id'],
+                include: [
+                    {
+                        attributes: ['adminId'],
+                        model: Kitchen,
+                        as: 'kitchen'
+                    }
+                ]
+            }).then((u)=> {
+                if (u.id !== u.kitchen.adminId) {
+                    return Promise.reject('You are not the admin of the kitchen!');
+                }
+                // Verify no overlapping dates
+                if(queries.length > 0)
+                   return Period.findAll({
+                        transaction: t,
+                        where: {
+                            // Either start or end overlaps with another period
+                            $or: [
+                                // start date overlaps with another period
+                                {
+                                    started_at: {
+                                        $lt: start.toISOString()
+                                    },
+                                    ended_at: {
+                                        $gt: start.toISOString()
+                                    }
+                                },
+                                // End date overlaps with another period
+                                {
+                                    started_at: {
+                                        $lt: end.toISOString()
+                                    },
+                                    ended_at: {
+                                        $gt: end.toISOString()
+                                    }
+                                }
+                            ],
+                        }
+                    }).then((p)=>(p.length > 0) ? Promise.reject('Period overlaps!') : null);
+                return null
+            }).then((_)=>{
+                if(args.archive){
+                    // Ensure we are not archiving something that is already archived
+
+                    // If archiving, then archive dinnerclubs and their participations
+                    
+                }
+                return null;
+            }).then((_)=> Period.update(args,{
+                transaction: t,
+                where: {
+                    id: args.id
+                }
+            }))
+        );
     },
     description: 'Changes a period by ID. Cannot un-archive period, and start/end can still not overlap' +
     'with other periods'

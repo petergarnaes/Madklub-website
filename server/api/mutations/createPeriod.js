@@ -32,7 +32,6 @@ const createPeriod = {
         var end = moment(args.ended_at);
         // Dates must be valid
         if (start.isValid() && end.isValid() && start.isBefore(end)) {
-            // TODO verify kitchen admin is performing this action
             return sequelize.transaction((t) =>
                 User.findById(root.request.user.id,{
                     transaction: t,
