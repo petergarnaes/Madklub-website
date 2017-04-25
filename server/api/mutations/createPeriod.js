@@ -7,13 +7,13 @@ import {
 } from 'graphql';
 import {attributeFields} from 'graphql-sequelize';
 import PeriodType from '../types/PeriodType';
-import {sequelize,Period} from '../db';
+import {sequelize,Period,User,Kitchen} from '../db';
 import {csrf_check,csrf_error_message} from '../csrf_check';
 import moment from 'moment';
 
 const createPeriod = {
     type: PeriodType,
-    args: Object.assign(attributeFields(Period,{exclude: ['id','archived','periodKitchenId']}),{
+    args: Object.assign(attributeFields(Period,{exclude: ['id','archived','periodKitchenId','createdAt','updatedAt']}),{
         started_at: {
             type: new NonNull(StringType),
             description: 'Start date of period, must not be within another period.'
@@ -34,36 +34,52 @@ const createPeriod = {
         if (start.isValid() && end.isValid() && start.isBefore(end)) {
             // TODO verify kitchen admin is performing this action
             return sequelize.transaction((t) =>
-                // Check for overlapping periods
-                Period.findAll({
+                User.findById(root.request.user.id,{
                     transaction: t,
-                    where: {
-                        // Either start or end overlaps with another period
-                        $or: [
-                            // start date overlaps with another period
-                            {
-                                started_at: {
-                                    $lt: start.toISOString()
-                                },
-                                ended_at: {
-                                    $gt: start.toISOString()
-                                }
-                            },
-                            // End date overlaps with another period
-                            {
-                                started_at: {
-                                    $lt: end.toISOString()
-                                },
-                                ended_at: {
-                                    $gt: end.toISOString()
-                                }
-                            }
-                        ],
+                    attributes: ['id'],
+                    include: [
+                        {
+                            attributes: ['adminId'],
+                            model: Kitchen,
+                            as: 'kitchen'
+                        }
+                    ]
+                }).then((u)=>{
+                    if(u.id !== u.kitchen.adminId){
+                        return Promise.reject('You are not the admin of the kitchen!');
                     }
-                }).then((p)=>{
-                    if(p.length > 0) return Promise.reject('Period overlaps!');
-                    return Period.create(args,{transaction: t});
-                }))
+                    // Check for overlapping periods
+                    return Period.findAll({
+                        transaction: t,
+                        where: {
+                            // Either start or end overlaps with another period
+                            $or: [
+                                // start date overlaps with another period
+                                {
+                                    started_at: {
+                                        $lt: start.toISOString()
+                                    },
+                                    ended_at: {
+                                        $gt: start.toISOString()
+                                    }
+                                },
+                                // End date overlaps with another period
+                                {
+                                    started_at: {
+                                        $lt: end.toISOString()
+                                    },
+                                    ended_at: {
+                                        $gt: end.toISOString()
+                                    }
+                                }
+                            ],
+                        }
+                    }).then((p)=>{
+                        if(p.length > 0) return Promise.reject('Period overlaps!');
+                        return Period.create(args,{transaction: t});
+                    });
+                })
+            );
         } else {
             // date is not valid
             return Promise.reject('Dates invalid! Make sure dates follow ISO 8601 date format and make sure ' +

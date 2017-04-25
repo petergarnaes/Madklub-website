@@ -347,8 +347,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
         * ~~Create filtering options in graphql~~
         * ~~Create field in PeriodType displaying accounting information~~
         * Create mutations:
-            * Kitchen admin should be able to create periods. Periods cannot
-            overlap with other periods.
+            * ~~Kitchen admin should be able to create periods. Periods cannot
+            overlap with other periods.~~
             * Kitchen admin should be able to change periods, as long as they
             are not archived, and start/end date does not overlap with other
             periods.

@@ -25,6 +25,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 User.Kitchen = User.belongsTo(models.Kitchen,{
+                    as: 'kitchen',
                     foreignKey: {
                         name: 'memberId'
                     }
