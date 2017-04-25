@@ -19,7 +19,7 @@ import {csrf_check,csrf_error_message} from '../csrf_check';
 const changeDinnerClub = {
     type: DinnerClubType,
     // should it even be possible to change date? maybe just cancel and become cook another day?)
-    args: Object.assign(attributeFields(DinnerClub,{exclude: ['id','at','KitchenId','cookId','createdAt','updatedAt']}),{
+    args: Object.assign(attributeFields(DinnerClub,{exclude: ['id','at','KitchenId','cookId','createdAt','updatedAt','archived']}),{
         id: {
             type: new NonNull(ID),
             description: 'Must provide ID to correctly change the DinnerClub'

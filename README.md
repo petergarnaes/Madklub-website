@@ -358,9 +358,9 @@ stuff, rest loads in along the way. All this should be very cacheable.
                 participations should be immutable
         * Periods optional?
     * `createDinnerclub` should incorporate `assume_attendance`
-    * `dinnerclub` should have `archived` field
+    * ~~`dinnerclub` should have `archived` field~~
     * `changeDinnerclub` should be immutable when archived
-    * `participation` should have `archived` field
+    * ~~`participation` should have `archived` field~~
     * `participate` should be immutable when archived
 * Madklubs indstillinger
     * perioder

@@ -28,7 +28,7 @@ const participate = {
         participating: {
             type: new InputObjectType({
                 name: 'Participating',
-                fields: attributeFields(Participation,{exclude: ['id','up_key','dp_key','createdAt','updatedAt']}),
+                fields: attributeFields(Participation,{exclude: ['id','up_key','dp_key','createdAt','updatedAt','archived']}),
                 description: 'The cooks own initial participation'
             }),
             description: 'Specific info about your participation like number of guests etc.'
