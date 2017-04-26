@@ -285,6 +285,7 @@ db.sequelize.sync({force: false}).then(async function () {
         if(err) {
             console.error(err);
         } else {
+            console.info('environment port: '+process.env.PORT);
             console.info('==> [] Webpack development server on port: %s',port);
         }
     });
