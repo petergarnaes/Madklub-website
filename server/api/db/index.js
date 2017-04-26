@@ -6,8 +6,11 @@ var fs              = require("fs");
 var path            = require("path");
 var Sequelize       = require("sequelize");
 var env             = process.env.NODE_ENV || "development";
-var {developmentDB} = require("../../config");
-var sequelize = new Sequelize(developmentDB.database, developmentDB.username, developmentDB.password, developmentDB);
+var {databaseUrl} = require("../../config");
+// When developing and using sqlite3, we must use the storage option, or else it
+// defaults to memory, which means it is volatile
+var options = (process.env.NODE_ENV == "development") ? {storage: './madklub.db'} : {};
+var sequelize = new Sequelize(databaseUrl,options);
 var db        = {};
 
 // Using require instead of file approach, as webpack will bundle it correctly

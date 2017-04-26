@@ -5,11 +5,9 @@
 export const port = process.env.PORT || 3000;
 export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
-export const databaseUrl = process.env.DATABASE_URL || 'postgresql://postgres:ixMWt5p6BSyumpc@localhost:5432/madklub';
-export const developmentDB = {
-    dialect: 'sqlite',
-    storage: './madklub.db'
-};
+// sqlite:///madklub.db is relative because of 3 slashes, with 4 slashes it is
+// absolute.
+export const databaseUrl = process.env.DATABASE_URL || 'sqlite:///madklub.db';
 export const analytics = {
 
     // https://analytics.google.com/
