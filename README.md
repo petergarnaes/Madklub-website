@@ -83,9 +83,10 @@ Node 6.0 required, as well as a sqlite driver for test database.
 
 ### Starting the test server
 To get going with the development server, first install dependencies with 
-`npm install`. Then simply run `npm start`. This will start the development
-server on port 3000. This setup includes hot reloading of react components, 
-so styling and development should be very fast.
+`npm install`. Then simply run `npm run-script start-dev-server`. This 
+will start the development server on port 3000. This setup includes hot 
+reloading of react components, so styling and development should be very 
+fast.
 
 ### Test data
 To get some test data into the system, when the sequelize db is syncing change

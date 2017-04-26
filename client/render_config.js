@@ -66,7 +66,7 @@ const composeEnhancers =
         }) : compose;
 
 const enhancer = composeEnhancers(
-    applyMiddleware(client.middleware()),
+    applyMiddleware(client.middleware())
     // other store enhancers if any
 );
 

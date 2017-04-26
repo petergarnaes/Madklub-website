@@ -6,8 +6,13 @@
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js --progress --profile --colors",
     "build-server": "NODE_ENV=production webpack -p --config webpack.config.server.prod.js --progress --profile --colors",
-    "start": "nodemon dist/backend.js",
-    "lint": "eslint --ext js --ext jsx src || exit 0"
+    "start-dev-server": "nodemon dist/backend.js",
+    "start": "node dist/backend.js",
+    "lint": "eslint --ext js --ext jsx src || exit 0",
+    "heroku-postbuild": "NODE_ENV=production webpack -p --config ./webpack.prod.config.js --progress --profile --colors;NODE_ENV=production webpack -p --config ./webpack.config.server.prod.js --progress --profile --colors"
+  },
+  "engines": {
+    "node": "6.10.2"
   },
   "repository": {
     "type": "git",

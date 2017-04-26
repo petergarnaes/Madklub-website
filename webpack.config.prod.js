@@ -116,8 +116,8 @@ var config = {
             algorithm: "gzip",
             // TODO add css ie. '|\.css$' when css has been properly dealt with
             test: /\.js$|\.html$|\.css$/,
-            threshold: 10240,
-            minRatio: 0.8
+            threshold: 0,
+            minRatio: 0.5
         })
     ],
     module: {

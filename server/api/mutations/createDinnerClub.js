@@ -73,7 +73,7 @@ const createDinnerClub = {
               {
                 model: User,
                 as: 'member',
-                attributes: ['id'],
+                attributes: ['id','active'],
                 where: {
                   active: true
                 }
@@ -106,7 +106,7 @@ const createDinnerClub = {
           
           // Add all active participants in the kitchen
           if(user.kitchen.assume_attendance){
-            var bobs = user.kitchen.member.map((m) => ({up_key: m.id}) );
+            var bobs = user.kitchen.member.filter((m)=>m.active).map((m) => ({up_key: m.id}) );
             args.participant = bobs;
           }
 

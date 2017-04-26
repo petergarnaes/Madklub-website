@@ -9,6 +9,7 @@ import {
     cancelParticipateDinnerclubMutation,
     cancelParticipationPropTypes,
     cancelParticipateOptions} from '../shared';
+import RoundIconButton from '../../round_icon_button';
 
 const CancelParticipationFrontPage = ({dinnerClub,isParticipating,participationID,hasCancelled,setCancel}) => {
     const dinnerclub_date = moment(dinnerClub.at);
