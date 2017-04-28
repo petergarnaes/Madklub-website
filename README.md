@@ -386,6 +386,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
 * When editing meal as cook in date detail, if we switch date the input
 field and content stays. We must reset it when the date changes!
 * Re-enable csrf on createDinnerclub
+* Something wrong with `shopping_completed`...
 
 ## Random Notes
 

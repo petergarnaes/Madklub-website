@@ -24,6 +24,10 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
     //console.log(me);
 
     // TODO handle error
+    if(error){
+        console.log('Error!');
+        console.log(error);
+    }
 
     // Index dinnerclubs by date, if several on same day, the latest will be the winner...
     var dinnerclubMap = new Map();

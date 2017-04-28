@@ -20,6 +20,10 @@ const TodayWithData = ({data}) => {
         )
     }
     // TODO error!
+    if(error){
+        console.log('Error!');
+        console.log(error);
+    }
 
     // DinnerClubs always ordered by 'at' date, so picking first will be the next one.
     let dinnerClubToday = me.kitchen.dinnerclubs[0];
