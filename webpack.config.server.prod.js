@@ -24,23 +24,31 @@ function replacePath(newResource){
 }
 
 module.exports = {
-    entry: [
+    entry: {
+        backend: [
         'babel-polyfill',
         './server'],
+        test_db: ['babel-polyfill','./server/api/db/test_set/setup.js']
+    },
     target: 'node',
     // Backend should be in the protected dist (distribution) folder
     output: {
         path: path.join(__dirname,'dist/'),
         publicPath: '/public/',
-        filename: 'backend.js'
+        filename: '[name].js'
     },
     externals: nodeModules,
     plugins: [
         // Set environment variable
         new webpack.DefinePlugin({
-            'process.env': {
-                'NODE_ENV': JSON.stringify('production')
-            }
+            // This form removes all process.env variables, except NODE_ENV, which
+            // we do not want!
+            //'process.env': {
+            //    'NODE_ENV': JSON.stringify('production')
+            //}
+            // This only replaces NODE_ENV, which can then optimize code based on
+            // if statements that is either always true or false
+            'process.env.NODE_ENV' : JSON.stringify('production')
         }),
         new webpack.LoaderOptionsPlugin({
             minimize: true,

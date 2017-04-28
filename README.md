@@ -96,6 +96,9 @@ Then you can change it back, as it will be there forever.
 If you don't change it back, it will overwrite it on every restart, which makes
 testing mutations hard.
 
+Another way is to build for production, by running `npm run-script build-server`
+and then `node dist/test_db.js`.
+
 ### Testing environment
 Changes to the server and anything in the `server` folder will trigger a 
 re-bundling of the server. This is slow compared to hot-reloading, but still
