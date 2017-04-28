@@ -19,7 +19,7 @@ import {createdAtDoc,updatedAtDoc} from '../docs/created_updated';
 
 const KitchenType = new ObjectType({
     name: 'Kitchen',
-    fields: Object.assign(attributeFields(Kitchen,{exclude: ['adminId','createdAt','updatedAt']}),{ // Extra fields
+    fields: Object.assign(attributeFields(Kitchen,{exclude: ['adminId','createdAt','updatedAt','associatedKitchenId']}),{ // Extra fields
         createdAt: {
             type: DateType,
             description: createdAtDoc

@@ -128,8 +128,8 @@ passport.use(new LocalStrategy(
             }
         }).then(function (account) {
             // We see if a user is found, if not we return an error
-            if(!account){
-                done(null,false);
+            if(account == null){
+                return done(null,false);
             }
             // User was found, we now check password
             bcrypt.compare(password,account.password_hash, function (err, res) {
