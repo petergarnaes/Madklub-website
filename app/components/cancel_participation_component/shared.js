@@ -75,7 +75,7 @@ export const cancelParticipateOptions = {
                             return newResult;
                         }
                     }
-                })
+                }).catch((err)=>console.log(err))
             }
         }
     }

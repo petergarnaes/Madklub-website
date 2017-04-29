@@ -17,7 +17,7 @@ const CancelDinnerclubComponent = ({dinnerclub,setCancelDinnerclub}) => (
             onColor="danger"
             onText="Aflyst"
             offText="Afholdes"
-            onChange={(el,state)=>setCancelDinnerclub(dinnerclub.id,state)}/>
+            onChange={(el,state)=>setCancelDinnerclub(dinnerclub.id,state).catch((err)=>console.log(err))}/>
     </h3>
 );
 
