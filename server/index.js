@@ -277,9 +277,9 @@ app.use((req,res)=>{
 //
 // Launch the server
 // -----------------------------------------------------------------------------
-db.sequelize.sync({force: true}).then(async function () {
+db.sequelize.sync({force: false}).then(async function () {
     console.log('Models are synced up!');
-    testSet(db);
+    //testSet(db);
     // Launching server
     app.listen(port, function onAppListen(err){
         if(err) {

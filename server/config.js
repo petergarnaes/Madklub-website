@@ -7,7 +7,8 @@ export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
 // sqlite:///madklub.db is relative because of 3 slashes, with 4 slashes it is
 // absolute.
-export const databaseUrl = process.env.DATABASE_URL || 'sqlite:///madklub.db';
+//export const databaseUrl = process.env.DATABASE_URL || 'sqlite:///madklub.db';
+export const databaseUrl = process.env.DATABASE_URL || 'postgres://postgres:postgres@127.0.0.1:5432/madklub.db';
 export const analytics = {
 
     // https://analytics.google.com/

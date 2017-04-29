@@ -52,7 +52,10 @@ const changeDinnerClub = {
                     },
                     required: true
                 }
-            ]
+            ],
+            // Postgresql very unhappy unless we do this, wants joins to be 
+            // grouped for some reason
+            group: ['"DinnerClub"."id"','"participant.id"']
         }).then((dinnerclub)=>{
             console.log('So it begins:');
             console.log(dinnerclub.get('guestCountPart'));
