@@ -119,9 +119,10 @@ app.use('/logout',(req,res)=>{
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
+app.use('/api_editor',(req,res)=>res.send(fs.readFileSync('./dist/public/api_editor.html').toString()));
 app.use('/graphql',expressGraphQL((req,res) => ({
         schema,
-        graphiql: true,
+        graphiql: false,
         rootValue: { request: req, response: res },
         pretty: process.env.NODE_ENV !== 'production',
     })
