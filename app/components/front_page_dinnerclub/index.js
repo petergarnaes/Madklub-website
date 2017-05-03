@@ -15,6 +15,8 @@ const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationI
     const dinnerclub_date = moment(dinnerClub.at);
     // Its to late to cancel when dinnerclub has already been held REMEMBER TO VERIFY SERVER SIDE
     const to_late = dinnerclub_date.isBefore(moment());
+    console.log("PLZ!!!!");
+    console.log(dinnerClub.cook);
     return (
         <div className="front-page-dinnerclub-container">
             <h2>Der er mad kl. {dinnerclub_date.format("H:mm")}</h2>
@@ -31,18 +33,22 @@ const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationI
 };
 
 FrontPageDinnerClubComponent.fragments = {
+    // Cook cannot be merged in under the dinnerclub component,
+    // so must be separate.
+    cook: gql`
+        fragment FrontPageDinnerClubComponentCook on SimpleUser {
+            id
+            ...CookComponentSimpleUser
+        }
+        ${CookComponent.fragments.simpleUser}
+    `,
     dinnerclub: gql`
         fragment FrontPageDinnerClubComponentDinnerClub on DinnerClub {
             id
             at
             meal
             ...CancelParticipationComponentDinnerClub
-            cook {
-                id
-                ...CookComponentSimpleUser
-            }
         }
-        ${CookComponent.fragments.simpleUser}
         ${CancelParticipationFrontPage.fragments.dinnerclub}
     `
 };

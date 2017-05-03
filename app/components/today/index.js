@@ -75,6 +75,7 @@ const currentUserQuery = gql`
                     ...FrontPageCookComponentDinnerClub
                     cook {
                         id
+                        ...FrontPageDinnerClubComponentCook
                     }
                     participants {
                         ...isParticipatingDinnerClubParticipation
@@ -83,6 +84,7 @@ const currentUserQuery = gql`
             }
         }
     }
+    ${FrontPageDinnerClubComponent.fragments.cook}
     ${FrontPageDinnerClubComponent.fragments.dinnerclub}
     ${FrontPageCookComponent.fragments.dinnerclub}
     ${participationFragment}
