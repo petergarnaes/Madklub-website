@@ -8,7 +8,7 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-//import { Navbar,Nav,NavItem,NavDropdown,MenuItem } from 'react-bootstrap';
+import pure from 'recompose/pure';
 
 const goTo = (history) => (key) => {
     var url = "/"+key;
@@ -60,4 +60,4 @@ let mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(withRouter(NavBar));
+export default connect(mapStateToProps)(withRouter(pure(NavBar)));
