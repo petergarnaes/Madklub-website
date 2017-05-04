@@ -7,6 +7,7 @@ import './styling.css';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { selectDetailDate,selectDinnerclubWithId } from '../../../actions/calendar';
+import pure from 'recompose/pure';
 
 // current user ID is at the top level of the query, maybe should be new Redux reducer? Then it could also include name
 // so the users name could be displayed in top left.
@@ -47,14 +48,17 @@ const DayComponent = ({date,thisMonth,dinnerclub,userID,selectDetailDate,selectD
     )
 };
 
-DayComponent.propTypes = {
+// Make component pure for faster rendering
+const PureDayComponent = pure(DayComponent);
+
+PureDayComponent.propTypes = {
     date: React.PropTypes.object.isRequired,
     thisMonth: React.PropTypes.bool.isRequired,
     dinnerclub: React.PropTypes.object,
     userParticipating: React.PropTypes.bool
 };
 
-DayComponent.fragments = {
+PureDayComponent.fragments = {
     dinnerclub: gql`
         fragment DayComponentDinnerClub on DinnerClub {
             id
@@ -79,4 +83,4 @@ const mapDispatchToProps = (dispatch) => ({
     selectDinnerclub: (id) => dispatch(selectDinnerclubWithId(id))
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(DayComponent);
+export default connect(mapStateToProps,mapDispatchToProps)(PureDayComponent);
