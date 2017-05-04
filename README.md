@@ -332,14 +332,16 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Antal deltagere~~
 * ~~Dato detaljer~~
     * ~~Aflys/tilmeld deltagelse~~
-    * Tilmeld gæster
+    * ~~Tilmeld gæster~~
     * Tilmeld
+    * Lås felter ved indkøb
 * ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~
     * ~~Rette måltid~~
     * ~~Købt ind~~
     * Indtast pris
-    * Tilmeld gæster
+    * ~~Tilmeld gæster~~
+    * Lås felter ved indkøb
 * Backend tilføjelser
     * ~~Deadline for aflysning af madklub, gemmes som minutter~~
     * ~~deadline for hvor tidligt man kan handle ind, gemmes i minutter~~
@@ -381,13 +383,12 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * navn
     * billed
     * etc.
-* ~~Graphiql should work with csrf~~
 * API editor
     * ~~Create graphiql at `/api_editor`~~
     * ~~API editor works with CSRF~~
     * Check for login, and inform in UI if not
     * Use a better logo
-    * Properly integrate in build process
+    * ~~Properly integrate in build process~~
 
 ## Bugs
 

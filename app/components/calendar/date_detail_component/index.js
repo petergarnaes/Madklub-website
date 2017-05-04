@@ -19,6 +19,7 @@ import MealEdit from '../../meal_edit';
 import ShoppingCompleteDateDetail from '../../shopping_set/date_detail';
 import CancelDinnerclubComponent from '../../cancel_dinnerclub_component';
 import CancelParticipationDateDetail from '../../cancel_participation_component/date_detail';
+import SelectGuestCount from '../../select_guest_component';
 
 const iconWidth = 6;
 
@@ -93,6 +94,11 @@ const DateDetailComponent = ({data}) => {
                         <h3>Antal deltagere: {nrParticipating}</h3>
                     </Row>
                     <Row>
+                        <SelectGuestCount
+                            dinnerclubID={dinnerclub.id}
+                            participation={dinnerclub.participants[participants.findIndex((p)=>p.id === participationID)]}/>
+                    </Row>
+                    <Row>
                         {cancelComponent}
                     </Row>
                     <Row>
@@ -126,6 +132,7 @@ DateDetailComponent.fragments = {
             }
             participants {
                 ...isParticipatingDinnerClubParticipation
+                ...SelectGuestComponentDinnerClubParticipation
                 id
                 cancelled
                 user {
@@ -136,6 +143,7 @@ DateDetailComponent.fragments = {
             }
         }
         ${participationFragment}
+        ${SelectGuestCount.fragments.participation}
         ${ShoppingCompleteDateDetail.fragments.dinnerclub}
         ${CancelDinnerclubComponent.fragments.dinnerclub}
         ${CancelParticipationDateDetail.fragments.dinnerclub}
