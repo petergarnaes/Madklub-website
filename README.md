@@ -323,6 +323,11 @@ stuff, rest loads in along the way. All this should be very cacheable.
     }
 }
 ```
+* Optimize react rendering:
+    * Better use life cycle for complex components to calculate stuff as 
+    few times as possible
+     * Use `recompose` library to make the simple functional components 
+     pure.
 
 ## TODO features
 * Fejl håndtering, hvis API afviser request
