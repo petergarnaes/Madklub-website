@@ -375,6 +375,9 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~`changeDinnerclub` should be immutable when archived~~
     * ~~`participation` should have `archived` field~~
     * ~~`participate` should be immutable when archived~~
+    * change password, require old password, make new datatype which can 
+    be optionally passed to MutableAccountType
+    * Support image upload
 * Madklubs indstillinger
     * perioder
     * tidligst indkøb madklub
@@ -385,9 +388,12 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * Slet bruger
     * Overdrag admin til andet køkkenmedlem
 * Bruger indstillinger
-    * navn
+    * ~~navn~~
     * billed
-    * etc.
+    * ~~værelses nummer~~
+    * ~~aktiv~~
+    * ~~email~~
+    * kodeord (felter klar og validering af gammelt kodeord mangler)
 * API editor
     * ~~Create graphiql at `/api_editor`~~
     * ~~API editor works with CSRF~~
@@ -399,8 +405,9 @@ stuff, rest loads in along the way. All this should be very cacheable.
 
 * When editing meal as cook in date detail, if we switch date the input
 field and content stays. We must reset it when the date changes!
-* Re-enable csrf on createDinnerclub
-* Something wrong with `shopping_completed`...
+* Something wrong with `shopping_completed`... (Just think it is sqlite vs. postgres bug)
+* Changing username in user settings should change username in navbar.
+    Use redux reducer, or change it to pull from apollo?
 
 ## Random Notes
 

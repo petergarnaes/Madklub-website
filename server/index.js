@@ -44,6 +44,10 @@ if(process.env.NODE_ENV === 'development') {
     }));
 
     app.use(require('webpack-hot-middleware')(compiler));
+    app.get(/(.+graphiql.+\.(js)$|.+api_editor_style\.css$)/, function (req, res, next) {
+        res.set('Content-Encoding', 'gzip');
+        next();
+    });
 }
 
 app.use(bodyParser.json());

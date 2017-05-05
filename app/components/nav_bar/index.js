@@ -17,12 +17,11 @@ const goTo = (history) => (key) => {
 
 // NavItem can have an eventKey prop, which is sent to onSelect on Nav.
 const NavBar = ({loggedIn,username,history}) => {
-    console.log(history);
     let SessionComponent = (!loggedIn) ? (
         <NavItem eventKey="login" onSelect={goTo(history)}>Login</NavItem>
     ) : (
         <NavDropdown title={username} id="basic-nav-dropdown">
-            <MenuItem eventKey="settings" onSelect={goTo(history)}>Indstillinger</MenuItem>
+            <MenuItem eventKey="user_settings" onSelect={goTo(history)}>Indstillinger</MenuItem>
             <MenuItem divider />
             <MenuItem href="/logout">Logout</MenuItem>
         </NavDropdown>

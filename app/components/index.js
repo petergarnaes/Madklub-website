@@ -5,6 +5,7 @@ import Route from 'react-router-dom/Route';
 import Main from './main';
 import Login from './login/async_version';
 import Calendar from './calendar/calendar_component/async_version';
+import UserSettings from './user_settings/async_version';
 import NavBar from './nav_bar';
 import '../themes/css/theme.min.css';
 
@@ -16,6 +17,7 @@ class App extends React.Component {
                 <Route exact path="/" component={Main}/>
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/calendar" component={Calendar}/>
+                <Route exact path="/user_settings" component={UserSettings}/>
             </div>
         );
     }
