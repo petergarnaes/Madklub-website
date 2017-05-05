@@ -4,6 +4,7 @@
 import React from 'react';
 import './styling.css';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import pure from 'recompose/pure';
 
 const LoadingIcon = ({message}) =>{
     var msg = null;
@@ -18,8 +19,10 @@ const LoadingIcon = ({message}) =>{
     )
 };
 
-LoadingIcon.PropTypes = {
+const PureLoadingIcon = pure(LoadingIcon);
+
+PureLoadingIcon.PropTypes = {
     message: React.PropTypes.string
 };
 
-export default LoadingIcon;
+export default PureLoadingIcon;

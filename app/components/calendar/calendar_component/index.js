@@ -30,17 +30,22 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
     }
 
     // Index dinnerclubs by date, if several on same day, the latest will be the winner...
+    /* TODO: move this into the reducer, so it does not have to be recalculated on every render.
+        Reducer should make it possible to add one or several dinnerclubs. */
     var dinnerclubMap = new Map();
     me.kitchen.dinnerclubs.forEach((d)=>{
         dinnerclubMap.set(moment(d.at).date(),d);
     });
 
     // Data loaded, we can initialize calendar
+    // TODO: this could also be moved into reducer, so only month changes
+    // triggers these recalculations.
     let dateMonthSelection = selectedMonth.startOf('month');
     let month = dateMonthSelection.format("MMMM YY");
     let weeks = [];
     var index = moment(dateMonthSelection).date(1).day(1);
     // Constructs all dates till the end of the month
+    // TODO: Use map?
     while(index.month() <= dateMonthSelection.month()){
         let week = index.week();
         var dates = [];

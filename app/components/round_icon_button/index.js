@@ -4,7 +4,7 @@
 import './styling.css';
 import React from 'react';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-//import { Glyphicon } from 'react-bootstrap';
+import pure from 'recompose/pure';
 
 const RoundIconButton = ({glyph,onClick,isActive,activeColor,activeColorIcon,isDisabled}) => {
     var buttonProps = {style: {}}, iconProps = {style: {}};
@@ -32,7 +32,9 @@ const RoundIconButton = ({glyph,onClick,isActive,activeColor,activeColorIcon,isD
     )
 };
 
-RoundIconButton.propTypes = {
+const PureRoundIconButton = pure(RoundIconButton);
+
+PureRoundIconButton.propTypes = {
     glyph: React.PropTypes.string.isRequired,
     onClick: React.PropTypes.func.isRequired,
     isActive: React.PropTypes.bool.isRequired,
@@ -41,4 +43,4 @@ RoundIconButton.propTypes = {
     isDisabled: React.PropTypes.bool
 };
 
-export default RoundIconButton;
+export default PureRoundIconButton;

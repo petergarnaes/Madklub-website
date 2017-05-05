@@ -5,8 +5,7 @@ import React from 'react';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import Grid from 'react-bootstrap/lib/Grid';
 import LoadingIcon from '../loading_icon';
-//import Button from 'react-bootstrap/lib/Button';
-//import { Jumbotron, Grid,Button } from 'react-bootstrap';
+import pure from 'recompose/pure';
 
 const WelcomePage = () => (
     <Jumbotron>
@@ -19,14 +18,7 @@ const WelcomePage = () => (
         </Grid>
     </Jumbotron>
 );
-/*
- <Button
- bsStyle="success"
- bsSize="large"
- href="http://react-bootstrap.github.io/components.html"
- target="_blank">
- View React Bootstrap Docs!
- </Button>
- */
 
-export default WelcomePage
+const PureWelcomePage = pure(WelcomePage);
+
+export default PureWelcomePage
