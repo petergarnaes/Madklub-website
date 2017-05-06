@@ -15,7 +15,7 @@ import {verifyKitchenAdmin} from './utils';
 
 const changePeriod = {
     type: PeriodType,
-    args: Object.assign(attributeFields(Period,{exclude: ['id','periodKitchenId']}),{
+    args: Object.assign(attributeFields(Period,{exclude: ['id','periodKitchenId','createdAt','updatedAt']}),{
         id: {
             type: new NonNull(ID),
             description: 'ID of the period that will be changed'

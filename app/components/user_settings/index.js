@@ -11,6 +11,7 @@ import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Checkbox from 'react-bootstrap/lib/Checkbox';
+import Alert from 'react-bootstrap/lib/Alert';
 import LoadingIcon from '../loading_icon';
 import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo';
@@ -46,7 +47,9 @@ class UserSettings extends React.Component {
             newPasswordValidation: null,
             old_password: '',
             new_password: '',
-            new_password_retype: ''
+            new_password_retype: '',
+            errorMsg: null,
+            success: false
         }
     }
 
@@ -101,15 +104,18 @@ class UserSettings extends React.Component {
     }
 
     onSaveSettings(){
+        this.setState({errorMsg: null});
         console.log('Store changes');
+        // Assumes that button is disabled when retyped new password is incorrect
         this.props.setUserSettings(
             this.state.display_name,
             this.state.room_number,
             this.state.active,
             this.state.email,
-            this.state.new_password,
-            this.state.new_password_retype
-        );
+            this.state.old_password,
+            this.state.new_password
+        ).then((res)=>this.setState({success: true}))
+            .catch((err)=>this.setState({errorMsg: err.message}));
     }
 
     render(){
@@ -128,6 +134,17 @@ class UserSettings extends React.Component {
                 <Row>
                     <Col xs={0} sm={2} md={3} lg={4}/>
                     <Col xs={12} sm={8} md={6} lg={4}>
+                        {this.state.success &&
+                        <Alert bsStyle="success">
+                            <h4>Success!</h4>
+                            Dine ændringer gik i igennem
+                        </Alert>}
+                        {(this.state.errorMsg || this.props.error) &&
+                        <Alert bsStyle="danger">
+                            <h4>Fejl!</h4>
+                            {this.state.errorMsg && <p>{this.state.errorMsg}</p>}
+                            {this.props.error && <p>{this.props.error.message}</p>}
+                        </Alert>}
                         <FieldGroup
                             id="userSettingsDisplayName"
                             type="text"
@@ -222,8 +239,10 @@ const userSettingsQuery = gql`
 `;
 
 const userSettingsMutation = gql`
-    mutation userSettingsMutation($display_name: String,$room_number: String,$active: Boolean,$email: String) {
-        changeUser(display_name: $display_name,room_number: $room_number,active: $active, account: {email: $email}){
+    mutation userSettingsMutation($display_name: String,$room_number: String,$active: Boolean,$email: String,
+        $change_password: ChangePasswordType) {
+        changeUser(display_name: $display_name,room_number: $room_number,active: $active,
+                account: {email: $email,change_password: $change_password}){
             id
             display_name
             room_number
@@ -256,14 +275,21 @@ export default compose(
     graphql(userSettingsMutation,{
         props({_,mutate}){
             return {
-                setUserSettings(display_name,room_number,active,email,new_password,new_password_retype){
+                setUserSettings(display_name,room_number,active,email,old_password,new_password){
+                    var variables = {
+                        display_name: display_name,
+                        room_number: room_number,
+                        active: active,
+                        email: email,
+                    };
+                    if(old_password && new_password && old_password.length > 0 && new_password.length > 0){
+                        variables.change_password = {
+                            old_password: old_password,
+                            new_password: new_password
+                        }
+                    }
                     return mutate({
-                        variables: {
-                            display_name: display_name,
-                            room_number: room_number,
-                            active: active,
-                            email: email
-                        },
+                        variables: variables,
                         optimisticResponse: {
                             __typename: 'Mutation',
                             changeUser: {

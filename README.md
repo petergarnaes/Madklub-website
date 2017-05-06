@@ -375,8 +375,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~`changeDinnerclub` should be immutable when archived~~
     * ~~`participation` should have `archived` field~~
     * ~~`participate` should be immutable when archived~~
-    * change password, require old password, make new datatype which can 
-    be optionally passed to MutableAccountType
+    * ~~change password, require old password, make new datatype which can 
+    be optionally passed to MutableAccountType~~
     * Support image upload
 * Madklubs indstillinger
     * perioder
@@ -393,7 +393,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~værelses nummer~~
     * ~~aktiv~~
     * ~~email~~
-    * kodeord (felter klar og validering af gammelt kodeord mangler)
+    * ~~kodeord~~
+    * ~~Giv visuel respons ved success~~
 * API editor
     * ~~Create graphiql at `/api_editor`~~
     * ~~API editor works with CSRF~~

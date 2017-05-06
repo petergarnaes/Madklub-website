@@ -87,6 +87,7 @@ const createUser = {
 
     return { user, errors };
   },
+  description: 'Creates new user, anyone including users not logged in can do this.'
 };
 
 export default createUser;
