@@ -99,6 +99,11 @@ const PeriodType = new ObjectType({
                             where: {
                                 cancelled: false
                             },
+                        },
+                        {
+                            model: User,
+                            as: 'cook',
+                            attributes: ['id']
                         }
                     ]
                 };
@@ -106,6 +111,7 @@ const PeriodType = new ObjectType({
                     // TODO join these maps
                     var userPayMap = new Map();
                     var uMap = new Map();
+                    var expenseMap = new Map();
                     var ds = dinnerclubs.filter((d)=>!d.cancelled);
                     ds.forEach((d)=>{
                         // Cancelled participations are naturally not counted
@@ -113,6 +119,9 @@ const PeriodType = new ObjectType({
                         let totalGuestCount = participants.map((p)=>p.guest_count).reduce((acc,cur)=>acc+cur);
                         let totalPart = participants.length + totalGuestCount;
                         let avg_price = d.total_cost / totalPart;
+                        // Accumulates the expense of the user cooking the meal
+                        let accExpense = d.total_cost + ((expenseMap.has(d.cook.id)) ? expenseMap.get(d.cook.id) : 0.0);
+                        expenseMap.set(d.cook.id,accExpense);
                         participants.forEach((p)=>{
                             // What a participant owes for this dinnerclub
                             let dp_price = avg_price*(1.0+p.guest_count);
@@ -124,8 +133,10 @@ const PeriodType = new ObjectType({
                     });
                     var results = [];
                     userPayMap.forEach((v,k,m)=>{
+                        // Pays their accumulated debt, minus the expense for the dinnerclubs they cooked
+                        let final_debt = v - ((expenseMap.has(k)) ? expenseMap.get(k) : 0.0);
                         results.push({
-                            to_pay: v,
+                            to_pay: final_debt,
                             user: uMap.get(k)
                         });
                     });
