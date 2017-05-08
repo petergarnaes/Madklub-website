@@ -338,13 +338,14 @@ stuff, rest loads in along the way. All this should be very cacheable.
 * ~~Dato detaljer~~
     * ~~Aflys/tilmeld deltagelse~~
     * ~~Tilmeld gæster~~
+    * ~~Vis pris~~
     * Tilmeld
     * Lås felter ved indkøb
 * ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~
     * ~~Rette måltid~~
     * ~~Købt ind~~
-    * Indtast pris
+    * ~~Indtast pris~~
     * ~~Tilmeld gæster~~
     * Lås felter ved indkøb
 * Backend tilføjelser

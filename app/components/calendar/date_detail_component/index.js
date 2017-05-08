@@ -20,6 +20,7 @@ import ShoppingCompleteDateDetail from '../../shopping_set/date_detail';
 import CancelDinnerclubComponent from '../../cancel_dinnerclub_component';
 import CancelParticipationDateDetail from '../../cancel_participation_component/date_detail';
 import SelectGuestCount from '../../select_guest_component';
+import EditTotalCostComponent from '../../edit_total_cost_component';
 
 const iconWidth = 6;
 
@@ -73,8 +74,15 @@ const DateDetailComponent = ({data}) => {
         );
         let dinnerclubText = (dinnerclub.meal) ? 'Menu: '+dinnerclub.meal : 'Retten ikke besluttet endnu';
         let dinnerclubComponent = (isCook) ?
-            <MealEdit
-                dinnerClub={dinnerclub}/> : <h3>{dinnerclubText}</h3>;
+            <div>
+                <MealEdit
+                    dinnerClub={dinnerclub}/>
+            </div> : <h3>{dinnerclubText}</h3>;
+        let totalCostText = "Det har kostet: "+dinnerclub.total_cost;
+        let total_costComponent = (isCook) ?
+        <EditTotalCostComponent
+            dinnerClub={dinnerclub}/> :
+            <h3>{totalCostText}</h3>;
         return (
             <div>
                 <Grid>
@@ -86,6 +94,9 @@ const DateDetailComponent = ({data}) => {
                     </Row>
                     <Row>
                         {dinnerclubComponent}
+                    </Row>
+                    <Row>
+                        {total_costComponent}
                     </Row>
                     <Row>
                         {shop_component}
@@ -122,9 +133,11 @@ DateDetailComponent.fragments = {
             ...ShoppingCompleteComponentDinnerClub
             ...CancelDinnerclubComponentDinnerClub
             ...CancelParticipationComponentDinnerClub
+            ...TotalCostEditDinnerClub
             id
             at
             meal
+            total_cost
             shopping_complete
             cook {
                 id
@@ -147,6 +160,7 @@ DateDetailComponent.fragments = {
         ${ShoppingCompleteDateDetail.fragments.dinnerclub}
         ${CancelDinnerclubComponent.fragments.dinnerclub}
         ${CancelParticipationDateDetail.fragments.dinnerclub}
+        ${EditTotalCostComponent.fragments.dinnerclub}
     `
 };
 
