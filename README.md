@@ -420,6 +420,8 @@ helps make calendar async component go through. Is it because of navbar query?
 It fucked with the user settings query to... Make it fragment and lift the page to
 one query? Maybe it cannot handle several concurrent queries, only queries run
 sequentially?...
+I think it has something to do with the navbar query, and it being overwritten.
+Maybe the store should be explored?
 
 ## Random Notes
 
