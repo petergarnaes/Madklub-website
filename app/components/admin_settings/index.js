@@ -49,8 +49,7 @@ class UserSettings extends React.Component {
             new_password: '',
             new_password_retype: '',
             errorMsg: null,
-            success: false,
-            submitting: false
+            success: false
         }
     }
 
@@ -105,7 +104,7 @@ class UserSettings extends React.Component {
     }
 
     onSaveSettings(){
-        this.setState({errorMsg: null,submitting: true});
+        this.setState({errorMsg: null});
         console.log('Store changes');
         // Assumes that button is disabled when retyped new password is incorrect
         this.props.setUserSettings(
@@ -115,8 +114,8 @@ class UserSettings extends React.Component {
             this.state.email,
             this.state.old_password,
             this.state.new_password
-        ).then((res)=>this.setState({success: true,submitting: false}))
-            .catch((err)=>this.setState({errorMsg: err.message,submitting: false}));
+        ).then((res)=>this.setState({success: true}))
+            .catch((err)=>this.setState({errorMsg: err.message}));
     }
 
     render(){
@@ -213,9 +212,9 @@ class UserSettings extends React.Component {
                             bsStyle="primary"
                             bsSize="large"
                             className="center-block"
-                            disabled={(this.state.newPasswordValidation === 'warning') || this.state.submitting}
+                            disabled={(this.state.newPasswordValidation === 'warning')}
                             onClick={this.onSaveSettings}>
-                            {(this.state.submitting) ? 'Bekræfter...' : 'Bekræft'}
+                            Bekræft
                         </Button>
                     </Col>
                     <Col xs={0} sm={2} md={3} lg={4}/>
@@ -303,16 +302,10 @@ export default compose(
                                 }
                             }
                         },
-                        refetchQueries: [
-                            'userSettingsQuery',
-                            'navbarQuery'
-                        ]
-                        /*updateQueries: {
+                        updateQueries: {
                             userSettingsQuery: (previousResult, { mutationResult }) => {
-                                console.log("previous");
+                                console.log("Cache update");
                                 console.log(previousResult);
-                                console.log("mutation");
-                                console.log(mutationResult);
                                 let newUser = mutationResult.data.changeUser;
                                 const dn = newUser.display_name;
                                 const rn = newUser.room_number;
@@ -327,31 +320,8 @@ export default compose(
                                     }
                                 });
                                 return newResult;
-                            },
-                            navbarQuery: (previousResult, { mutationResult }) => {
-                                let newUser = mutationResult.data.changeUser;
-                                const dn = newUser.display_name;
-                                let newResult = update(previousResult,{
-                                    me: {
-                                        display_name: {$set: dn}
-                                    }
-                                });
-                                return newResult;
                             }
-                        },*/
-                        /*update: (store, { data: { changeUser } }) => {
-                            const data = store.readQuery({ query: userSettingsQuery });
-                            let newUser = changeUser;
-                            const dn = newUser.display_name;
-                            const rn = newUser.room_number;
-                            const a = newUser.active;
-                            const e = newUser.account.email;
-                            data.display_name = dn;
-                            data.room_number = rn;
-                            data.active = a;
-                            data.account.email = e;
-                            store.writeQuery({ query: userSettingsQuery, data });
-                        }*/
+                        }
                     })
                 }
             }

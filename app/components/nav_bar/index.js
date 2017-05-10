@@ -6,8 +6,7 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import NavItem from 'react-bootstrap/lib/NavItem';
-import NavDropdown from 'react-bootstrap/lib/NavDropdown';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
+import SessionComponent from './session_component';
 import pure from 'recompose/pure';
 
 const goTo = (history) => (key) => {
@@ -17,14 +16,10 @@ const goTo = (history) => (key) => {
 
 // NavItem can have an eventKey prop, which is sent to onSelect on Nav.
 const NavBar = ({loggedIn,username,history}) => {
-    let SessionComponent = (!loggedIn) ? (
+    let OptionsComponent = (!loggedIn) ? (
         <NavItem eventKey="login" onSelect={goTo(history)}>Login</NavItem>
     ) : (
-        <NavDropdown title={username} id="basic-nav-dropdown">
-            <MenuItem eventKey="user_settings" onSelect={goTo(history)}>Indstillinger</MenuItem>
-            <MenuItem divider />
-            <MenuItem href="/logout">Logout</MenuItem>
-        </NavDropdown>
+        <SessionComponent />
     );
     let CalendarComponent = (loggedIn) ?
         <NavItem eventKey="calendar" onSelect={goTo(history)}>
@@ -45,7 +40,7 @@ const NavBar = ({loggedIn,username,history}) => {
             <Navbar.Collapse>
                 <Nav pullRight>
                     {CalendarComponent}
-                    {SessionComponent}
+                    {OptionsComponent}
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

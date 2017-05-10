@@ -408,8 +408,8 @@ stuff, rest loads in along the way. All this should be very cacheable.
 * When editing meal as cook in date detail, if we switch date the input
 field and content stays. We must reset it when the date changes!
 * Something wrong with `shopping_completed`... (Just think it is sqlite vs. postgres bug)
-* Changing username in user settings should change username in navbar.
-    Use redux reducer, or change it to pull from apollo?
+* when pulling account from graphql, have some sort of id. It confuses the cache and
+creates errors...
 
 ## Random Notes
 
