@@ -128,7 +128,7 @@ class UserSettings extends React.Component {
         // TODO error!
         if(this.props.error){
             console.log('Error!');
-            console.log(error);
+            console.log(this.props.error);
         }
         return (
             <Grid>

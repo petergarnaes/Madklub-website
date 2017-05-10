@@ -16,6 +16,9 @@ import LoadingIcon from '../loading_icon';
 import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
+import moment from 'moment';
+import 'rc-time-picker/assets/index.css';
+import TimePicker from 'rc-time-picker';
 
 const FieldGroup = ({ id, label, validate, help, ...props }) => (
     <FormGroup controlId={id}
@@ -27,95 +30,136 @@ const FieldGroup = ({ id, label, validate, help, ...props }) => (
     </FormGroup>
 );
 
-class UserSettings extends React.Component {
+const cancellationDeadlineHelp = "Du skal indtaste et tal, som er det mindste antal af minutter inden madklubben " +
+    "man kan aflyse. Hvis 0 gælder der ingen regel";
+const shoppingOpenAtHelp = "Dus skal indtaste et tal, som er antallet af minutter inden afholdelsen af " +
+    "madklubben, der angiver tidspunktet det tidligst er tilladt at købe ind. Hvis 0 så er gælder der ingen regel.";
+const priceloftHelp = "Du skal indtaste et tal, som er den maksimale pris per person det må koste";
+
+class AdminSettings extends React.Component {
 
     constructor(props){
         super(props);
         // Bind change functions
-        this.onEmailChange = this.onEmailChange.bind(this);
-        this.onDisplayNameChange = this.onDisplayNameChange.bind(this);
-        this.onRoomNumberChange = this.onRoomNumberChange.bind(this);
+        this.onDefaultMealTimeChange = this.onDefaultMealTimeChange.bind(this);
+        this.onCancellationDeadlineChange = this.onCancellationDeadlineChange.bind(this);
+        this.onShoppingOpenAtChange = this.onShoppingOpenAtChange.bind(this);
+        this.onDefaultPriceloftChange = this.onDefaultPriceloftChange.bind(this);
         this.onSaveSettings = this.onSaveSettings.bind(this);
 
         // Initial state
         this.state = {
-            display_name: '',
-            room_number: '',
-            email: '',
-            active: false,
-            emailValidation: null,
-            newPasswordValidation: null,
-            old_password: '',
-            new_password: '',
-            new_password_retype: '',
+            default_mealtime: moment(),
+            rule_set: '',
+            cancellation_deadline: '',
+            shopping_open_at: '',
+            priceloft_applies: false,
+            default_priceloft: '',
+            assume_attendance: false,
+            name: '',
+
+            cancellationDeadlineValidation: null,
+            cancellationDeadlineHelp: null,
+            shoppingOpenAtValidation: null,
+            shoppingOpenAtHelp: null,
+            defaultPriceloftValidation: null,
+            defaultPriceloftHelp: null,
+            
             errorMsg: null,
-            success: false
+            success: false,
+            submitting: false
         }
     }
 
     componentWillReceiveProps(newProps) {
-        if(newProps.me){
-            let me = newProps.me;
+        if(newProps.me && newProps.me.kitchen){
+            let kitchen = newProps.me.kitchen;
+            let times = kitchen.default_mealtime.toString().split(":");
             this.setState({
-                display_name: me.display_name,
-                room_number: me.room_number,
-                email: me.account.email,
-                active: me.active,
+                default_mealtime: moment().set({'hour':times[0],'minute':times[1],'second':times[2]}),
+                rule_set: kitchen.rule_set,
+                cancellation_deadline: kitchen.cancellation_deadline,
+                shopping_open_at: kitchen.shopping_open_at,
+                priceloft_applies: kitchen.priceloft_applies,
+                default_priceloft: kitchen.default_priceloft,
+                assume_attendance: kitchen.assume_attendance,
+                name: kitchen.name,
             });
         }
     }
+    
+    static isFloat(val){
+        var floatRegex = /^-?\d+(?:[.,]\d*?)?$/;
+        if (!floatRegex.test(val))
+            return false;
 
-    onEmailChange(e){
-        let typed = e.target.value;
-        let valid = typed.includes('@');
-        let val = (typed.length > 0 ?
-                (valid ? 'success' : 'warning') :
-                null
-        );
-        this.setState({
-            emailValidation: val,
-            email: typed
-        });
+        val = parseFloat(val);
+        if (isNaN(val))
+            return false;
+        return true;
+    }
+    
+    static isInteger(val){
+        return !isNaN(val);
     }
 
-    onDisplayNameChange(e){
-        let typed = e.target.value;
+    onDefaultMealTimeChange(val){
         this.setState({
-            display_name: typed
+            default_mealtime: val
+        })
+    }
+    
+    onCancellationDeadlineChange(e){
+        let cancellation_deadline = e.target.value;
+        let isValid = (AdminSettings.isInteger(cancellation_deadline));
+        let validate = (isValid) ? null : 'warning';
+        let help = (isValid) ? null : cancellationDeadlineHelp;
+        this.setState({
+            cancellation_deadline: cancellation_deadline,
+            cancellationDeadlineValidation: validate,
+            cancellationDeadlineHelp: help
         });
     }
-
-    onRoomNumberChange(e){
-        let typed = e.target.value;
+    
+    onShoppingOpenAtChange(e){
+        let shopping_open_at = e.target.value;
+        let isValid = (AdminSettings.isInteger(shopping_open_at));
+        let validate = (isValid) ? null : 'warning';
+        let help = (isValid) ? null : shoppingOpenAtHelp;
         this.setState({
-            room_number: typed
+            shopping_open_at: shopping_open_at,
+            shoppingOpenAtValidation: validate,
+            shoppingOpenAtHelp: help
         });
     }
-
-    onNewPassword(newPassword,newPasswordRetype){
-        let pVal = (newPassword.length > 0 || newPasswordRetype.length > 0) ?
-            ((newPassword === newPasswordRetype) ? 'success' : 'warning') :
-            null;
+    
+    onDefaultPriceloftChange(e){
+        let default_priceloft = e.target.value;
+        let isValid = (AdminSettings.isFloat(default_priceloft));
+        let validate = (isValid) ? null : 'warning';
+        let help = (isValid) ? null : priceloftHelp;
         this.setState({
-            new_password: newPassword,
-            new_password_retype: newPasswordRetype,
-            newPasswordValidation: pVal
+            default_priceloft: default_priceloft,
+            defaultPriceloftValidation: validate,
+            defaultPriceloftHelp: help
         });
     }
 
     onSaveSettings(){
-        this.setState({errorMsg: null});
-        console.log('Store changes');
+        this.setState({errorMsg: null,submitting: true});
         // Assumes that button is disabled when retyped new password is incorrect
-        this.props.setUserSettings(
-            this.state.display_name,
-            this.state.room_number,
-            this.state.active,
-            this.state.email,
-            this.state.old_password,
-            this.state.new_password
-        ).then((res)=>this.setState({success: true}))
-            .catch((err)=>this.setState({errorMsg: err.message}));
+        this.props.setAdminSettings(
+            this.props.me.kitchen.id,
+            this.state.rule_set,
+            this.state.default_mealtime,
+            this.state.cancellation_deadline,
+            this.state.shopping_open_at,
+            this.state.priceloft_applies,
+            this.state.default_priceloft,
+            this.state.assume_attendance,
+            this.state.name
+        ).then((res)=>this.setState({success: true,submitting: false}))
+            .catch((err)=>this.setState({errorMsg: err.message,submitting: false}));
     }
 
     render(){
@@ -127,7 +171,7 @@ class UserSettings extends React.Component {
         // TODO error!
         if(this.props.error){
             console.log('Error!');
-            console.log(error);
+            console.log(this.props.error);
         }
         return (
             <Grid>
@@ -146,75 +190,80 @@ class UserSettings extends React.Component {
                             {this.props.error && <p>{this.props.error.message}</p>}
                         </Alert>}
                         <FieldGroup
-                            id="userSettingsDisplayName"
-                            type="text"
-                            name="display_name"
-                            label="Brugernavn"
-                            onChange={this.onDisplayNameChange}
-                            value={this.state.display_name} />
-                        <FieldGroup
-                            id="userSettingsPicture"
+                            id="adminSettingsPicture"
                             type="file"
                             name="picture"
-                            label="Profil billede"
-                            help="Profil billede af dig" />
+                            label="Køkken billede"
+                            help="Billede af køkken" />
                         <FieldGroup
-                            id="userSettingsRoomNumber"
+                            id="adminSettingsRuleSet"
                             type="text"
-                            name="room_number"
-                            label="Værelses nummer"
-                            onChange={this.onRoomNumberChange}
-                            value={this.state.room_number} />
-                        <Checkbox checked={this.state.active} onChange={(_)=>this.setState({active: !this.state.active})}>
-                            Aktiv
-                        </Checkbox>
-                        <HelpBlock>Aktive medlemmer tilmeldes automatisk madklub hvis køkkenet kører med automatisk tilmelding</HelpBlock>
-                        <FieldGroup
-                            id="userSettingsEmail"
-                            type="email"
-                            name="email"
-                            label="Email"
-                            onChange={this.onEmailChange}
-                            validate={this.state.emailValidation}
-                            value={this.state.email} />
-                        <FieldGroup
-                            id="userSettingsPreviousPassword"
-                            type="password"
-                            name="previous_password"
-                            label="Password"
-                            onChange={(e)=>this.setState({old_password: e.target.value})}
-                            value={this.state.old_password}
-                            placeholder="Indtast gammelt kodeord" />
-                        <FormGroup validationState={this.state.newPasswordValidation}>
-                            <FieldGroup
-                                id="userSettingsNewPassword"
-                                type="password"
-                                name="new_password"
-                                label="Nyt Password"
-                                onChange={(e)=>this.onNewPassword(e.target.value,this.state.new_password_retype)}
-                                value={this.state.new_password}
-                                placeholder="Nyt kodeord" />
-                            <FieldGroup
-                                id="userSettingsRetypeNewPassword"
-                                type="password"
-                                name="retype_new_password"
-                                label="Genindtast nyt Password"
-                                onChange={(e)=>this.onNewPassword(this.state.new_password,e.target.value)}
-                                value={this.state.new_password_retype}
-                                placeholder="Genindtast nyt kodeord" />
-                            {this.state.newPasswordValidation && (this.state.newPasswordValidation === 'warning') &&
-                                <HelpBlock>
-                                    Indtast nyt kodeord to gange
-                                </HelpBlock>
-                            }
+                            name="rule_set"
+                            label="Regel sæt"
+                            componentClass="textarea"
+                            placeholder="Hvilke regler har i på køkkenet?"
+                            onChange={(e)=>this.setState({rule_set: e.target.value})}
+                            value={this.state.rule_set} />
+                        <FormGroup>
+                            <ControlLabel>Automatisk Madklubs tidspunkt</ControlLabel>
+                            <TimePicker
+                                showSecond={false}
+                                onChange={this.onDefaultMealTimeChange}
+                                value={this.state.default_mealtime}
+                                defaultValue={this.state.default_mealtime}/>
                         </FormGroup>
+                        <FieldGroup
+                            id="adminSettingsCancellatingDeadline"
+                            type="text"
+                            name="cancellation_deadline"
+                            label="Aflysnings deadline"
+                            onChange={this.onCancellationDeadlineChange}
+                            validate={this.state.cancellationDeadlineValidation}
+                            help={this.state.cancellationDeadlineHelp}
+                            value={this.state.cancellation_deadline} />
+                        <FieldGroup
+                            id="adminSettingsShoppingOpenAt"
+                            type="text"
+                            name="shopping_open_at"
+                            label="Indkøb tidligst åben"
+                            onChange={this.onShoppingOpenAtChange}
+                            validate={this.state.shoppingOpenAtValidation}
+                            help={this.state.shoppingOpenAtHelp}
+                            value={this.state.shopping_open_at} />
+                        <Checkbox checked={this.state.priceloft_applies} onChange={(_)=>this.setState({priceloft_applies: !this.state.priceloft_applies})}>
+                            Prisloft aktiv
+                        </Checkbox>
+                        <HelpBlock>Hvis ikke aktiv, kan en madklub koste så meget det skulle være</HelpBlock>
+                        <FieldGroup
+                            id="adminSettingsDefaultPriceloft"
+                            type="text"
+                            name="default_priceloft"
+                            label="Prisloft"
+                            onChange={this.onDefaultPriceloftChange}
+                            validate={this.state.defaultPriceloftValidation}
+                            help={this.state.defaultPriceloftHelp}
+                            value={this.state.default_priceloft} />
+                        <Checkbox checked={this.state.assume_attendance} onChange={(_)=>this.setState({assume_attendance: !this.state.assume_attendance})}>
+                            Automatisk tilmelding af madklub
+                        </Checkbox>
+                        <HelpBlock>Hvis medlemmer er aktive, tilmeldes de automatisk ny-oprettede madklubber</HelpBlock>
+                        <FieldGroup
+                            id="adminSettingsName"
+                            type="text"
+                            name="kitchen_name"
+                            label="Køkkenets navn"
+                            onChange={(e)=>this.setState({name: e.target.value})}
+                            value={this.state.name}/>
                         <Button
                             bsStyle="primary"
                             bsSize="large"
                             className="center-block"
-                            disabled={(this.state.newPasswordValidation === 'warning')}
+                            disabled={(this.state.cancellationDeadlineValidation === 'warning') || 
+                            (this.state.defaultPriceloftValidation === 'warning') || 
+                            (this.state.shoppingOpenAtValidation === 'warning') || 
+                            this.state.submitting}
                             onClick={this.onSaveSettings}>
-                            Bekræft
+                            {(this.state.submitting) ? 'Bekræfter...' : 'Bekræft'}
                         </Button>
                     </Col>
                     <Col xs={0} sm={2} md={3} lg={4}/>
@@ -224,38 +273,48 @@ class UserSettings extends React.Component {
     }
 };
 
-const userSettingsQuery = gql`
-    query userSettingsQuery {
+const adminSettingsQuery = gql`
+    query adminSettingsQuery {
         me {
             id
-            display_name
-            room_number
-            active
-            account {
-                email
+            kitchen {
+                id
+                rule_set
+                default_mealtime
+                cancellation_deadline
+                shopping_open_at
+                priceloft_applies
+                default_priceloft
+                assume_attendance
+                name
             }
         }
     }
 `;
 
-const userSettingsMutation = gql`
-    mutation userSettingsMutation($display_name: String,$room_number: String,$active: Boolean,$email: String,
-        $change_password: ChangePasswordType) {
-        changeUser(display_name: $display_name,room_number: $room_number,active: $active,
-                account: {email: $email,change_password: $change_password}){
+const adminSettingsMutation = gql`
+    mutation adminSettingsMutation($rule_set: String,$default_mealtime: String,$cancellation_deadline: Int
+            $shopping_open_at: Int,$priceloft_applies: Boolean,$default_priceloft: Float,$assume_attendance: Boolean,
+            $name: String) {
+        changeKitchen(rule_set: $rule_set,default_mealtime: $default_mealtime,
+                cancellation_deadline: $cancellation_deadline,shopping_open_at: $shopping_open_at,priceloft_applies:
+                $priceloft_applies,default_priceloft: $default_priceloft,assume_attendance: $assume_attendance,
+                name: $name){
             id
-            display_name
-            room_number
-            active
-            account {
-                email
-            }
+            rule_set
+            default_mealtime
+            cancellation_deadline
+            shopping_open_at
+            priceloft_applies
+            default_priceloft
+            assume_attendance
+            name
         }
     }
 `;
 
 export default compose(
-    graphql(userSettingsQuery,{
+    graphql(adminSettingsQuery,{
         props: ({ data }) => {
             // loading state
             if (data.loading) {
@@ -272,54 +331,56 @@ export default compose(
             return { me: data.me };
         }
     }),
-    graphql(userSettingsMutation,{
+    graphql(adminSettingsMutation,{
         props({_,mutate}){
             return {
-                setUserSettings(display_name,room_number,active,email,old_password,new_password){
+                setAdminSettings(kitchenId,rule_set,default_mealtime,cancellation_deadline,shopping_open_at,
+                                 priceloft_applies,default_priceloft,assume_attendance,name){
+                    var mealtime = default_mealtime.format("HH:mm:ss");
                     var variables = {
-                        display_name: display_name,
-                        room_number: room_number,
-                        active: active,
-                        email: email,
+                        rule_set,
+                        default_mealtime: mealtime,
+                        cancellation_deadline,
+                        shopping_open_at,
+                        priceloft_applies,
+                        default_priceloft,
+                        assume_attendance,
+                        name
                     };
-                    if(old_password && new_password && old_password.length > 0 && new_password.length > 0){
-                        variables.change_password = {
-                            old_password: old_password,
-                            new_password: new_password
-                        }
-                    }
                     return mutate({
                         variables: variables,
                         optimisticResponse: {
                             __typename: 'Mutation',
-                            changeUser: {
-                                __typename: 'User',
-                                display_name: display_name,
-                                room_number: room_number,
-                                active: active,
-                                account: {
-                                    email: email
-                                }
+                            changeKitchen: {
+                                __typename: 'Kitchen',
+                                id: kitchenId,
+                                rule_set,
+                                default_mealtime: mealtime,
+                                cancellation_deadline,
+                                shopping_open_at,
+                                priceloft_applies,
+                                default_priceloft,
+                                assume_attendance,
+                                name
                             }
                         },
                         updateQueries: {
-                            userSettingsQuery: (previousResult, { mutationResult }) => {
-                                console.log("Cache update");
-                                console.log(previousResult);
-                                let newUser = mutationResult.data.changeUser;
-                                const dn = newUser.display_name;
-                                const rn = newUser.room_number;
-                                const a = newUser.active;
-                                const e = newUser.account.email;
-                                let newResult = update(previousResult,{
+                            adminSettingsQuery: (previousResult, { mutationResult }) => {
+                                let newKitchen = mutationResult.data.changeKitchen;
+                                return update(previousResult,{
                                     me: {
-                                        display_name: {$set: dn},
-                                        room_number: {$set: rn},
-                                        active: {$set: a},
-                                        account: {email: {$set: e}}
+                                        kitchen: {
+                                            rule_set: {$set: newKitchen.rule_set},
+                                            default_mealtime: {$set: newKitchen.default_mealtime},
+                                            cancellation_deadline: {$set: newKitchen.cancellation_deadline},
+                                            shopping_open_at: {$set: newKitchen.shopping_open_at},
+                                            priceloft_applies: {$set: newKitchen.priceloft_applies},
+                                            default_priceloft: {$set: newKitchen.default_priceloft},
+                                            assume_attendance: {$set: newKitchen.assume_attendance},
+                                            name: {$set: newKitchen.name}
+                                        }
                                     }
                                 });
-                                return newResult;
                             }
                         }
                     })
@@ -327,4 +388,4 @@ export default compose(
             }
         }
     })
-)(UserSettings);
+)(AdminSettings);

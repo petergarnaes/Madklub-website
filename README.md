@@ -381,8 +381,13 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * Support image upload
 * Madklubs indstillinger
     * perioder
-    * tidligst indkøb madklub
-    * senest aflysning af madklub
+    * ~~tidligst indkøb madklub~~
+    * ~~senest aflysning af madklub~~
+    * ~~slå deltagelse som udgangspunkt til og fra~~
+    * ~~juster prisloft~~
+    * ~~Sæt automatisk tidspunkt for madklub~~
+    * ~~Indstil køkkens navn~~
+    * Billed af køkken
 * Madklubs indstillinger for admin
     * alle madklubs indstillinger
     * Opret ny bruger
