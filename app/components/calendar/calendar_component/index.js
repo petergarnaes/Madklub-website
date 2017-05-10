@@ -17,6 +17,9 @@ import ClaimDateComponent from '../claim_date_component';
 
 const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selectedDinnerclubID}) => {
     let {loading,error,me} = data;
+    console.log("Bobby!");
+    console.log(data);
+    console.log(me);
     if(loading){
         return <LoadingIcon message="Loading data..."/>
     }
@@ -122,6 +125,7 @@ const currentUserQuery = gql`
         me {
             id
             kitchen {
+                id
                 ...ClaimDateComponentKitchen
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
                     id
@@ -158,7 +162,7 @@ export default connect(mapStateToProps,mapDispatchToProps)(
             // query before, with these exact arguments.
             let todayStart = moment(selectedMonth).startOf('month').startOf('date').toISOString();
             let todayEnd = moment(selectedMonth).endOf('month').endOf('date').toISOString();
-            //console.log("Going from "+todayStart+" to "+todayEnd);
+            console.log("Going from "+todayStart+" to "+todayEnd);
             return {
                 variables: {
                     todayStart: todayStart,

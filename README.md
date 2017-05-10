@@ -415,6 +415,11 @@ field and content stays. We must reset it when the date changes!
 * Something wrong with `shopping_completed`... (Just think it is sqlite vs. postgres bug)
 * when pulling account from graphql, have some sort of id. It confuses the cache and
 creates errors...
+* Apollo shitting the bed... Somehow pulling the other async components first
+helps make calendar async component go through. Is it because of navbar query?
+It fucked with the user settings query to... Make it fragment and lift the page to
+one query? Maybe it cannot handle several concurrent queries, only queries run
+sequentially?...
 
 ## Random Notes
 

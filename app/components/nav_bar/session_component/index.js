@@ -66,6 +66,7 @@ const navbarQuery = gql`
             id
             display_name
             kitchen {
+                id
                 admin {
                     id
                 }

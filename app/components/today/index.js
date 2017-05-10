@@ -70,7 +70,9 @@ const currentUserQuery = gql`
         me {
             id
             kitchen {
+                id
                 dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
+                    id
                     ...FrontPageDinnerClubComponentDinnerClub
                     ...FrontPageCookComponentDinnerClub
                     cook {
