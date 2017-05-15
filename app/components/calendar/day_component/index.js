@@ -2,7 +2,8 @@
  * Created by peter on 2/11/17.
  */
 import React from 'react';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
+import { gql } from 'react-apollo';
 import './styling.css';
 import moment from 'moment';
 import { connect } from 'react-redux';

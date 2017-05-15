@@ -2,8 +2,8 @@
  * Created by peter on 2/12/17.
  */
 import React from 'react';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+//import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import Table from 'react-bootstrap/lib/Table';
 import Grid from 'react-bootstrap/lib/Grid';

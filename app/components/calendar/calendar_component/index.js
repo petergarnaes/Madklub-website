@@ -2,8 +2,8 @@
  * Created by peter on 2/10/17.
  */
 import React from 'react';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+//import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import Table from 'react-bootstrap/lib/Table';
 import GlyphIcon from 'react-bootstrap/lib/Glyphicon.js';
@@ -121,7 +121,7 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
 };
 
 const currentUserQuery = gql`
-    query currentUserQuery($todayStart: String!, $todayEnd: String!) {
+    query calendarUserQuery($todayStart: String!, $todayEnd: String!) {
         me {
             id
             kitchen {

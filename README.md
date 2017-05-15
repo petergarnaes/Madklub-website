@@ -407,6 +407,9 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * Check for login, and inform in UI if not
     * Use a better logo
     * ~~Properly integrate in build process~~
+* ~~REMOVE `apollo-client` depedency and only use `react-apollo`. Small 
+change in client code is required. SSR needs some refactoring, but seems
+simpler!~~
 
 ## Bugs
 

@@ -4,9 +4,9 @@
 import React from 'react';
 import './styling.css';
 import 'rc-time-picker/assets/index.css';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
 import update from 'immutability-helper';
-import { graphql } from 'react-apollo';
+import { gql, graphql } from 'react-apollo';
 import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
 import Form from 'react-bootstrap/lib/Form';

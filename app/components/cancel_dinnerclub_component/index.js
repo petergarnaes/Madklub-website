@@ -3,8 +3,8 @@
  */
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
+//import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
 import Switch from 'react-bootstrap-switch';

@@ -3,9 +3,9 @@
  */
 
 import React from 'react';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
 import { propType } from 'graphql-anywhere';
-import { graphql } from 'react-apollo';
+import { gql, graphql } from 'react-apollo';
 import pure from 'recompose/pure';
 
 const CookComponent = ({cook}) => (

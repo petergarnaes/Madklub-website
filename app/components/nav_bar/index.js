@@ -19,7 +19,7 @@ const NavBar = ({loggedIn,username,history}) => {
     let OptionsComponent = (!loggedIn) ? (
         <NavItem eventKey="login" onSelect={goTo(history)}>Login</NavItem>
     ) : (
-        <SessionComponent />
+        <SessionComponent display_name={username}/>
     );
     let CalendarComponent = (loggedIn) ?
         <NavItem eventKey="calendar" onSelect={goTo(history)}>

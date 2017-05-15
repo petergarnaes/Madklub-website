@@ -2,10 +2,10 @@
  * Created by peter on 4/17/17.
  */
 import React from 'react';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import { propType } from 'graphql-anywhere';
-import { graphql } from 'react-apollo';
+import { gql, graphql } from 'react-apollo';
 import moment from 'moment';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Button from 'react-bootstrap/lib/Button';

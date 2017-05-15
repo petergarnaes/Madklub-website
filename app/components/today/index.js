@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+//import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 import moment from 'moment';
 import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
 import FrontPageCookComponent from '../front_page_dinnerclub_cook';
@@ -65,8 +65,8 @@ TodayWithData.propTypes = {
 
 // We pick all participants, so we can check if our own ID is in the participants list of the dinnerclub we want to
 // show. This gives some client side calculation, but this list is not to long. Maybe some Redux magic?
-const currentUserQuery = gql`
-    query currentUserQuery($todayStart: String!, $todayEnd: String!) {
+const todayUserQuery = gql`
+    query todayUserQuery($todayStart: String!, $todayEnd: String!) {
         me {
             id
             kitchen {
@@ -100,7 +100,7 @@ let todayStart = moment().set({'hour':0,'minute':0,'second':0,'millisecond':0}).
 let todayEnd = moment().set({'hour':23,'minute':59,'second':59,'millisecond':0}).toISOString();
 console.log("From "+todayStart+" To "+todayEnd);
 
-const TodayPage = graphql(currentUserQuery,{
+const TodayPage = graphql(todayUserQuery,{
     options: {
         variables: {
             todayStart: todayStart,

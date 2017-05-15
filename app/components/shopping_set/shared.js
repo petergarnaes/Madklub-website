@@ -1,7 +1,8 @@
 /**
  * Created by peter on 4/18/17.
  */
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
+import { gql } from 'react-apollo';
 import update from 'immutability-helper';
 
 export const dinnerclubFragment = gql`

@@ -1,8 +1,8 @@
 /**
  * Created by peter on 10-05-17.
  */import React from 'react';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+//import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 import LoadingIcon from '../../loading_icon';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
@@ -14,12 +14,15 @@ const goTo = (history) => (key) => {
     if(key) history.push(url);
 };
 
-const SessionComponent = ({data,history}) => {
-    let {loading,error,me} = data;
+const SessionComponent = ({data,display_name,history}) => {
+    //let {loading,error,me} = data;
+    let me = {id: 'bb', kitchen: {admin: {id: 'bb'}}};
+    let loading = false;
+    let error = null;
     console.log(me);
     if(loading){
         return (
-            <LoadingIcon message="Loading..."/>
+            <NavItem>Loading</NavItem>
         )
     }
     // TODO error!
@@ -45,7 +48,7 @@ const SessionComponent = ({data,history}) => {
         </MenuItem>;
     }
     return (
-        <NavDropdown title={me.display_name} id="basic-nav-dropdown">
+        <NavDropdown title={display_name} id="basic-nav-dropdown">
             {AccountingOption}
             {AdminSettings}
             <MenuItem eventKey="user_settings" onSelect={goTo(history)}>
@@ -64,7 +67,6 @@ const navbarQuery = gql`
     query navbarQuery {
         me {
             id
-            display_name
             kitchen {
                 id
                 admin {
@@ -75,4 +77,5 @@ const navbarQuery = gql`
     }
 `;
 
-export default graphql(navbarQuery)(withRouter(SessionComponent))
+//export default graphql(navbarQuery)(withRouter(SessionComponent))
+export default withRouter(SessionComponent)

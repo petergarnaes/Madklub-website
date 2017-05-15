@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
+import { gql } from 'react-apollo';
 import { propType } from 'graphql-anywhere';
 import moment from 'moment';
 import '../front_page_dinnerclub/styling.css';

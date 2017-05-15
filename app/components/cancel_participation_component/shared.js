@@ -3,7 +3,8 @@
  */
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import gql from 'graphql-tag';
+import { gql } from 'react-apollo';
+//import gql from 'graphql-tag';
 import update from 'immutability-helper';
 
 export const cancelParticipationFragment = gql`
