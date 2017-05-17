@@ -6,7 +6,7 @@ import React       from 'react';
 import { BrowserRouter }  from 'react-router-dom';
 import * as Cookies from "js-cookie";
 //import ApolloClient, { createNetworkInterface,toIdValue } from 'apollo-client';
-import { ApolloClient, ApolloProvider, createNetworkInterface, toIdValue } from 'react-apollo';
+import ApolloClient, { ApolloProvider, createNetworkInterface, toIdValue } from 'react-apollo';
 import App from '../app/components';
 import * as reducers from '../app/reducers';
 import async_map from '../app/async/components';
@@ -46,6 +46,7 @@ networkInterface.use([{
 const client = new ApolloClient({
     dataIdFromObject: dataIdFromObject,
     addTypename: true,
+    //ssrForceFetchDelay: 100,
     customResolvers: {
         // Specify __typename on which the customResolver of a field goes,
         // if top-level field the typename is Query, like in the examples
