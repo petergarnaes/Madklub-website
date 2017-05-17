@@ -197,6 +197,7 @@ async function handleRender(req,res){
     console.log(registered_components);
     // Sets initial state for apollo, so client bundle knows what is loaded and whatnot
     const preloadedState = store.getState();
+    const apolloInitialState = client.getInitialState();
 
     // TODO 404's ?!?!?!
     // context.url will contain the URL to redirect to if a <Redirect> was used
@@ -206,14 +207,14 @@ async function handleRender(req,res){
     //    res.redirect(context.url);
     //} else {
         // Send the rendered page back to the client
-    res.status(200).send(renderFullPage(html, preloadedState,registered_components));
+    res.status(200).send(renderFullPage(html, preloadedState,apolloInitialState,registered_components));
     //}
 }
 
 /**
  * Renders react app instance to a html document
  **/
-function renderFullPage(html, preloadedState,registered_components){
+function renderFullPage(html, preloadedState,apolloInitialState,registered_components){
     // Loads all of app css statically, which is statically compiled.
     // TODO
     //const css = fs.readFileSync('./dist/public/styles.css');
@@ -265,6 +266,7 @@ function renderFullPage(html, preloadedState,registered_components){
                     // WARNING: See the following for Security isues with this approach:
                     // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
                     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)};
+                    window.__APOLLO_STATE__ = ${JSON.stringify(apolloInitialState)};
                     window.__REGISTERED_COMPONENTS__ = ${JSON.stringify(registered_components)}
                 </script>
                 ${manifestDecl}

@@ -19,6 +19,7 @@ import dataIdFromObject from '../app/util/data_id_from_object';
 moment.locale("da");
 
 let initialState = window.__PRELOADED_STATE__;
+let apolloInitialState = window.__APOLLO_STATE__;
 let registeredComponents = window.__REGISTERED_COMPONENTS__;
 
 const networkInterface = createNetworkInterface({
@@ -46,6 +47,7 @@ networkInterface.use([{
 const client = new ApolloClient({
     dataIdFromObject: dataIdFromObject,
     addTypename: true,
+    initialState: apolloInitialState,
     //ssrForceFetchDelay: 100,
     customResolvers: {
         // Specify __typename on which the customResolver of a field goes,
