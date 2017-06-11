@@ -1,0 +1,6 @@
+mutation cancelDinnerclub($dinnerclubID: ID!, $cancel: Boolean!){
+    changeDinnerClub(id: $dinnerclubID,cancelled: $cancel){
+        id
+        cancelled
+    }
+}

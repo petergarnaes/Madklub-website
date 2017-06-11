@@ -1,0 +1,5 @@
+fragment CancelDinnerclubComponentDinnerClub on DinnerClub {
+    id
+    at
+    cancelled
+}

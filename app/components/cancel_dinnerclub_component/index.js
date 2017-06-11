@@ -3,12 +3,13 @@
  */
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import { gql, graphql } from 'react-apollo';
-//import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import moment from 'moment';
 import update from 'immutability-helper';
 import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
 import Switch from 'react-bootstrap-switch';
+import dinnerClubFragment from './DinnerClubFragment.gql';
+import cancelDinnerclubMutation from './cancelDinnerclubMutation.gql';
 
 const CancelDinnerclubComponent = ({dinnerclub,setCancelDinnerclub}) => (
     <h3>
@@ -24,27 +25,12 @@ const CancelDinnerclubComponent = ({dinnerclub,setCancelDinnerclub}) => (
 );
 
 CancelDinnerclubComponent.fragments = {
-    dinnerclub: gql`
-        fragment CancelDinnerclubComponentDinnerClub on DinnerClub {
-            id
-            at
-            cancelled
-        }
-    `
+    dinnerclub: dinnerClubFragment
 };
 
 CancelDinnerclubComponent.propTypes = {
     dinnerclub: propType(CancelDinnerclubComponent.fragments.dinnerclub).isRequired
 };
-
-const cancelDinnerclubMutation = gql`
-    mutation cancelDinnerclub($dinnerclubID: ID!, $cancel: Boolean!){
-        changeDinnerClub(id: $dinnerclubID,cancelled: $cancel){
-            id
-            cancelled
-        }
-    }
-`;
 
 export default graphql(cancelDinnerclubMutation,{
     props({_,mutate}) {
