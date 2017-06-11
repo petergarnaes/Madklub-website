@@ -5,6 +5,7 @@ import React from 'react';
 import { propType } from 'graphql-anywhere';
 import { gql, graphql } from 'react-apollo';
 //import gql from 'graphql-tag';
+import moment from 'moment';
 import update from 'immutability-helper';
 import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
 import Switch from 'react-bootstrap-switch';
@@ -17,6 +18,7 @@ const CancelDinnerclubComponent = ({dinnerclub,setCancelDinnerclub}) => (
             onColor="danger"
             onText="Aflyst"
             offText="Afholdes"
+            disabled={moment(dinnerclub.at).isBefore(moment())}
             onChange={(el,state)=>setCancelDinnerclub(dinnerclub.id,state).catch((err)=>console.log(err))}/>
     </h3>
 );
@@ -25,6 +27,7 @@ CancelDinnerclubComponent.fragments = {
     dinnerclub: gql`
         fragment CancelDinnerclubComponentDinnerClub on DinnerClub {
             id
+            at
             cancelled
         }
     `

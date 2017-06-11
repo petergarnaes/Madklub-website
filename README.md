@@ -342,16 +342,17 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Tilmeld gæster~~
     * ~~Vis pris~~
     * Tilmeld
-    * Lås felter hvis madklub er blevet afholdt
-    * Lås felter ved indkøb
+    * ~~Lås felter hvis madklub er blevet afholdt~~
+    * ~~Lås felter ved indkøb~~
 * ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~
     * ~~Rette måltid~~
     * ~~Købt ind~~
     * ~~Indtast pris~~
     * ~~Tilmeld gæster~~
-    * Lås felter hvis madklub er blevet afholdt
-    * Lås felter ved indkøb
+    * ~~Lås felter hvis madklub er blevet afholdt~~
+    * ~~Lås felter ved indkøb~~
+    * Aflysnings deadline skal deaktivere aflysningsfeltet
 * Backend tilføjelser
     * ~~Deadline for aflysning af madklub, gemmes som minutter~~
     * ~~deadline for hvor tidligt man kan handle ind, gemmes i minutter~~

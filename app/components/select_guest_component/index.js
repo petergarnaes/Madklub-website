@@ -11,7 +11,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
 
-const SelectGuestComponent = ({dinnerclubID,participation,setGuestCount}) => {
+const SelectGuestComponent = ({disabled,dinnerclubID,participation,setGuestCount}) => {
     console.log("We have guests: "+participation.guest_count);
     let options = [0,1,2,3,4,5].map((n)=> ({value: n, label: n}) );
     return (
@@ -21,6 +21,7 @@ const SelectGuestComponent = ({dinnerclubID,participation,setGuestCount}) => {
                 <Select
                     value={participation.guest_count}
                     options={options}
+                    disabled={disabled}
                     onChange={(option)=>setGuestCount(dinnerclubID,participation.id,option.value)}/>
             </h3>
         </div>
@@ -45,6 +46,10 @@ export const selectGuestCountMutation = gql`
         }
     }
 `;
+
+SelectGuestComponent.defaultProps = {
+    disabled = false
+};
 
 SelectGuestComponent.propTypes = {
     dinnerclubID: React.PropTypes.string.isRequired,

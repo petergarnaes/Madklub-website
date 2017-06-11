@@ -45,7 +45,8 @@ const DateDetailComponent = ({data}) => {
         let isCook = me.id === dinnerclub.cook.id;
         // Parsing dinnerclub data for presentation
         const theDate = moment(dinnerclub.at);
-        const shop_message = (dinnerclub.shopping_complete) ? 'Der er købt ind' : 'Der er ikke købt ind';
+        const has_shopped = dinnerclub.shopping_complete;
+        const shop_message = (has_shopped) ? 'Der er købt ind' : 'Der er ikke købt ind';
         let shop_component = (isCook) ?
             <ShoppingCompleteDateDetail
                 dinnerClub={dinnerclub} /> :
@@ -106,6 +107,7 @@ const DateDetailComponent = ({data}) => {
                     </Row>
                     <Row>
                         <SelectGuestCount
+                            disabled={has_shopped}
                             dinnerclubID={dinnerclub.id}
                             participation={dinnerclub.participants[participants.findIndex((p)=>p.id === participationID)]}/>
                     </Row>
