@@ -68,13 +68,13 @@ const changeDinnerClub = {
                 let at = moment(dinnerclub.at);
                 // Verify cancelling is not to late
                 let deadline = kitchen.cancellation_deadline;
-                if(deadline > 0 && current.isAfter(moment(at).subtract({'minutes': deadline}))){
+                if(args.cancelled == true && deadline > 0 && current.isAfter(moment(at).subtract({'minutes': deadline}))){
                     return Promise.reject('You are trying to cancel after the cancel deadline ' +
                         'is passed');
                 }
                 // Verify shopping complete is not to early
                 let shop_at = kitchen.shopping_open_at;
-                if(shop_at > 0 && current.isBefore(moment(at).subtract({'minutes': shop_at}))){
+                if(args.shopping_complete == true && shop_at > 0 && current.isBefore(moment(at).subtract({'minutes': shop_at}))){
                     return Promise.reject('You are trying to shop to early!');
                 }
                 // - verify shopping complete is not set from true to false, it seems non-sensical

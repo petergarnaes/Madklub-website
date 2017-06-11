@@ -204,7 +204,9 @@ tricked into clicking.
 * Dealing with XSS - All string inputs must be sanitized! Even though session 
 JWT token is `httpOnly` XSS could still use logged in session, and traverse 
 any CSRF method. While they can not get the JWT token, they can still send 
-request from the browser as the logged in user.
+request from the browser as the logged in user. Also, we JSON.stringify 
+the state into a <script> tag, so unsanitized input can potentially 
+escape script and start new script tag running anything.
 
 More notes on public API in Random Notes.
 
@@ -340,6 +342,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Tilmeld gæster~~
     * ~~Vis pris~~
     * Tilmeld
+    * Lås felter hvis madklub er blevet afholdt
     * Lås felter ved indkøb
 * ~~Kok dato detaljer~~
     * ~~Aflyse madklub~~
@@ -347,6 +350,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~Købt ind~~
     * ~~Indtast pris~~
     * ~~Tilmeld gæster~~
+    * Lås felter hvis madklub er blevet afholdt
     * Lås felter ved indkøb
 * Backend tilføjelser
     * ~~Deadline for aflysning af madklub, gemmes som minutter~~
