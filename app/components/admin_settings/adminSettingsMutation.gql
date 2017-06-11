@@ -1,0 +1,18 @@
+mutation adminSettingsMutation($rule_set: String,$default_mealtime: String,$cancellation_deadline: Int
+        $shopping_open_at: Int,$priceloft_applies: Boolean,$default_priceloft: Float,$assume_attendance: Boolean,
+        $name: String) {
+    changeKitchen(rule_set: $rule_set,default_mealtime: $default_mealtime,
+            cancellation_deadline: $cancellation_deadline,shopping_open_at: $shopping_open_at,priceloft_applies:
+            $priceloft_applies,default_priceloft: $default_priceloft,assume_attendance: $assume_attendance,
+            name: $name){
+        id
+        rule_set
+        default_mealtime
+        cancellation_deadline
+        shopping_open_at
+        priceloft_applies
+        default_priceloft
+        assume_attendance
+        name
+    }
+}

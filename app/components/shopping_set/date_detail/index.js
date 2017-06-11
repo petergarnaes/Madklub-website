@@ -6,10 +6,9 @@ import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
 import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
 import Switch from 'react-bootstrap-switch';
-import {
-    dinnerclubFragment,
-    completeShoppingDinnerclubMutation,
-    completeShoppingOptions} from '../shared';
+import { completeShoppingOptions } from '../shared';
+import dinnerclubFragment from '../DinnerClubFragment.gql';
+import completeShoppingDinnerclubMutation from '../completeShoppingDinnerclubMutation.gql';
 
 const ShoppingCompleteDateDetail = ({dinnerClub,setShoppingComplete}) => (
     <h3>

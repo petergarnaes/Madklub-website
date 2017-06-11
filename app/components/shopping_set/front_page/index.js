@@ -5,10 +5,9 @@ import React from 'react';
 import { propType } from 'graphql-anywhere';
 import { graphql } from 'react-apollo';
 import RoundIconButton from '../../round_icon_button';
-import {
-    dinnerclubFragment,
-    completeShoppingDinnerclubMutation,
-    completeShoppingOptions} from '../shared';
+import { completeShoppingOptions } from '../shared';
+import dinnerclubFragment from '../DinnerClubFragment.gql';
+import completeShoppingDinnerclubMutation from '../completeShoppingDinnerclubMutation.gql';
 
 const ShoppingCompleteFrontPage = ({dinnerClub,setShoppingComplete}) => (
     <div>

@@ -57,6 +57,9 @@ CancelParticipationFrontPage.fragments = {
 
 CancelParticipationFrontPage.propTypes = cancelParticipationPropTypes;
 
-export default graphql(cancelParticipateDinnerclubMutation,cancelParticipateOptions)(CancelParticipationFrontPage);
+export default graphql(
+    cancelParticipateDinnerclubMutation,
+    cancelParticipateOptions('todayUserQuery'))
+(CancelParticipationFrontPage);
 
 

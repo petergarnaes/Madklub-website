@@ -1,25 +1,8 @@
 /**
  * Created by peter on 4/18/17.
  */
-//import gql from 'graphql-tag';
-import { gql } from 'react-apollo';
 import update from 'immutability-helper';
 
-export const dinnerclubFragment = gql`
-    fragment ShoppingCompleteComponentDinnerClub on DinnerClub {
-        id
-        cancelled
-        shopping_complete
-    }
-`;
-export const completeShoppingDinnerclubMutation = gql`
-    mutation changeDinnerClub($dinnerclubID: ID!,$value: Boolean!){
-        changeDinnerClub(id: $dinnerclubID,shopping_complete: $value){
-            id
-            shopping_complete
-        }
-    }
-`;
 export const completeShoppingOptions = {
     props({_,mutate}) {
         return {
@@ -38,7 +21,8 @@ export const completeShoppingOptions = {
                         }
                     },
                     updateQueries: {
-                        currentUserQuery: (previousResult, { mutationResult }) => {
+                        // TODO update either calendar or today depending on which one call
+                        todayUserQuery: (previousResult, { mutationResult }) => {
                             console.log("Bobby");
                             console.log(mutationResult.data);
                             const newDinnerclub = mutationResult.data.changeDinnerClub;

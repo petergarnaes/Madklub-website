@@ -1,0 +1,3 @@
+fragment CookComponentSimpleUser on SimpleUser {
+    display_name
+}

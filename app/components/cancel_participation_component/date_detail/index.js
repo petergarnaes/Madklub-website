@@ -39,5 +39,8 @@ CancelParticipationDateDetail.fragments = {
 
 CancelParticipationDateDetail.propTypes = cancelParticipationPropTypes;
 
-export default graphql(cancelParticipateDinnerclubMutation,cancelParticipateOptions)(CancelParticipationDateDetail);
+export default graphql(
+    cancelParticipateDinnerclubMutation,
+    cancelParticipateOptions('calendarUserQuery')
+)(CancelParticipationDateDetail);
 

@@ -1,0 +1,6 @@
+mutation changeDinnerClub($dinnerclubID: ID!,$value: Boolean!){
+    changeDinnerClub(id: $dinnerclubID,shopping_complete: $value){
+        id
+        shopping_complete
+    }
+}

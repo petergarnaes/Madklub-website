@@ -3,10 +3,10 @@
  */
 
 import React from 'react';
-//import gql from 'graphql-tag';
 import { propType } from 'graphql-anywhere';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import pure from 'recompose/pure';
+import simpleUserFragment from './SimpleUserFragment.gql';
 
 const CookComponent = ({cook}) => (
     <h3>{cook.display_name} laver mad</h3>
@@ -15,11 +15,7 @@ const CookComponent = ({cook}) => (
 const PureCookComponent = pure(CookComponent);
 
 PureCookComponent.fragments = {
-    simpleUser: gql`
-        fragment CookComponentSimpleUser on SimpleUser {
-            display_name
-        }
-    `
+    simpleUser: simpleUserFragment
 };
 
 PureCookComponent.propTypes = {

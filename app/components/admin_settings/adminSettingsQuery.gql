@@ -1,0 +1,16 @@
+query adminSettingsQuery {
+    me {
+        id
+        kitchen {
+            id
+            rule_set
+            default_mealtime
+            cancellation_deadline
+            shopping_open_at
+            priceloft_applies
+            default_priceloft
+            assume_attendance
+            name
+        }
+    }
+}

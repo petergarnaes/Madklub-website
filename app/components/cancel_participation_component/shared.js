@@ -32,13 +32,39 @@ export var cancelParticipationPropTypes = {
     hasCancelled: React.PropTypes.bool.isRequired
 }
 
-export const cancelParticipateOptions = {
+const queryRoutine = (dinnerclubID) => (previousResult, { mutationResult }) => {
+    const newParticipation = mutationResult.data.participate;
+    const newPartID = newParticipation.id;
+    const newCancel = newParticipation.cancelled;
+    const updateDinnerclubIndex = previousResult.me.kitchen.
+    dinnerclubs.findIndex((d)=>d.id === dinnerclubID);
+    const updateParticipantsIndex = previousResult.me.kitchen.
+        dinnerclubs[updateDinnerclubIndex].
+    participants.findIndex((p) =>p.id === newPartID);
+    let newResult = update(previousResult,{
+        me: {
+            kitchen: {
+                dinnerclubs: {$apply: (l)=>{
+                    l[updateDinnerclubIndex].
+                        participants[updateParticipantsIndex].cancelled = newCancel;
+                    return l;
+                }}
+            }
+        }
+    });
+    return newResult;
+};
+
+export const cancelParticipateOptions = (queryName) => ({
     props({ _,mutate }) {
         return {
             setCancel(dinnerclubID,participationID,cancel){
                 console.log(dinnerclubID);
                 console.log(participationID);
                 console.log(cancel);
+                let updateQueriesObj = {};
+                console.log('Cancelling with updated query: '+queryName);
+                updateQueriesObj[queryName] = queryRoutine(dinnerclubID);
                 return mutate({
                     variables: {
                         dinnerclubID: dinnerclubID,
@@ -52,33 +78,10 @@ export const cancelParticipateOptions = {
                             cancelled: cancel
                         }
                     },
-                    updateQueries: {
-                        currentUserQuery: (previousResult, { mutationResult }) => {
-                            const newParticipation = mutationResult.data.participate;
-                            const newPartID = newParticipation.id;
-                            const newCancel = newParticipation.cancelled;
-                            const updateDinnerclubIndex = previousResult.me.kitchen.
-                            dinnerclubs.findIndex((d)=>d.id === dinnerclubID);
-                            const updateParticipantsIndex = previousResult.me.kitchen.
-                                dinnerclubs[updateDinnerclubIndex].
-                            participants.findIndex((p) =>p.id === newPartID);
-                            let newResult = update(previousResult,{
-                                me: {
-                                    kitchen: {
-                                        dinnerclubs: {$apply: (l)=>{
-                                            l[updateDinnerclubIndex].
-                                                participants[updateParticipantsIndex].cancelled = newCancel;
-                                            return l;
-                                        }}
-                                    }
-                                }
-                            });
-                            return newResult;
-                        }
-                    }
+                    updateQueries: updateQueriesObj
                 }).catch((err)=>console.log(err))
             }
         }
     }
-};
+});
 

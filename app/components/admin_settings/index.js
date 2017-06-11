@@ -19,6 +19,8 @@ import update from 'immutability-helper';
 import moment from 'moment';
 import 'rc-time-picker/assets/index.css';
 import TimePicker from 'rc-time-picker';
+import adminSettingsQuery from './adminSettingsQuery.gql';
+import adminSettingsMutation from './adminSettingsMutation.gql';
 
 const FieldGroup = ({ id, label, validate, help, ...props }) => (
     <FormGroup controlId={id}
@@ -272,46 +274,6 @@ class AdminSettings extends React.Component {
         )
     }
 };
-
-const adminSettingsQuery = gql`
-    query adminSettingsQuery {
-        me {
-            id
-            kitchen {
-                id
-                rule_set
-                default_mealtime
-                cancellation_deadline
-                shopping_open_at
-                priceloft_applies
-                default_priceloft
-                assume_attendance
-                name
-            }
-        }
-    }
-`;
-
-const adminSettingsMutation = gql`
-    mutation adminSettingsMutation($rule_set: String,$default_mealtime: String,$cancellation_deadline: Int
-            $shopping_open_at: Int,$priceloft_applies: Boolean,$default_priceloft: Float,$assume_attendance: Boolean,
-            $name: String) {
-        changeKitchen(rule_set: $rule_set,default_mealtime: $default_mealtime,
-                cancellation_deadline: $cancellation_deadline,shopping_open_at: $shopping_open_at,priceloft_applies:
-                $priceloft_applies,default_priceloft: $default_priceloft,assume_attendance: $assume_attendance,
-                name: $name){
-            id
-            rule_set
-            default_mealtime
-            cancellation_deadline
-            shopping_open_at
-            priceloft_applies
-            default_priceloft
-            assume_attendance
-            name
-        }
-    }
-`;
 
 export default compose(
     graphql(adminSettingsQuery,{
