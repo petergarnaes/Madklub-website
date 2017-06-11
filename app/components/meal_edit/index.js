@@ -2,7 +2,6 @@
  * Created by peter on 4/17/17.
  */
 import React from 'react';
-//import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import { propType } from 'graphql-anywhere';
 import { gql, graphql } from 'react-apollo';
@@ -11,6 +10,8 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Button from 'react-bootstrap/lib/Button';
 import Form from 'react-bootstrap/lib/Form';
 import FormControl from 'react-bootstrap/lib/FormControl';
+import mealEditMutation from './mealEditMutation.gql';
+import dinnerClubFragment from './DinnerClubFragment.gql';
 
 class MealEditComponent extends React.Component {
     constructor(props){
@@ -66,27 +67,13 @@ class MealEditComponent extends React.Component {
 }
 
 MealEditComponent.fragments = {
-    dinnerclub: gql`
-        fragment MealEditDinnerClub on DinnerClub {
-            id
-            meal
-        }
-    `
+    dinnerclub: dinnerClubFragment
 };
 
 MealEditComponent.propTypes = {
     dinnerClub: propType(MealEditComponent.fragments.dinnerclub).isRequired,
     setMeal: React.PropTypes.func.isRequired
 };
-
-const mealEditMutation = gql`
-    mutation changeMeal($dinnerclubID: ID!,$meal: String!){
-       changeDinnerClub(id: $dinnerclubID,meal: $meal){
-            id
-            meal
-       }
-    }
-`;
 
 export default graphql(mealEditMutation,{
     props({_,mutate}) {

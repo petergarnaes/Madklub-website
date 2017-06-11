@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 //import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import Select from 'react-select';

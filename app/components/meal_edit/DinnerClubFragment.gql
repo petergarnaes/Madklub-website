@@ -1,0 +1,4 @@
+fragment MealEditDinnerClub on DinnerClub {
+    id
+    meal
+}

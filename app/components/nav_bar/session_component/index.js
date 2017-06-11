@@ -2,14 +2,14 @@
  * Created by peter on 10-05-17.
  */
 import React from 'react';
-//import gql from 'graphql-tag';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import LoadingIcon from '../../loading_icon';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import withRouter from 'react-router-dom/withRouter';
+import navbarQuery from './navbarQuery.gql';
 
 const goTo = (history) => (key) => {
     var url = "/"+key;
@@ -66,25 +66,9 @@ const SessionComponent = ({data,display_name,history}) => {
     )
 };
 
-const navbarQuery = gql`
-    query navbarQuery {
-        me {
-            id
-            display_name
-            kitchen {
-                id
-                admin {
-                    id
-                }
-            }
-        }
-    }
-`;
-
 // Somehow not SSR this query fixes calendar query?
 export default graphql(navbarQuery,{
     options: {
         ssr: false
     }
 })(withRouter(SessionComponent))
-//export default withRouter(SessionComponent)

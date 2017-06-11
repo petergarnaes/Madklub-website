@@ -1,0 +1,6 @@
+mutation changeMeal($dinnerclubID: ID!,$meal: String!){
+   changeDinnerClub(id: $dinnerclubID,meal: $meal){
+        id
+        meal
+   }
+}

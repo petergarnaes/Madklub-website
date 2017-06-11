@@ -14,7 +14,7 @@ import Checkbox from 'react-bootstrap/lib/Checkbox';
 import Alert from 'react-bootstrap/lib/Alert';
 import LoadingIcon from '../loading_icon';
 //import gql from 'graphql-tag';
-import { gql, graphql, compose } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
 import userSettingsQuery from './userSettingsQuery.gql';
 import userSettingsMutation from './userSettingsMutation.gql';

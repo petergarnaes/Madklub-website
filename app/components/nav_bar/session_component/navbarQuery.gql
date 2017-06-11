@@ -1,0 +1,12 @@
+query navbarQuery {
+    me {
+        id
+        display_name
+        kitchen {
+            id
+            admin {
+                id
+            }
+        }
+    }
+}
