@@ -205,7 +205,7 @@ tricked into clicking.
 JWT token is `httpOnly` XSS could still use logged in session, and traverse 
 any CSRF method. While they can not get the JWT token, they can still send 
 request from the browser as the logged in user. Also, we JSON.stringify 
-the state into a <script> tag, so unsanitized input can potentially 
+the state into a `<script>` tag, so unsanitized input can potentially 
 escape script and start new script tag running anything.
 
 More notes on public API in Random Notes.

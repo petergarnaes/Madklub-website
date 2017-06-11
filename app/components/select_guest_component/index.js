@@ -9,7 +9,7 @@ import { gql, graphql } from 'react-apollo';
 import update from 'immutability-helper';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-
+import participateMutation from './participate.gql';
 
 const SelectGuestComponent = ({disabled,dinnerclubID,participation,setGuestCount}) => {
     console.log("We have guests: "+participation.guest_count);
@@ -38,17 +38,18 @@ SelectGuestComponent.fragments = {
     `
 };
 
-export const selectGuestCountMutation = gql`
+export const selectGuestCountMutation = participateMutation;
+    /*gql`
     mutation participate($dinnerclubID: String!,$guest_nr: Int!){
         participate(id: $dinnerclubID,participating:{guest_count:$guest_nr}) {
             id
             guest_count
         }
     }
-`;
+`*/;
 
 SelectGuestComponent.defaultProps = {
-    disabled = false
+    disabled: false
 };
 
 SelectGuestComponent.propTypes = {
@@ -76,7 +77,7 @@ export default graphql(selectGuestCountMutation,{
                         }
                     },
                     updateQueries: {
-                        currentUserQuery: (previousResult, { mutationResult }) => {
+                        calendarUserQuery: (previousResult, { mutationResult }) => {
                             const newParticipation = mutationResult.data.participate;
                             const newPartID = newParticipation.id;
                             const newGuestCount = newParticipation.guest_count;

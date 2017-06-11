@@ -140,6 +140,11 @@ var config = {
                     publicPath: "/public/"})
             },
             {
+                test: /\.(graphql|gql)$/,
+                exclude: /node_modules/,
+                loader: 'graphql-tag/loader',
+            },
+            {
                 test: /\.(woff|woff2|png|jpg|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'file-loader',
                 options: {

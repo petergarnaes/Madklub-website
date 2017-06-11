@@ -1,0 +1,6 @@
+mutation participate($dinnerclubID: String!,$guest_nr: Int!){
+    participate(id: $dinnerclubID,participating:{guest_count:$guest_nr}) {
+        id
+        guest_count
+    }
+}
