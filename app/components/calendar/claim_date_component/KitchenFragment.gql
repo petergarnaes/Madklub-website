@@ -1,0 +1,3 @@
+fragment ClaimDateComponentKitchen on Kitchen {
+    default_mealtime
+}

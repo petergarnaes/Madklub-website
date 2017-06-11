@@ -3,6 +3,7 @@
  */
 //import gql from 'graphql-tag';
 import { gql } from 'react-apollo';
+import partReducerFragment from './participationReducerFragment.gql';
 
 export default (participants,userID) => participants.reduce(
     (pc,part) => {
@@ -16,12 +17,4 @@ export default (participants,userID) => participants.reduce(
 );
 
 // Data requirement for the above reducer to work
-export const participationFragment = gql`
-    fragment isParticipatingDinnerClubParticipation on DinnerClubParticipation {
-        id
-        cancelled
-        user {
-            id
-        }
-    }
-`;
+export const participationFragment = partReducerFragment;

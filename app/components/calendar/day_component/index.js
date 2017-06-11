@@ -9,6 +9,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { selectDetailDate,selectDinnerclubWithId } from '../../../actions/calendar';
 import pure from 'recompose/pure';
+import dinnerclubFragment from './DinnerClubFragment.gql';
 
 // current user ID is at the top level of the query, maybe should be new Redux reducer? Then it could also include name
 // so the users name could be displayed in top left.
@@ -60,19 +61,7 @@ PureDayComponent.propTypes = {
 };
 
 PureDayComponent.fragments = {
-    dinnerclub: gql`
-        fragment DayComponentDinnerClub on DinnerClub {
-            id
-            cancelled
-            participants {
-                id
-                cancelled
-                user {
-                    id
-                }
-            }
-        }
-    `
+    dinnerclub: dinnerclubFragment
 };
 
 const mapStateToProps = (state) => ({

@@ -28,11 +28,6 @@ const SelectGuestComponent = ({disabled,dinnerclubID,participation,setGuestCount
         </div>
     );
 };
-//<select value="0" onChange={something}>
-
-SelectGuestComponent.fragments = {
-    participation: selectGuestCountDinnerclubParticipation
-};
 
 export const selectGuestCountMutation = participateMutation;
 
@@ -42,7 +37,7 @@ SelectGuestComponent.defaultProps = {
 
 SelectGuestComponent.propTypes = {
     dinnerclubID: React.PropTypes.string.isRequired,
-    participation: propType(SelectGuestComponent.fragments.participation).isRequired
+    participation: propType(selectGuestCountDinnerclubParticipation).isRequired
 };
 
 export default graphql(selectGuestCountMutation,{

@@ -1,0 +1,7 @@
+fragment isParticipatingDinnerClubParticipation on DinnerClubParticipation {
+    id
+    cancelled
+    user {
+        id
+    }
+}

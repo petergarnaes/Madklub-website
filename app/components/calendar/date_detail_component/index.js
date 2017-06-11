@@ -21,6 +21,12 @@ import CancelDinnerclubComponent from '../../cancel_dinnerclub_component';
 import CancelParticipationDateDetail from '../../cancel_participation_component/date_detail';
 import SelectGuestCount from '../../select_guest_component';
 import EditTotalCostComponent from '../../edit_total_cost_component';
+import guestCountDinnerClubFragment from '../../select_guest_component/DinnerclubParticipationFragment.gql';
+import setShoppingDinnerClubFragment from '../../shopping_set/DinnerClubFragment.gql';
+import cancelDinnerclubFragment from '../../cancel_dinnerclub_component/DinnerClubFragment.gql';
+import cancelParticipationDinnerclubFragment from '../../cancel_participation_component/DinnerClubFragment.gql';
+import totalCostDinnerclubFragment from '../../edit_total_cost_component/DinnerClubFragment.gql';
+import participationReducerFragment from '../../../util/participationReducerFragment.gql';
 
 const iconWidth = 6;
 
@@ -157,12 +163,12 @@ DateDetailComponent.fragments = {
                 }
             }
         }
-        ${participationFragment}
-        ${SelectGuestCount.fragments.participation}
-        ${ShoppingCompleteDateDetail.fragments.dinnerclub}
-        ${CancelDinnerclubComponent.fragments.dinnerclub}
-        ${CancelParticipationDateDetail.fragments.dinnerclub}
-        ${EditTotalCostComponent.fragments.dinnerclub}
+        ${participationReducerFragment}
+        ${guestCountDinnerClubFragment}
+        ${setShoppingDinnerClubFragment}
+        ${cancelDinnerclubFragment}
+        ${cancelParticipationDinnerclubFragment}
+        ${totalCostDinnerclubFragment}
     `
 };
 

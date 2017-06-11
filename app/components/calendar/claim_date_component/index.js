@@ -21,6 +21,7 @@ import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import DayComponent from '../day_component';
 import DateDetailComponent from '../date_detail_component';
+import kitchenFragment from './KitchenFragment.gql';
 
 class ClaimDateComponent extends React.Component {
     constructor(props){
@@ -156,11 +157,7 @@ const createDinnerclubMutation = gql`
 `;
 
 ClaimDateComponent.fragments = {
-    kitchen: gql`
-        fragment ClaimDateComponentKitchen on Kitchen {
-            default_mealtime
-        }
-    `
+    kitchen: kitchenFragment
 };
 
 const mapStateToProps = (state) => ({});

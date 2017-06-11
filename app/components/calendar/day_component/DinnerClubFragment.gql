@@ -1,0 +1,11 @@
+fragment DayComponentDinnerClub on DinnerClub {
+    id
+    cancelled
+    participants {
+        id
+        cancelled
+        user {
+            id
+        }
+    }
+}
