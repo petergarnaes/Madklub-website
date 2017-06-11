@@ -16,6 +16,7 @@ const goTo = (history) => (key) => {
     if(key) history.push(url);
 };
 
+// TODO remove display_name prop and all the redux stuff
 const SessionComponent = ({data,display_name,history}) => {
     let {loading,error,me} = data;
     //let me = {id: 'bb', kitchen: {admin: {id: 'bb'}}};
@@ -50,7 +51,7 @@ const SessionComponent = ({data,display_name,history}) => {
         </MenuItem>;
     }
     return (
-        <NavDropdown title={display_name} id="basic-nav-dropdown">
+        <NavDropdown title={me.display_name} id="basic-nav-dropdown">
             {AccountingOption}
             {AdminSettings}
             <MenuItem eventKey="user_settings" onSelect={goTo(history)}>
@@ -69,6 +70,7 @@ const navbarQuery = gql`
     query navbarQuery {
         me {
             id
+            display_name
             kitchen {
                 id
                 admin {

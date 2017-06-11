@@ -81,12 +81,10 @@ const changeUser = {
           if(affectedRows != 1){
             return Promise.reject('Request rejected, no such user exists or you are not logged in');
           }
-          // Resolves the user
-          return resolver(User)(root,{id: root.request.user.id},context, info);
         }).catch((err)=> {
           return Promise.reject(err);
         })
-    );
+    ).then(()=>resolver(User)(root,{id: root.request.user.id},context, info));
   },
   description: 'Changing user settings, including all account settings related to your user. This includes ' +
   'email and password.'

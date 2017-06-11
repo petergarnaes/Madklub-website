@@ -303,16 +303,16 @@ export default compose(
                                 }
                             }
                         },
-                        refetchQueries: [
+                        /*refetchQueries: [
                             'userSettingsQuery',
                             'navbarQuery'
-                        ]
-                        /*updateQueries: {
+                        ]*/
+                        updateQueries: {
                             userSettingsQuery: (previousResult, { mutationResult }) => {
-                                console.log("previous");
-                                console.log(previousResult);
-                                console.log("mutation");
-                                console.log(mutationResult);
+                                //console.log("previous");
+                                //console.log(previousResult);
+                                //console.log("mutation");
+                                //console.log(mutationResult);
                                 let newUser = mutationResult.data.changeUser;
                                 const dn = newUser.display_name;
                                 const rn = newUser.room_number;
@@ -338,7 +338,7 @@ export default compose(
                                 });
                                 return newResult;
                             }
-                        },*/
+                        },
                         /*update: (store, { data: { changeUser } }) => {
                             const data = store.readQuery({ query: userSettingsQuery });
                             let newUser = changeUser;
