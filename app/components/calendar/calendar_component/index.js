@@ -120,7 +120,7 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
     );
 };
 
-const currentUserQuery = gql`
+const calendarUserQuery = gql`
     query calendarUserQuery($todayStart: String!, $todayEnd: String!) {
         me {
             id
@@ -156,7 +156,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps,mapDispatchToProps)(
-    graphql(currentUserQuery,{
+    graphql(calendarUserQuery,{
         options: ({selectedMonth}) => {
             // This is enough for the Apollo cache, as it will know if it has run this exact
             // query before, with these exact arguments.

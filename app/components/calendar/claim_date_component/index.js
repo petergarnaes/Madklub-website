@@ -7,6 +7,8 @@ import 'rc-time-picker/assets/index.css';
 //import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import { gql, graphql } from 'react-apollo';
+import { connect } from 'react-redux';
+import { selectDetailDate,selectDinnerclubWithId } from '../../../actions/calendar';
 import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
 import Form from 'react-bootstrap/lib/Form';
@@ -30,6 +32,8 @@ class ClaimDateComponent extends React.Component {
         // Time format is HH:mm:ss
         let times = this.props.kitchen.default_mealtime.split(":");
         this.state = {
+            // TODO make error state for server rejections and the like
+            err: false,
             claimed: false,
             meal: '',
             mealtime: moment(this.props.date).set({'hour':times[0],'minute':times[1],'second':times[2]})
@@ -55,7 +59,14 @@ class ClaimDateComponent extends React.Component {
     }
 
     onSubmit(){
-        this.props.submit(this.state.mealtime,this.state.meal);
+        // TODO If successful, select dinnerclub details with redux
+        this.props.submit(this.state.mealtime,this.state.meal)
+            .then((res)=>{
+                console.log("HOWDY?!?!?!??!?!?!?!?!?!?!");
+                console.log(res);
+                this.props.selectDinnerclub(res.data.createDinnerClub.id);
+            })
+            .catch((err)=>this.setState({err: true}));
     }
 
 
@@ -152,6 +163,13 @@ ClaimDateComponent.fragments = {
     `
 };
 
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = (dispatch) => ({
+    //selectDetailDate: (date) => dispatch(selectDetailDate(date))
+    selectDinnerclub: (id) => dispatch(selectDinnerclubWithId(id))
+});
+
 export default graphql(createDinnerclubMutation,{
     props: ({ownProps,mutate}) => ({
         submit: (at,meal) => mutate({
@@ -171,7 +189,7 @@ export default graphql(createDinnerclubMutation,{
                 }
             },*/
             updateQueries: {
-                currentUserQuery: (previousResult, { mutationResult }) => {
+                calendarUserQuery: (previousResult, { mutationResult }) => {
                     const newDinnerclub = mutationResult.data.createDinnerClub;
                     let newResult = update(previousResult,{
                         me: {
@@ -187,4 +205,4 @@ export default graphql(createDinnerclubMutation,{
             }
         })
     })
-})(ClaimDateComponent);
+})(connect(mapStateToProps,mapDispatchToProps)(ClaimDateComponent));
