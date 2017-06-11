@@ -31,4 +31,7 @@ ShoppingCompleteDateDetail.propTypes = {
     dinnerClub: propType(dinnerclubFragment).isRequired
 };
 
-export default graphql(completeShoppingDinnerclubMutation,completeShoppingOptions)(ShoppingCompleteDateDetail);
+export default graphql(
+    completeShoppingDinnerclubMutation,
+    completeShoppingOptions('calendarUserQuery'))
+(ShoppingCompleteDateDetail);

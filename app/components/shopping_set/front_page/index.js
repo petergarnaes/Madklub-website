@@ -44,4 +44,7 @@ ShoppingCompleteFrontPage.propTypes = {
     dinnerClub: propType(dinnerclubFragment).isRequired
 };
 
-export default graphql(completeShoppingDinnerclubMutation,completeShoppingOptions)(ShoppingCompleteFrontPage);
+export default graphql(
+    completeShoppingDinnerclubMutation,
+    completeShoppingOptions('todayUserQuery'))
+(ShoppingCompleteFrontPage);

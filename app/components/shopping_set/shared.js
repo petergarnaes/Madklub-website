@@ -3,10 +3,33 @@
  */
 import update from 'immutability-helper';
 
-export const completeShoppingOptions = {
+let queryRoutine = (dinnerclubID) => (previousResult, { mutationResult }) => {
+    const newDinnerclub = mutationResult.data.changeDinnerClub;
+    const newDinID = newDinnerclub.id;
+    const newShoppingComplete = newDinnerclub.shopping_complete;
+    const updateDinnerclubIndex = previousResult.me.kitchen.
+            dinnerclubs.findIndex((d)=>d.id === dinnerclubID);
+    let newResult = update(previousResult,{
+        me: {
+            kitchen: {
+                dinnerclubs: {
+                    $apply: (l)=>{
+                        l[updateDinnerclubIndex].shopping_complete = newShoppingComplete;
+                        return l;
+                    }
+                }
+            }
+        }
+    });
+    return newResult;
+};
+
+export const completeShoppingOptions = (queryName) => ({
     props({_,mutate}) {
         return {
             setShoppingComplete(dinnerclubID,value){
+                let updateQueriesObj = {};
+                updateQueriesObj[queryName] = queryRoutine(dinnerclubID);
                 return mutate({
                     variables: {
                         dinnerclubID: dinnerclubID,
@@ -20,34 +43,10 @@ export const completeShoppingOptions = {
                             shopping_complete: value
                         }
                     },
-                    updateQueries: {
-                        // TODO update either calendar or today depending on which one call
-                        todayUserQuery: (previousResult, { mutationResult }) => {
-                            console.log("Bobby");
-                            console.log(mutationResult.data);
-                            const newDinnerclub = mutationResult.data.changeDinnerClub;
-                            const newDinID = newDinnerclub.id;
-                            const newShoppingComplete = newDinnerclub.shopping_complete;
-                            const updateDinnerclubIndex = previousResult.me.kitchen.
-                                dinnerclubs.findIndex((d)=>d.id === dinnerclubID);
-                            let newResult = update(previousResult,{
-                                me: {
-                                    kitchen: {
-                                        dinnerclubs: {
-                                            $apply: (l)=>{
-                                                l[updateDinnerclubIndex].shopping_complete = newShoppingComplete;
-                                                return l;
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                            return newResult;
-                        }
-                    }
+                    updateQueries: updateQueriesObj
                 })
             }
         }
     }
-};
+});
 

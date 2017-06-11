@@ -3,27 +3,8 @@
  */
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import { gql } from 'react-apollo';
-//import gql from 'graphql-tag';
 import update from 'immutability-helper';
-
-export const cancelParticipationFragment = gql`
-    fragment CancelParticipationComponentDinnerClub on DinnerClub {
-        id
-        at
-        cancelled
-        shopping_complete
-    }
-`;
-
-export const cancelParticipateDinnerclubMutation = gql`
-    mutation participate($dinnerclubID: String!,$cancel: Boolean!){
-        participate(id: $dinnerclubID,participating:{cancelled:$cancel}) {
-            id
-            cancelled
-        }
-    }
-`;
+import cancelParticipationFragment from './DinnerClubFragment.gql';
 
 export var cancelParticipationPropTypes = {
     dinnerClub: propType(cancelParticipationFragment).isRequired,

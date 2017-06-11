@@ -1,0 +1,6 @@
+mutation participate($dinnerclubID: String!,$cancel: Boolean!){
+    participate(id: $dinnerclubID,participating:{cancelled:$cancel}) {
+        id
+        cancelled
+    }
+}

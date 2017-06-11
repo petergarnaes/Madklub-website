@@ -8,10 +8,10 @@ import { graphql } from 'react-apollo';
 import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
 import Switch from 'react-bootstrap-switch';
 import {
-    cancelParticipationFragment,
-    cancelParticipateDinnerclubMutation,
     cancelParticipationPropTypes,
     cancelParticipateOptions} from '../shared';
+import cancelParticipateDinnerclubMutation from '../cancelParticipateDinnerclubMutation.gql';
+import cancelParticipationFragment from '../DinnerClubFragment.gql';
 
 const CancelParticipationDateDetail = ({dinnerClub,isParticipating,participationID,hasCancelled,setCancel}) => {
     const dinnerclub_date = moment(dinnerClub.at);

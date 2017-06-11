@@ -1,0 +1,6 @@
+fragment CancelParticipationComponentDinnerClub on DinnerClub {
+    id
+    at
+    cancelled
+    shopping_complete
+}
