@@ -1,0 +1,6 @@
+mutation changeTotalCost($dinnerclubID: ID!,$total_cost: Float!){
+   changeDinnerClub(id: $dinnerclubID,total_cost: $total_cost){
+        id
+        total_cost
+   }
+}

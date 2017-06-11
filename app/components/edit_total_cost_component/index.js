@@ -2,10 +2,9 @@
  * Created by peter on 5/8/17.
  */
 import React from 'react';
-//import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import { propType } from 'graphql-anywhere';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import moment from 'moment';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
@@ -13,6 +12,8 @@ import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Button from 'react-bootstrap/lib/Button';
 import Form from 'react-bootstrap/lib/Form';
 import FormControl from 'react-bootstrap/lib/FormControl';
+import dinnerclubFragment from './DinnerClubFragment.gql';
+import changeCostMutation from './changeCostMutation.gql';
 
 class TotalCostEditComponent extends React.Component {
     constructor(props){
@@ -95,12 +96,7 @@ class TotalCostEditComponent extends React.Component {
 }
 
 TotalCostEditComponent.fragments = {
-    dinnerclub: gql`
-        fragment TotalCostEditDinnerClub on DinnerClub {
-            id
-            total_cost
-        }
-    `
+    dinnerclub: dinnerclubFragment
 };
 
 TotalCostEditComponent.propTypes = {
@@ -108,16 +104,7 @@ TotalCostEditComponent.propTypes = {
     setTotalCost: React.PropTypes.func.isRequired
 };
 
-const mealEditMutation = gql`
-    mutation changeTotalCost($dinnerclubID: ID!,$total_cost: Float!){
-       changeDinnerClub(id: $dinnerclubID,total_cost: $total_cost){
-            id
-            total_cost
-       }
-    }
-`;
-
-export default graphql(mealEditMutation,{
+export default graphql(changeCostMutation,{
     props({_,mutate}) {
         return {
             setTotalCost(dinnerclubID,total_cost){
@@ -135,7 +122,7 @@ export default graphql(mealEditMutation,{
                         }
                     },
                     updateQueries: {
-                        currentUserQuery: (previousResult, { mutationResult }) => {
+                        calendarUserQuery: (previousResult, { mutationResult }) => {
                             const newDinnerclub = mutationResult.data.changeDinnerClub;
                             const newDinID = newDinnerclub.id;
                             const newTotalCost = newDinnerclub.total_cost;

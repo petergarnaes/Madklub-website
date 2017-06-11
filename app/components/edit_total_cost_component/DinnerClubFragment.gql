@@ -1,0 +1,4 @@
+fragment TotalCostEditDinnerClub on DinnerClub {
+    id
+    total_cost
+}
