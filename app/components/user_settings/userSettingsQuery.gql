@@ -1,0 +1,11 @@
+query userSettingsQuery {
+    me {
+        id
+        display_name
+        room_number
+        active
+        account {
+            email
+        }
+    }
+}

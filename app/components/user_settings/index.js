@@ -16,6 +16,8 @@ import LoadingIcon from '../loading_icon';
 //import gql from 'graphql-tag';
 import { gql, graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
+import userSettingsQuery from './userSettingsQuery.gql';
+import userSettingsMutation from './userSettingsMutation.gql';
 
 const FieldGroup = ({ id, label, validate, help, ...props }) => (
     <FormGroup controlId={id}
@@ -224,36 +226,6 @@ class UserSettings extends React.Component {
         )
     }
 };
-
-const userSettingsQuery = gql`
-    query userSettingsQuery {
-        me {
-            id
-            display_name
-            room_number
-            active
-            account {
-                email
-            }
-        }
-    }
-`;
-
-const userSettingsMutation = gql`
-    mutation userSettingsMutation($display_name: String,$room_number: String,$active: Boolean,$email: String,
-        $change_password: ChangePasswordType) {
-        changeUser(display_name: $display_name,room_number: $room_number,active: $active,
-                account: {email: $email,change_password: $change_password}){
-            id
-            display_name
-            room_number
-            active
-            account {
-                email
-            }
-        }
-    }
-`;
 
 export default compose(
     graphql(userSettingsQuery,{

@@ -1,0 +1,13 @@
+mutation userSettingsMutation($display_name: String,$room_number: String,$active: Boolean,$email: String,
+    $change_password: ChangePasswordType) {
+    changeUser(display_name: $display_name,room_number: $room_number,active: $active,
+            account: {email: $email,change_password: $change_password}){
+        id
+        display_name
+        room_number
+        active
+        account {
+            email
+        }
+    }
+}
