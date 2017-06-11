@@ -1,0 +1,4 @@
+fragment SelectGuestComponentDinnerClubParticipation on DinnerClubParticipation {
+    id
+    guest_count
+}
