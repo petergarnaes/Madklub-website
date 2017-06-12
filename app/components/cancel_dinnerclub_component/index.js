@@ -24,12 +24,8 @@ const CancelDinnerclubComponent = ({dinnerclub,setCancelDinnerclub}) => (
     </h3>
 );
 
-CancelDinnerclubComponent.fragments = {
-    dinnerclub: dinnerClubFragment
-};
-
 CancelDinnerclubComponent.propTypes = {
-    dinnerclub: propType(CancelDinnerclubComponent.fragments.dinnerclub).isRequired
+    dinnerclub: propType(dinnerClubFragment).isRequired
 };
 
 export default graphql(cancelDinnerclubMutation,{

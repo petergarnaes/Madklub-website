@@ -66,12 +66,8 @@ class MealEditComponent extends React.Component {
     }
 }
 
-MealEditComponent.fragments = {
-    dinnerclub: dinnerClubFragment
-};
-
 MealEditComponent.propTypes = {
-    dinnerClub: propType(MealEditComponent.fragments.dinnerclub).isRequired,
+    dinnerClub: propType(dinnerClubFragment).isRequired,
     setMeal: React.PropTypes.func.isRequired
 };
 

@@ -14,12 +14,8 @@ const CookComponent = ({cook}) => (
 
 const PureCookComponent = pure(CookComponent);
 
-PureCookComponent.fragments = {
-    simpleUser: simpleUserFragment
-};
-
 PureCookComponent.propTypes = {
-    cook: propType(PureCookComponent.fragments.simpleUser).isRequired
+    cook: propType(simpleUserFragment).isRequired
 };
 
 export default PureCookComponent;

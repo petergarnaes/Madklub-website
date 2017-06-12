@@ -23,10 +23,6 @@ const ShoppingCompleteDateDetail = ({dinnerClub,setShoppingComplete}) => (
     </h3>
 );
 
-ShoppingCompleteDateDetail.fragments = {
-    dinnerclub: dinnerclubFragment
-};
-
 ShoppingCompleteDateDetail.propTypes = {
     dinnerClub: propType(dinnerclubFragment).isRequired
 };

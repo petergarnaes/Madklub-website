@@ -95,12 +95,8 @@ class TotalCostEditComponent extends React.Component {
     }
 }
 
-TotalCostEditComponent.fragments = {
-    dinnerclub: dinnerclubFragment
-};
-
 TotalCostEditComponent.propTypes = {
-    dinnerClub: propType(TotalCostEditComponent.fragments.dinnerclub).isRequired,
+    dinnerClub: propType(dinnerclubFragment).isRequired,
     setTotalCost: React.PropTypes.func.isRequired
 };
 

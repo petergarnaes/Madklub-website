@@ -11,7 +11,6 @@ import {
     cancelParticipationPropTypes,
     cancelParticipateOptions} from '../shared';
 import cancelParticipateDinnerclubMutation from '../cancelParticipateDinnerclubMutation.gql';
-import cancelParticipationFragment from '../DinnerClubFragment.gql';
 
 const CancelParticipationDateDetail = ({dinnerClub,isParticipating,participationID,hasCancelled,setCancel}) => {
     const dinnerclub_date = moment(dinnerClub.at);
@@ -31,10 +30,6 @@ const CancelParticipationDateDetail = ({dinnerClub,isParticipating,participation
             </h3>
         </div>
     );
-};
-
-CancelParticipationDateDetail.fragments = {
-    dinnerclub: cancelParticipationFragment
 };
 
 CancelParticipationDateDetail.propTypes = cancelParticipationPropTypes;

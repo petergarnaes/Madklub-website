@@ -9,7 +9,6 @@ import {
     cancelParticipateOptions} from '../shared';
 import RoundIconButton from '../../round_icon_button';
 import cancelParticipateDinnerclubMutation from '../cancelParticipateDinnerclubMutation.gql';
-import cancelParticipationFragment from '../DinnerClubFragment.gql';
 
 const CancelParticipationFrontPage = ({dinnerClub,isParticipating,participationID,hasCancelled,setCancel}) => {
     const dinnerclub_date = moment(dinnerClub.at);
@@ -49,10 +48,6 @@ const CancelParticipationFrontPage = ({dinnerClub,isParticipating,participationI
                 activeColorIcon="white"/>
         </div>
     );
-};
-
-CancelParticipationFrontPage.fragments = {
-    dinnerclub: cancelParticipationFragment
 };
 
 CancelParticipationFrontPage.propTypes = cancelParticipationPropTypes;

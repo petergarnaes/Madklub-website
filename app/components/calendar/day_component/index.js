@@ -2,14 +2,11 @@
  * Created by peter on 2/11/17.
  */
 import React from 'react';
-//import gql from 'graphql-tag';
-import { gql } from 'react-apollo';
 import './styling.css';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { selectDetailDate,selectDinnerclubWithId } from '../../../actions/calendar';
 import pure from 'recompose/pure';
-import dinnerclubFragment from './DinnerClubFragment.gql';
 
 // current user ID is at the top level of the query, maybe should be new Redux reducer? Then it could also include name
 // so the users name could be displayed in top left.
@@ -58,10 +55,6 @@ PureDayComponent.propTypes = {
     thisMonth: React.PropTypes.bool.isRequired,
     dinnerclub: React.PropTypes.object,
     userParticipating: React.PropTypes.bool
-};
-
-PureDayComponent.fragments = {
-    dinnerclub: dinnerclubFragment
 };
 
 const mapStateToProps = (state) => ({

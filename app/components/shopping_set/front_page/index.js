@@ -36,10 +36,6 @@ const ShoppingCompleteFrontPage = ({dinnerClub,setShoppingComplete}) => (
     </div>
 );
 
-ShoppingCompleteFrontPage.fragments = {
-    dinnerclub: dinnerclubFragment
-};
-
 ShoppingCompleteFrontPage.propTypes = {
     dinnerClub: propType(dinnerclubFragment).isRequired
 };
