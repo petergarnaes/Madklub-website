@@ -19,7 +19,6 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
-import kitchenFragment from './KitchenFragment.gql';
 import createDinnerclubMutation from './createDinnerclubMutation.gql';
 
 class ClaimDateComponent extends React.Component {
@@ -140,10 +139,6 @@ class ClaimDateComponent extends React.Component {
 ClaimDateComponent.propTypes = {
     kitchen: React.PropTypes.object.isRequired,
     submit: React.PropTypes.func.isRequired
-};
-
-ClaimDateComponent.fragments = {
-    kitchen: kitchenFragment
 };
 
 const mapStateToProps = (state) => ({});
