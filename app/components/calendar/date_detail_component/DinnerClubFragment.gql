@@ -1,0 +1,33 @@
+#import "../../../util/participationReducerFragment.gql"
+#import "../../select_guest_component/DinnerclubParticipationFragment.gql"
+#import "../../shopping_set/DinnerClubFragment.gql"
+#import "../../cancel_dinnerclub_component/DinnerClubFragment.gql"
+#import "../../cancel_participation_component/DinnerClubFragment.gql"
+#import "../../edit_total_cost_component/DinnerClubFragment.gql"
+
+fragment DateDetailComponentDinnerClub on DinnerClub {
+    ...CancelDinnerclubComponentDinnerClub
+    ...ShoppingCompleteComponentDinnerClub
+    ...CancelParticipationComponentDinnerClub
+    ...TotalCostEditDinnerClub
+    id
+    at
+    meal
+    total_cost
+    shopping_complete
+    cook {
+        id
+        display_name
+    }
+    participants {
+        ...isParticipatingDinnerClubParticipation
+        ...SelectGuestComponentDinnerClubParticipation
+        id
+        cancelled
+        user {
+            id
+            display_name
+            picture
+        }
+    }
+}

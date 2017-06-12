@@ -6,7 +6,7 @@ import './styling.css';
 import 'rc-time-picker/assets/index.css';
 //import gql from 'graphql-tag';
 import update from 'immutability-helper';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import { selectDetailDate,selectDinnerclubWithId } from '../../../actions/calendar';
 import Button from 'react-bootstrap/lib/Button';
@@ -19,9 +19,8 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
-import DayComponent from '../day_component';
-import DateDetailComponent from '../date_detail_component';
 import kitchenFragment from './KitchenFragment.gql';
+import createDinnerclubMutation from './createDinnerclubMutation.gql';
 
 class ClaimDateComponent extends React.Component {
     constructor(props){
@@ -142,19 +141,6 @@ ClaimDateComponent.propTypes = {
     kitchen: React.PropTypes.object.isRequired,
     submit: React.PropTypes.func.isRequired
 };
-
-const createDinnerclubMutation = gql`
-    mutation createDinnerClub($at: String!,$meal: String){
-        createDinnerClub(at: $at,meal: $meal){
-            id
-            at
-            ...DayComponentDinnerClub
-            ...DateDetailComponentDinnerClub
-        }
-    }
-    ${DayComponent.fragments.dinnerclub}
-    ${DateDetailComponent.fragments.dinnerclub}
-`;
 
 ClaimDateComponent.fragments = {
     kitchen: kitchenFragment

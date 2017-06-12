@@ -1,0 +1,19 @@
+#import "../day_component/DinnerClubFragment.gql"
+#import "../date_detail_component/DinnerClubFragment.gql"
+#import "../claim_date_component/KitchenFragment.gql"
+
+query calendarUserQuery($todayStart: String!, $todayEnd: String!) {
+    me {
+        id
+        kitchen {
+            id
+            ...ClaimDateComponentKitchen
+            dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
+                id
+                at
+                ...DayComponentDinnerClub
+                ...DateDetailComponentDinnerClub
+            }
+        }
+    }
+}

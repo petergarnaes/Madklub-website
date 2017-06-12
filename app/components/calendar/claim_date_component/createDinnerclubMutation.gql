@@ -1,0 +1,11 @@
+#import "../day_component/DinnerClubFragment.gql"
+#import "../date_detail_component/DinnerClubFragment.gql"
+
+mutation createDinnerClub($at: String!,$meal: String){
+    createDinnerClub(at: $at,meal: $meal){
+        id
+        at
+        ...DayComponentDinnerClub
+        ...DateDetailComponentDinnerClub
+    }
+}

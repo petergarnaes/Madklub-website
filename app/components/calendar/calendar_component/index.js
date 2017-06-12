@@ -3,7 +3,7 @@
  */
 import React from 'react';
 //import gql from 'graphql-tag';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import Table from 'react-bootstrap/lib/Table';
 import GlyphIcon from 'react-bootstrap/lib/Glyphicon.js';
@@ -14,6 +14,7 @@ import LoadingIcon from '../../loading_icon';
 import { selectMonth } from '../../../actions/calendar';
 import DateDetailComponent from '../date_detail_component';
 import ClaimDateComponent from '../claim_date_component';
+import calendarUserQuery from './calendarUserQuery.gql';
 
 const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selectedDinnerclubID}) => {
     let {loading,error,me} = data;
@@ -119,27 +120,6 @@ const CalendarComponent = ({data,selectedMonth,selectMonth,selectedDate,selected
         </div>
     );
 };
-
-const calendarUserQuery = gql`
-    query calendarUserQuery($todayStart: String!, $todayEnd: String!) {
-        me {
-            id
-            kitchen {
-                id
-                ...ClaimDateComponentKitchen
-                dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
-                    id
-                    at
-                    ...DayComponentDinnerClub
-                    ...DateDetailComponentDinnerClub
-                }
-            }
-        }
-    }
-    ${DayComponent.fragments.dinnerclub}
-    ${DateDetailComponent.fragments.dinnerclub}
-    ${ClaimDateComponent.fragments.kitchen}
-`;
 
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),

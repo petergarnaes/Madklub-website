@@ -21,12 +21,8 @@ import CancelDinnerclubComponent from '../../cancel_dinnerclub_component';
 import CancelParticipationDateDetail from '../../cancel_participation_component/date_detail';
 import SelectGuestCount from '../../select_guest_component';
 import EditTotalCostComponent from '../../edit_total_cost_component';
-import guestCountDinnerClubFragment from '../../select_guest_component/DinnerclubParticipationFragment.gql';
-import setShoppingDinnerClubFragment from '../../shopping_set/DinnerClubFragment.gql';
-import cancelDinnerclubFragment from '../../cancel_dinnerclub_component/DinnerClubFragment.gql';
-import cancelParticipationDinnerclubFragment from '../../cancel_participation_component/DinnerClubFragment.gql';
-import totalCostDinnerclubFragment from '../../edit_total_cost_component/DinnerClubFragment.gql';
-import participationReducerFragment from '../../../util/participationReducerFragment.gql';
+import dinnerClubFragment from './DinnerClubFragment.gql';
+import dinnerclubWithIdQuery from './dinnerclubWithIdQuery.gql';
 
 const iconWidth = 6;
 
@@ -134,58 +130,6 @@ const DateDetailComponent = ({data}) => {
         )
     }
 };
-
-DateDetailComponent.fragments = {
-    dinnerclub: gql`
-        fragment DateDetailComponentDinnerClub on DinnerClub {
-            ...ShoppingCompleteComponentDinnerClub
-            ...CancelDinnerclubComponentDinnerClub
-            ...CancelParticipationComponentDinnerClub
-            ...TotalCostEditDinnerClub
-            id
-            at
-            meal
-            total_cost
-            shopping_complete
-            cook {
-                id
-                display_name
-            }
-            participants {
-                ...isParticipatingDinnerClubParticipation
-                ...SelectGuestComponentDinnerClubParticipation
-                id
-                cancelled
-                user {
-                    id
-                    display_name
-                    picture
-                }
-            }
-        }
-        ${participationReducerFragment}
-        ${guestCountDinnerClubFragment}
-        ${setShoppingDinnerClubFragment}
-        ${cancelDinnerclubFragment}
-        ${cancelParticipationDinnerclubFragment}
-        ${totalCostDinnerclubFragment}
-    `
-};
-
-const dinnerclubWithIdQuery = gql`
-    query dinnerclubWithIdQuery($dinnerclubID: ID!) {
-        me {
-            id
-            kitchen {
-                dinnerclub(id: $dinnerclubID) {
-                    id
-                    ...DateDetailComponentDinnerClub
-                }
-            }
-        }
-    }
-    ${DateDetailComponent.fragments.dinnerclub}
-`;
 
 const mapStateToProps = (state) => ({
     selectedMonth: moment(state.calendar.selectedMonth),

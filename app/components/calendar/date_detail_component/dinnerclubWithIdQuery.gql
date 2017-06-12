@@ -1,0 +1,13 @@
+#import "./DinnerClubFragment.gql"
+
+query dinnerclubWithIdQuery($dinnerclubID: ID!) {
+    me {
+        id
+        kitchen {
+            dinnerclub(id: $dinnerclubID) {
+                id
+                ...DateDetailComponentDinnerClub
+            }
+        }
+    }
+}
