@@ -1,0 +1,6 @@
+#import "../cook_component/SimpleUserFragment.gql"
+
+fragment FrontPageDinnerClubComponentCook on SimpleUser {
+    id
+    ...CookComponentSimpleUser
+}

@@ -294,10 +294,10 @@ The overhead in constructing the `<preload />` serverside is small.
 * Relative paths in `server/index.js` should not have `dist/` in front, the
 `dist` folder should be self contained. This is important for making the
 production bundle work.
-* [Pre-process GraphQL ASTs](http://dev.apollodata.com/react/webpack.html) for
+* ~~[Pre-process GraphQL ASTs](http://dev.apollodata.com/react/webpack.html) for
 Apollo with webpack when bundling. This should decrease bundle size, as
 `graphql-tag` is no longer required client side, and speed up client side
-because client does not need to do AST processing.
+because client does not need to do AST processing.~~
 * Switch to [preact](https://github.com/developit/preact) to decrease bundle
 size. `preact-compat` should give us very little change. Maybe `preact-compat`
 for production?

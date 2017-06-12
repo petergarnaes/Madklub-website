@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
-//import gql from 'graphql-tag';
 import { propType } from 'graphql-anywhere';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import './styling.css';
 import moment from 'moment';
 import CookComponent from '../cook_component';
 import CancelParticipationFrontPage from '../cancel_participation_component/front_page';
+import dinnerclubFragment from './DinnerClubFragment.gql';
 
 const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationID,hasCancelled}) => {
     const dinnerclub_date = moment(dinnerClub.at);
@@ -32,29 +32,8 @@ const FrontPageDinnerClubComponent = ({dinnerClub,isParticipating,participationI
     );
 };
 
-FrontPageDinnerClubComponent.fragments = {
-    // Cook cannot be merged in under the dinnerclub component,
-    // so must be separate.
-    cook: gql`
-        fragment FrontPageDinnerClubComponentCook on SimpleUser {
-            id
-            ...CookComponentSimpleUser
-        }
-        ${CookComponent.fragments.simpleUser}
-    `,
-    dinnerclub: gql`
-        fragment FrontPageDinnerClubComponentDinnerClub on DinnerClub {
-            id
-            at
-            meal
-            ...CancelParticipationComponentDinnerClub
-        }
-        ${CancelParticipationFrontPage.fragments.dinnerclub}
-    `
-};
-
 FrontPageDinnerClubComponent.propTypes = {
-    dinnerClub: propType(FrontPageDinnerClubComponent.fragments.dinnerclub).isRequired,
+    dinnerClub: propType(dinnerclubFragment).isRequired,
     isParticipating: React.PropTypes.bool.isRequired,
     participationID: React.PropTypes.string,
     hasCancelled: React.PropTypes.bool.isRequired

@@ -1,0 +1,25 @@
+#import "../front_page_dinnerclub/SimpleUserFragment.gql"
+#import "../front_page_dinnerclub/DinnerClubFragment.gql"
+#import "../front_page_dinnerclub_cook/DinnerClubFragment.gql"
+#import "../../util/participationReducerFragment.gql"
+
+query todayUserQuery($todayStart: String!, $todayEnd: String!) {
+    me {
+        id
+        kitchen {
+            id
+            dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
+                id
+                ...FrontPageDinnerClubComponentDinnerClub
+                ...FrontPageCookComponentDinnerClub
+                cook {
+                    id
+                    ...FrontPageDinnerClubComponentCook
+                }
+                participants {
+                    ...isParticipatingDinnerClubParticipation
+                }
+            }
+        }
+    }
+}

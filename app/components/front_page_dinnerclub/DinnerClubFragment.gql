@@ -1,0 +1,8 @@
+#import "../cancel_participation_component/DinnerClubFragment.gql"
+
+fragment FrontPageDinnerClubComponentDinnerClub on DinnerClub {
+    id
+    at
+    meal
+    ...CancelParticipationComponentDinnerClub
+}

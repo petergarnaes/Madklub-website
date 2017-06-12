@@ -3,8 +3,6 @@
  */
 
 import React from 'react';
-//import gql from 'graphql-tag';
-import { gql } from 'react-apollo';
 import { propType } from 'graphql-anywhere';
 import moment from 'moment';
 import '../front_page_dinnerclub/styling.css';
@@ -13,6 +11,7 @@ import ShoppingCompleteFrontPage from '../shopping_set/front_page';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
+import dinnerclubFragment from './DinnerClubFragment.gql';
 
 const FrontPageCookComponent = ({dinnerClub}) => {
     const dinnerclub_date = moment(dinnerClub.at);
@@ -29,25 +28,8 @@ const FrontPageCookComponent = ({dinnerClub}) => {
     )
 };
 
-FrontPageCookComponent.fragments = {
-    dinnerclub: gql`
-        fragment FrontPageCookComponentDinnerClub on DinnerClub {
-            ...MealEditDinnerClub
-            ...ShoppingCompleteComponentDinnerClub
-            id
-            at
-            participants {
-                id
-            }
-        }
-        ${MealComponent.fragments.dinnerclub}
-        ${ShoppingCompleteFrontPage.fragments.dinnerclub}
-    `
-};
-
-
 FrontPageCookComponent.propTypes = {
-    dinnerClub: propType(FrontPageCookComponent.fragments.dinnerclub).isRequired
+    dinnerClub: propType(dinnerclubFragment).isRequired
 };
 
 export default FrontPageCookComponent;

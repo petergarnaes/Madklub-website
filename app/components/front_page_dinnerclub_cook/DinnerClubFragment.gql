@@ -1,0 +1,12 @@
+#import "../meal_edit/DinnerClubFragment.gql"
+#import "../shopping_set/DinnerClubFragment.gql"
+
+fragment FrontPageCookComponentDinnerClub on DinnerClub {
+    ...MealEditDinnerClub
+    ...ShoppingCompleteComponentDinnerClub
+    id
+    at
+    participants {
+        id
+    }
+}

@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
-//import gql from 'graphql-tag';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import moment from 'moment';
 import FrontPageDinnerClubComponent from '../front_page_dinnerclub';
 import FrontPageCookComponent from '../front_page_dinnerclub_cook';
 import LoadingIcon from '../loading_icon';
-import participationReducer, {participationFragment} from '../../util/participation_reducer';
+import participationReducer from '../../util/participation_reducer';
+import todayUserQuery from './todayUserQuery.gql';
 
 const TodayWithData = ({data}) => {
     let {loading,error,me} = data;
@@ -62,35 +62,6 @@ TodayWithData.propTypes = {
         me: React.PropTypes.object,
     }).isRequired
 };
-
-// We pick all participants, so we can check if our own ID is in the participants list of the dinnerclub we want to
-// show. This gives some client side calculation, but this list is not to long. Maybe some Redux magic?
-const todayUserQuery = gql`
-    query todayUserQuery($todayStart: String!, $todayEnd: String!) {
-        me {
-            id
-            kitchen {
-                id
-                dinnerclubs(range: {start: $todayStart,end: $todayEnd}) {
-                    id
-                    ...FrontPageDinnerClubComponentDinnerClub
-                    ...FrontPageCookComponentDinnerClub
-                    cook {
-                        id
-                        ...FrontPageDinnerClubComponentCook
-                    }
-                    participants {
-                        ...isParticipatingDinnerClubParticipation
-                    }
-                }
-            }
-        }
-    }
-    ${FrontPageDinnerClubComponent.fragments.cook}
-    ${FrontPageDinnerClubComponent.fragments.dinnerclub}
-    ${FrontPageCookComponent.fragments.dinnerclub}
-    ${participationFragment}
-`;
 
 // Queries all of today (midnight to midnight), so we can pick the first upcoming one.
 // millisecond set, so client AND server side construct the same query, therefore NOT refetching
