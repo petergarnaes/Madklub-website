@@ -10,7 +10,7 @@ export default function(req, res,next) {
     const token = jwt.sign(req.user, auth.jwt.secret, {expiresIn});
     // httpOnly true since the client side does not need access to it
     res.cookie('id_token', token, {maxAge: 1000 * expiresIn, httpOnly: true});
-    next();
+    if(next){ next(); } else { return token }
     //return token;
     //res.redirect('/');
 }

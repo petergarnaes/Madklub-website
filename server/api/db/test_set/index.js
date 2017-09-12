@@ -314,6 +314,85 @@ export default async function(db){
     });
     vest10.addDinnerclub(madklub3);
 
+    // Setting up a lot of random data
+    let dishes = [
+		'Hurtig grøntret m. kalkun',
+		'Cajun-skinkeschnitzler med blandede bønner og stegte rødløg',
+		'Moussaka',
+		'Bøf i fad',
+		'Farseret svinemørbrad',
+		'Gammeldags grydekylling',
+		'Lasagne med kantareller (kantarellasagne)',
+		'Safranfisk med gule pebre og tomater',
+		'Hellefisksteak med bløde løg',
+		'Spinatsalat med pære og rygeost',
+		'Tarteletter med ratatouille og pesto',
+		'Selleribøf (Revet)',
+		'Hyldebærsuppe',
+		'Kantarelsuppe',
+		'Wok i en fart',
+		'Græske kalkunfrikadeller med tzatziki og krydderkartofler',
+		'Hakket oksekød med kartoffellåg',
+		'Amagergryde med hamburgerryg',
+		'Kyllingeoverlår På Urtebund',
+		'Oksetyndstegsfilet i ovn med squashgratin',
+		'Ostegratineret skinkechnitzel med Kantareller',
+		'Æggekage med røget sild',
+		'Ostegratineret mørksej med svampe og pasta',
+		'Spidskålsalat med melon',
+		'Artiskok med persillerelish og serrano',
+		'Artiskokker i fad - Zeytinagli Enginar',
+		'Kørvelsuppe',
+		'Krebinetter med kartoffelsalat og lime',
+		'Kyllingelår på Provence kartoffelbund',
+		'Broget hverdagsgryde',
+		'Farseret spidskål',
+		'Kalkunbryst med pikantost',
+		'Ølbraiseret oksebryst',
+		'Australsk squashtærte (stor)',
+		'Skindstegt kulmule med peberfrugtkompot og kartoffelsalat',
+		'Bagte helleflynderfileter med citron- og sojavinaigrette',
+		'Squash gratin',
+		'Grillbøffer til spid',
+		'Peberfrugt med kammuslinger, hvidløg og pesto',
+		'Farsret med blomkål',
+		'Kylling i spidskålspakker (Spidskålsdolmer)',
+		'Ovnret med squash',
+		'Skinketern i karry',
+		'Broccolifyldt kalkunbryst med basilikumsauce og ovnstegte kartofler ( Fedtfattig )',
+		'Engelsk bøf med hvide kartofler og bløde løg samt agurkesalat',
+		'Græske pitabrød',
+		'Stegte ris med store tigerrejer',
+		'Ovngrillet multe med kantareller',
+		'Spinat- ærtesalat',
+		'Kantareller á la creme på hvidløgstoast',
+		'Østershatte med tomatsovs'
+	]
+
+    var cookDate = moment().add(4,'day')
+    cookDate.set({'hour':19,'minute':0,'second':0})
+    // Create 50 random dinnerclubs
+    var i;
+    for (i=0;i < 50; i++){
+	console.log("Creating dinnerclub: "+i);
+        var mk = await db.DinnerClub.create({
+            at: cookDate.toISOString(),
+            cancelled: false,
+            total_cost: Math.floor((Math.random() * 100) + 1),
+            meal: dishes[Math.floor(Math.random() * dishes.length)]
+        });
+	mk.setCook(all_members[Math.floor(Math.random() * all_members.length)])
+        all_members.forEach(async function (user){
+            var part = await db.Participation.create({
+                guest_count: 0
+            });
+            part.setUser(user);
+            part.setDinnerClub(mk);
+        });
+        cookDate.add(Math.floor(Math.random() * 4)+1,'day');
+	vest10.addDinnerclub(mk);
+    }
+
     var period1 = await db.Period.create({
         started_at: (moment().subtract(1,'day')).toISOString(),
         ended_at: (moment().add(10,'day')).toISOString(),

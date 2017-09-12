@@ -87,8 +87,9 @@ const login = {
             console.log("the login is: "+JSON.stringify(login));
             if(login){
                 request.user = {id: login.id, email: login.email};
-                successful_login(request,response);
-                let token = res.cookies.id_token;
+                let token = successful_login(request,response);
+                //console.log(response.headers);
+                //let token = response.headers['id_token'];
                 return {success: true, token: token,feedback: "Successfully authorized"}
             } else {
                 return {success: false, token: '',feedback: "Invalid username or password"}
