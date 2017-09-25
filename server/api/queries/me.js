@@ -13,14 +13,21 @@ import {User} from '../db';
 
 const me = {
   type: UserType,
-  resolve: function({request},args,context,info) {
+  resolve: function({request,response},args,context,info) {
     // TODO Check for csrf with double cookie submit method
     //if(request && request.user.id && req.cookies.csrf_token === req.get('X-CSRF-TOKEN')){
+    if(request.exp){
+        console.log("Testing...")
+        console.log(request.exp)
+    }
     if(request && request.user && request.user.id){
       console.log("Valid login");
       return resolver(User)({request: request},{id: request.user.id},context,info);
     } else {
       console.log("Invalid login");
+      console.log(request);
+      console.log(request.user);
+      response.status(403);
       return null;
     }
   },

@@ -2,6 +2,7 @@
  * Created by peter on 4/24/16.
  */
 import {
+  GraphQLNonNull as NonNull,
   GraphQLObjectType as ObjectType,
   GraphQLList as ListType,
     GraphQLBoolean as BooleanType
@@ -21,11 +22,11 @@ const KitchenType = new ObjectType({
     name: 'Kitchen',
     fields: Object.assign(attributeFields(Kitchen,{exclude: ['adminId','createdAt','updatedAt','associatedKitchenId']}),{ // Extra fields
         createdAt: {
-            type: DateType,
+            type: new NonNull(DateType),
             description: createdAtDoc
         },
         updatedAt: {
-            type: DateType,
+            type: new NonNull(DateType),
             description: updatedAtDoc
         },
         dinnerclubs: {
