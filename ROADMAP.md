@@ -24,7 +24,7 @@ important modules linked first. Most important module would be body and navbar
 stuff, rest loads in along the way. All this should be very cacheable.
 * Consider using `nprogress` for things?
 * Remove Redux dev tools from production code.
-* Create actual endpoint for
+* <s>Create actual endpoint for</s>
 ```
 {
     me {
@@ -35,9 +35,9 @@ stuff, rest loads in along the way. All this should be very cacheable.
 }
 ```
 * Optimize react rendering:
-    * Better use life cycle for complex components to calculate stuff as 
+    * Better use life cycle for complex components to calculate stuff as
     few times as possible
-     * Use `recompose` library to make the simple functional components 
+     * Use `recompose` library to make the simple functional components
      pure.
 
 ## TODO features
@@ -90,7 +90,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * ~~`changeDinnerclub` should be immutable when archived~~
     * ~~`participation` should have `archived` field~~
     * ~~`participate` should be immutable when archived~~
-    * ~~change password, require old password, make new datatype which can 
+    * ~~change password, require old password, make new datatype which can
     be optionally passed to MutableAccountType~~
     * Support image upload
 * Madklubs indstillinger
@@ -121,7 +121,7 @@ stuff, rest loads in along the way. All this should be very cacheable.
     * Check for login, and inform in UI if not
     * Use a better logo
     * ~~Properly integrate in build process~~
-* ~~REMOVE `apollo-client` depedency and only use `react-apollo`. Small 
+* ~~REMOVE `apollo-client` depedency and only use `react-apollo`. Small
 change in client code is required. SSR needs some refactoring, but seems
 simpler!~~
 

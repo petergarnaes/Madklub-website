@@ -5,10 +5,11 @@ import {
   GraphQLNonNull as NonNull,
   GraphQLObjectType as ObjectType,
   GraphQLList as ListType,
-    GraphQLBoolean as BooleanType
+  GraphQLBoolean as BooleanType,
+  GraphQLID as ID,
 } from 'graphql';
 import {resolver} from 'graphql-sequelize';
-import {Kitchen} from '../db';
+import {Kitchen,DinnerClub} from '../db';
 import {attributeFields} from 'graphql-sequelize';
 import DinnerClubType from './DinnerClubType';
 import PeriodType from './PeriodType';
@@ -65,6 +66,25 @@ const KitchenType = new ObjectType({
                 }
             }),
             description: 'List of dinnerclubs, both future and past, associated with this kitchen'
+        },
+        dinnerclub: {
+          type: DinnerClubType,
+          args: {
+            id: {
+              type: new NonNull(ID),
+              description: 'The ID of the dinnerclub you want to look at'
+            }
+          },
+          resolve: (a,b,c,d) => resolver(Kitchen.DinnerClubs,{
+                before: (options,args) => {
+                    options.where = {
+                      id: args.id
+                    };
+                    return options;
+                }
+            })(a,b,c,d).then((ds)=>ds[0]),
+          //.then((dinnerclubs)=>dinnerclubs[0]),
+          description: 'Specific dinnerclub of this kitchen.'
         },
         periods: {
             type: new ListType(PeriodType),
