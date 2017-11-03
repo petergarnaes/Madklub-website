@@ -3,6 +3,7 @@
 * Relative paths in `server/index.js` should not have `dist/` in front, the
 `dist` folder should be self contained. This is important for making the
 production bundle work.
+* <s>Update node engine, so promises and async awaits no longer have to be polyfilled</s>
 * ~~[Pre-process GraphQL ASTs](http://dev.apollodata.com/react/webpack.html) for
 Apollo with webpack when bundling. This should decrease bundle size, as
 `graphql-tag` is no longer required client side, and speed up client side

@@ -61,6 +61,8 @@ var config = {
         // Only includes desired locales in moment.js, I assume en (united states) is default included. We further
         // include Danish and Faroese
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /da|fo/),
+        // TODO use plugin like this to remove 'promise' module from client bundle
+
         // Maybe this does something DID NOTHING - we probably need several entries and such
         //new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
 

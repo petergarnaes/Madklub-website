@@ -5,3 +5,4 @@ log
 .idea
 madklub.db
 deb-tree
+package-lock.json

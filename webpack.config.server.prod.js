@@ -26,6 +26,7 @@ function replacePath(newResource){
 module.exports = {
     entry: {
         backend: [
+        // TODO remove this and replace with bluebird
         'babel-polyfill',
         './server'],
         test_db: ['babel-polyfill','./server/api/db/test_set/setup.js']
