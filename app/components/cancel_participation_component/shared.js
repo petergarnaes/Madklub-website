@@ -40,9 +40,7 @@ export const cancelParticipateOptions = (queryName) => ({
     props({ _,mutate }) {
         return {
             setCancel(dinnerclubID,participationID,cancel){
-                console.log(dinnerclubID);
-                console.log(participationID);
-                console.log(cancel);
+                console.log("Cancelling dinnerclub"+dinnerclubID+" by setting it to "+cancel);
                 let updateQueriesObj = {};
                 console.log('Cancelling with updated query: '+queryName);
                 updateQueriesObj[queryName] = queryRoutine(dinnerclubID);
@@ -65,4 +63,3 @@ export const cancelParticipateOptions = (queryName) => ({
         }
     }
 });
-
